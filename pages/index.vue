@@ -1,7 +1,5 @@
 <template>
   <div>
- 
- 
     <!-- slide -->
     <b-carousel
       id="carousel-1"
@@ -22,8 +20,7 @@
       >
       </b-carousel-slide>
     </b-carousel>
- 
- 
+
     <!-- một vài hình ảnh -->
     <b-container
       fluid
@@ -75,48 +72,39 @@
         </b-col>
       </b-row>
     </b-container>
- 
- 
+
     <!-- cái gfi đó chưa nghĩa ra -->
     <b-jumbotron bg-variant="secondary" class="mt-5">
       <template #header>FAMILY CONNECT</template>
- 
- 
+
       <template #lead>
         Family connect giúp kết nối thế hệ: Family connect là một cách hiệu quả
         để kết nối giữa các thế hệ trong một gia đình. Bằng cách ghi chép thông
         tin về ông bà, cha mẹ, anh chị em, con cháu, Family connect giúp hiểu rõ
         hơn về quan hệ gia đình và liên kết giữa các thành viên.
       </template>
- 
- 
+
       <hr class="my-4" />
- 
- 
+
       <p>
         Giúp tìm hiểu về nguồn gốc và dòng họ: Gia phả cung cấp thông tin về
         nguồn gốc và dòng họ của gia đình. Việc biết được về nơi xuất xứ, tên
         họ, và lịch sử phát triển của gia đình có thể mang lại sự tự hào và nhận
         thức về bản thân.
       </p>
- 
- 
+
       <b-button variant="primary" href="/so_do_cay">Xem sơ đồ</b-button>
     </b-jumbotron>
- 
- 
   </div>
- </template>
- 
- 
- <script>
- export default {
+</template>
+
+<script>
+export default {
   data() {
     return {
       slide: 0,
       sliding: null,
- 
- 
+
       carouselItems: [
         {
           imgSrc:
@@ -137,6 +125,31 @@
       ],
     }
   },
+
+  mounted() {
+    // Kiểm tra nếu có accessToken trong localStorage
+    if (localStorage.getItem('accessToken')) {
+      // Kiểm tra nếu đường dẫn hiện tại là "/account/dang_nhap" hoặc "/account/dang_ki"
+      const currentPath = this.$route
+
+      // eslint-disable-next-line no-console
+      console.log(currentPath)
+      if (
+        currentPath === '/account/dang_nhap' ||
+        currentPath === '/account/dang_ki' ||
+        currentPath === '/account/quen_mat_khau' ||
+        currentPath === '/account/xac_nhan_otp' ||
+        currentPath === '/account/trang_chao_mung'
+      ) {
+        this.$router.push('/')
+      }
+      // Ngược lại, giữ nguyên trang
+    } else {
+      // Chuyển hướng về trang /account/dang_nhap nếu không có accessToken
+      this.$router.push('/account/dang_nhap')
+    }
+  },
+
   methods: {
     onSlideStart(slide) {
       this.sliding = true
@@ -145,12 +158,11 @@
       this.sliding = false
     },
   },
- }
- </script>
- 
- 
- <style scoped>
- * {
+}
+</script>
+
+<style scoped>
+* {
   color: #fff;
- }
- </style>
+}
+</style>

@@ -11,7 +11,7 @@
           <b-navbar-nav v-if="showHeader">
             <b-nav-item href="/" active>Trang chủ</b-nav-item>
             <b-nav-item href="/danh_sach_so_do" active>Danh sách</b-nav-item>
-            <b-nav-item href="/so_do_cay" active>Sơ đồ</b-nav-item>
+           
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
@@ -62,7 +62,7 @@
             <b-nav-item-dropdown v-if="showHeader" right>
               <!-- Using 'button-content' slot -->
               <template #button-content>
-                <em>User</em>
+                <strong>{{ userInfo.fullName }}</strong>
               </template>
               <b-dropdown-item>Profile</b-dropdown-item>
               <b-dropdown-item @click="signOut">Sign Out</b-dropdown-item>
@@ -89,6 +89,15 @@ import NotificationCard from './notificationBell/notificationCard.vue'
 import searchPerson from './searchPerson.vue'
 export default {
   components: { searchPerson, BellHeader, NotificationCard },
+
+  data() {
+    return {
+      userInfo: {
+        fullName: '',
+      },
+    }
+  },
+
   computed: {
     showHeader() {
       // Điều kiện để hiển thị headerLayout
@@ -130,65 +139,75 @@ export default {
       )
     },
   },
-  methods: {
-  async signOutWithToken(token) {
-    try {
-      // Gửi yêu cầu GET đến API để thực hiện sign out và truyền accessToken vào
-      await this.$axios.$get('http://localhost:8080/sign-out', {
-        headers: {
-          Authorization: `Bearer ${token}` // Gửi access token trong header Authorization
-        }
-      });
-      
-      // Xóa thông tin người dùng đã lưu trong localStorage hoặc Vuex (nếu cần)
-      localStorage.removeItem('userInfo');
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
 
-      // Chuyển hướng người dùng về trang đăng nhập hoặc trang chủ (tuỳ vào luồng của bạn)
-      this.$router.push('/login'); // Điều hướng về trang đăng nhập
-
-      // eslint-disable-next-line no-console
-      console.log('Đã đăng xuất thành công!');
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        // Nếu lỗi trả về là Unauthorized (401), có thể là access token hết hạn
-        // Tiến hành gửi refreshToken để lấy lại access token mới
-        try {
-          const response = await this.$axios.$get('http://localhost:8080/verifyRefreshToken', {
-            refreshToken: localStorage.getItem('refreshToken')
-          });
-
-          // Lưu trữ access token mới vào localStorage
-          localStorage.setItem('accessToken', response.accessToken);
-
-          // Thực hiện đăng xuất lại sử dụng access token mới
-          this.signOutWithToken(response.accessToken);
-        } catch (refreshError) {
-          // Xử lý lỗi khi lấy lại access token mới
-          // eslint-disable-next-line no-console
-          console.error('Lỗi khi lấy lại access token mới:', refreshError);
-        }
-      } else {
-        // Xử lý lỗi nếu không phải là lỗi hết hạn access token
-        // eslint-disable-next-line no-console
-        console.error('Lỗi khi đăng xuất:', error);
-      }
+  mounted() {
+    // Kiểm tra nếu có userInfo trong localStorage
+    if (localStorage.getItem('userInfo')) {
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
     }
   },
 
-  signOut() {
-    const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
-      // Nếu tồn tại access token, thực hiện đăng xuất với access token đó
-      this.signOutWithToken(accessToken);
-    } else {
-      // Nếu không tồn tại access token, xử lý đăng xuất thông thường
-      this.$router.push('/account/dang_nhap'); // Chuyển hướng về trang đăng nhập
-    }
-  }
-}
+  methods: {
+    async signOutWithToken(token) {
+      try {
+        // Gửi yêu cầu GET đến API để thực hiện sign out và truyền accessToken vào
+        await this.$axios.$get('http://localhost:8080/sign-out', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Gửi access token trong header Authorization
+          },
+        })
 
+        // Xóa thông tin người dùng đã lưu trong localStorage hoặc Vuex (nếu cần)
+        localStorage.removeItem('userInfo')
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+
+        // Chuyển hướng người dùng về trang đăng nhập hoặc trang chủ (tuỳ vào luồng của bạn)
+        this.$router.push('/trang_chao_mung') // Điều hướng về trang đăng nhập
+
+        // eslint-disable-next-line no-console
+        console.log('Đã đăng xuất thành công!')
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          // Nếu lỗi trả về là Unauthorized (401), có thể là access token hết hạn
+          // Tiến hành gửi refreshToken để lấy lại access token mới
+          try {
+            const response = await this.$axios.$get(
+              'http://localhost:8080/verifyRefreshToken',
+              {
+                refreshToken: localStorage.getItem('refreshToken'),
+              }
+            )
+
+            // Lưu trữ access token mới vào localStorage
+            localStorage.setItem('accessToken', response.accessToken)
+
+            // Thực hiện đăng xuất lại sử dụng access token mới
+            this.signOutWithToken(response.accessToken)
+          } catch (refreshError) {
+            // Xử lý lỗi khi lấy lại access token mới
+            // eslint-disable-next-line no-console
+            console.error('Lỗi khi lấy lại access token mới:', refreshError)
+          }
+        } else {
+          // Xử lý lỗi nếu không phải là lỗi hết hạn access token
+          // eslint-disable-next-line no-console
+          console.error('Lỗi khi đăng xuất:', error)
+        }
+      }
+    },
+
+    signOut() {
+      const accessToken = localStorage.getItem('accessToken')
+      if (accessToken) {
+        // Nếu tồn tại access token, thực hiện đăng xuất với access token đó
+        this.signOutWithToken(accessToken)
+      } else {
+        // Nếu không tồn tại access token, xử lý đăng xuất thông thường
+        this.$router.push('/account/dang_nhap') // Chuyển hướng về trang đăng nhập
+      }
+    },
+  },
 }
 </script>
 

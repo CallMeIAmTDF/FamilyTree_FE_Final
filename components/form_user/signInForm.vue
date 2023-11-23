@@ -197,28 +197,49 @@ export default {
         console.log({ response })
 
         if (response.data && response.status === 'OK') {
-          // const { userInfo } = response.data.userInfo
-          // const { tokens } = response.data.tokens
-          // Xử lý phản hồi sau khi đăng nhập thành công
-
-          // Lưu thông tin người dùng vào localStorage hoặc Vuex
-          // localStorage.setItem('userInfo', JSON.parse(response.data.userInfo))
+          localStorage.setItem(
+            'userInfo',
+            JSON.stringify(response.data.userInfo)
+          )
           localStorage.setItem('accessToken', response.data.tokens.accessToken)
-          localStorage.setItem('refreshToken', response.data.tokens.refreshToken)
+          localStorage.setItem(
+            'refreshToken',
+            response.data.tokens.refreshToken
+          )
 
           // Chuyển hướng hoặc thực hiện hành động khác sau khi đăng nhập thành công
           this.$router.push('/')
           // eslint-disable-next-line no-console
           console.log('Đăng nhập thành công!')
+
+          // Hiển thị toast thông báo đăng nhập thành công trong 5 giây
+          this.$bvToast.toast('Đăng nhập thành công!', {
+            title: 'Thành công',
+            variant: 'success',
+            autoHideDelay: 5000, // Hiển thị trong 5 giây
+          })
         } else {
           // Xử lý khi đăng nhập không thành công
           // eslint-disable-next-line no-console
           console.error('Đăng nhập thất bại!')
+
+          this.$bvToast.toast('Đăng nhập thất bại!', {
+          title: 'Đã xảy ra lỗi',
+          variant: 'danger',
+          autoHideDelay: 5000, // Hiển thị trong 5 giây
+        })
         }
       } catch (error) {
         // Xử lý lỗi nếu có
         // eslint-disable-next-line no-console
         console.error('Đã xảy ra lỗi khi đăng nhập:', error)
+
+        // Hiển thị toast thông báo đăng nhập thất bại trong 5 giây
+        this.$bvToast.toast('Đăng nhập thất bại!', {
+          title: 'error.response.message',
+          variant: 'danger',
+          autoHideDelay: 5000, // Hiển thị trong 5 giây
+        })
       }
     },
   },

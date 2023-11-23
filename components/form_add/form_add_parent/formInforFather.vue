@@ -49,7 +49,9 @@
               required
             >
               <b-form-radio value="true">Nam</b-form-radio>
-              <b-form-radio value="false">Nữ</b-form-radio>
+              <b-form-radio value="false" disabled
+                >Nữ</b-form-radio
+              >
             </b-form-radio-group>
           </b-form-group>
 
@@ -118,7 +120,7 @@
         <!-- Trường chọn ngày mất -->
         <b-form-group
           v-if="form.selectedStatus === '1'"
-          label="Tình trạng"
+          label="Ngày mất:"
           class="col-md-6"
           :state="isDeathdayValid"
           :invalid-feedback="deathdayErrorMessage"
@@ -163,20 +165,20 @@ export default {
       default: () => ({}),
     },
   },
+
   data() {
     return {
       form: {
         name: '',
         img: null,
         imageSrc: null,
-        selectedSex: '',
+        selectedSex: true,
         selectedStatus: '',
         birthday: '',
         birthplace: '',
         deathday: '',
       },
       show: true,
-      familyTreeId: null,
       validForm: false,
       isNameValid: false,
       nameErrorMessage: '',
@@ -194,11 +196,6 @@ export default {
         this.validateForm()
       },
     },
-  },
-
-  created() {
-    // Lấy ID sản phẩm từ query parameter khi trang được tạo
-    this.familyTreeId = this.$route.query.id
   },
 
   methods: {

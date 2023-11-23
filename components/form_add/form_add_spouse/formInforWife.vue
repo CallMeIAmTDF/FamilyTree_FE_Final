@@ -23,7 +23,6 @@
             @blur="validateName"
           ></b-form-input>
         </b-form-group>
-
         <!-- Trường chọn hình ảnh từ file -->
         <b-form-group label="Chọn ảnh đại diện:" class="col-md-6">
           <b-form-file
@@ -34,7 +33,6 @@
           ></b-form-file>
         </b-form-group>
       </div>
-
       <div class="row">
         <div class="col-md-6">
           <!-- Trường giới tính -->
@@ -48,11 +46,12 @@
               name="radio-sex"
               required
             >
-              <b-form-radio value="true">Nam</b-form-radio>
+              <b-form-radio value="true" disabled
+                >Nam</b-form-radio
+              >
               <b-form-radio value="false">Nữ</b-form-radio>
             </b-form-radio-group>
           </b-form-group>
-
           <!-- Trường tình trạng -->
           <b-form-group
             label="Tình trạng: "
@@ -71,7 +70,6 @@
             </b-form-radio-group>
           </b-form-group>
         </div>
-
         <!-- Hiển thị hình ảnh -->
         <div class="col-md-6 d-flex justify-content-center">
           <img
@@ -88,7 +86,6 @@
           />
         </div>
       </div>
-
       <div class="row">
         <!-- Trường chọn ngày sinh -->
         <b-form-group
@@ -103,7 +100,6 @@
             @input="validateDateOfBirth"
           ></b-form-datepicker>
         </b-form-group>
-
         <!-- Trường chọn nơi sinh -->
         <b-form-group label="Nơi sinh:" class="col-md-6">
           <b-form-input
@@ -113,12 +109,11 @@
           ></b-form-input>
         </b-form-group>
       </div>
-
       <div class="row">
         <!-- Trường chọn ngày mất -->
         <b-form-group
           v-if="form.selectedStatus === '1'"
-          label="Tình trạng"
+          label="Ngày mất:"
           class="col-md-6"
           :state="isDeathdayValid"
           :invalid-feedback="deathdayErrorMessage"
@@ -129,7 +124,6 @@
             @input="validateDateOfDeath"
           ></b-form-datepicker>
         </b-form-group>
-
         <!-- Trường chọn nơi mất -->
         <b-form-group
           v-if="form.selectedStatus === '1'"
@@ -143,7 +137,6 @@
           ></b-form-input>
         </b-form-group>
       </div>
-
       <!-- Sử lý các sự kiện -->
       <div class="d-flex justify-content-end">
         <b-button type="reset" class="mr-3" variant="danger">Reset</b-button>
@@ -154,7 +147,6 @@
     </b-form>
   </div>
 </template>
-
 <script>
 export default {
   props: {
@@ -163,20 +155,22 @@ export default {
       default: () => ({}),
     },
   },
+
   data() {
     return {
       form: {
         name: '',
         img: null,
         imageSrc: null,
-        selectedSex: '',
+        selectedSex: false,
         selectedStatus: '',
+        selectedParent: '',
         birthday: '',
         birthplace: '',
         deathday: '',
+        deathplace: '',
       },
       show: true,
-      familyTreeId: null,
       validForm: false,
       isNameValid: false,
       nameErrorMessage: '',
@@ -186,7 +180,6 @@ export default {
       deathdayErrorMessage: '',
     }
   },
-
   watch: {
     form: {
       deep: true,
@@ -195,12 +188,6 @@ export default {
       },
     },
   },
-
-  created() {
-    // Lấy ID sản phẩm từ query parameter khi trang được tạo
-    this.familyTreeId = this.$route.query.id
-  },
-
   methods: {
     onReset(event) {
       event.preventDefault()
@@ -210,30 +197,28 @@ export default {
       this.form.imageSrc = ''
       this.form.selectedSex = ''
       this.form.selectedStatus = ''
+      this.form.selectedParent = ''
       this.form.birthday = ''
       this.form.birthplace = ''
       this.form.deathday = ''
+      this.form.deathplace = ''
       this.nameErrorMessage = ''
       this.birthdayErrorMessage = ''
       this.deathdayErrorMessage = ''
-
       this.show = false
       this.$nextTick(() => {
         this.show = true
       })
     },
-
     deleteValueDeath() {
       this.form.deathday = ''
       this.form.deathplace = ''
     },
-
     async onFileChosen(event) {
       const file = event.target.files[0]
       if (file) {
         const formData = new FormData()
         formData.append('image', file)
-
         try {
           const response = await fetch('https://api.imgur.com/3/image/', {
             method: 'POST',
@@ -242,7 +227,6 @@ export default {
             },
             body: formData,
           })
-
           const data = await response.json()
           this.form.imageSrc = data.data.link // Lưu đường dẫn hình ảnh vào biến imageSrc
           // eslint-disable-next-line no-console
@@ -255,7 +239,6 @@ export default {
         }
       }
     },
-
     validateForm() {
       // Kiểm tra các trường khác
       if (
@@ -271,7 +254,6 @@ export default {
         this.validForm = false
       }
     },
-
     // Validate tên
     validateName() {
       if (this.form.name.length === 0) {
@@ -286,7 +268,6 @@ export default {
       }
       this.validateForm()
     },
-
     // Validate ngày sinh phải trước ngày hiện tại
     validateDateOfBirth() {
       const currentDate = new Date()
@@ -300,7 +281,6 @@ export default {
       }
       this.validateForm()
     },
-
     // Validate ngày mất phải trước ngày hiện tại và sau ngày sinh
     validateDateOfDeath() {
       const currentDate = new Date()
@@ -320,7 +300,7 @@ export default {
     async onSubmit() {
       try {
         await this.$axios.$post(
-          `http://localhost:8080/person/createParents?personId=${this.item.personId}`,
+          `http://localhost:8080/person/createSpouse?personId=${this.item.personId}`,
           {
             personName: this.form.name,
             personGender: this.form.selectedSex,

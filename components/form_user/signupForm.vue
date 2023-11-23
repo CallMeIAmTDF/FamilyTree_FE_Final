@@ -332,6 +332,8 @@ export default {
 
         // eslint-disable-next-line no-console
         console.log('success')
+
+        this.$router.push('/account/dang_nhap')
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error)
