@@ -79,25 +79,25 @@
                         <b-form-radio value="false">Nữ</b-form-radio>
                       </b-form-radio-group>
                     </b-form-group>
-                  </div>
 
-                  <!-- Trường tình trạng -->
-                  <b-form-group
-                    label="Tình trạng: "
-                    class="mt-2"
-                    :state="form.selectedStatus !== ''"
-                  >
-                    <b-form-radio-group
-                      v-model="form.selectedStatus"
-                      name="radio-status"
-                      required
+                    <!-- Trường tình trạng -->
+                    <b-form-group
+                      label="Tình trạng: "
+                      class="mt-2"
+                      :state="form.selectedStatus !== ''"
                     >
-                      <b-form-radio value="true" @change="deleteValueDeath"
-                        >Còn sống</b-form-radio
+                      <b-form-radio-group
+                        v-model="form.selectedStatus"
+                        name="radio-status"
+                        required
                       >
-                      <b-form-radio value="false">Từ trần</b-form-radio>
-                    </b-form-radio-group>
-                  </b-form-group>
+                        <b-form-radio value="true" @change="deleteValueDeath"
+                          >Còn sống</b-form-radio
+                        >
+                        <b-form-radio value="false">Từ trần</b-form-radio>
+                      </b-form-radio-group>
+                    </b-form-group>
+                  </div>
 
                   <!-- Hiển thị hình ảnh -->
                   <div class="col-md-6 d-flex justify-content-center">
@@ -117,6 +117,26 @@
                 </div>
 
                 <div class="row">
+                  <!-- trường nghề nghiệp -->
+                  <b-form-group label="Nghề nghiệp:" class="col-md-6">
+                    <b-form-input
+                      v-model="form.job"
+                      type="text"
+                      placeholder="Nhập nghề nghiệp..."
+                    ></b-form-input>
+                  </b-form-group>
+
+                  <!-- Trường chọn địa chỉ -->
+                  <b-form-group label="Địa chỉ:" class="col-md-6">
+                    <b-form-input
+                      v-model="form.address"
+                      type="text"
+                      placeholder="Nhập địa chỉ..."
+                    ></b-form-input>
+                  </b-form-group>
+                </div>
+
+                <div class="row">
                   <!-- Trường chọn ngày sinh -->
                   <b-form-group
                     label="Ngày sinh:"
@@ -124,19 +144,27 @@
                     :state="isBirthdayValid"
                     :invalid-feedback="birthdayErrorMessage"
                   >
-                    <b-form-datepicker
+                    <b-form-input
                       v-model="form.birthday"
+                      type="date"
                       class="mb-2"
                       @input="validateDateOfBirth"
-                    ></b-form-datepicker>
+                    ></b-form-input>
                   </b-form-group>
 
-                  <!-- Trường chọn nơi sinh -->
-                  <b-form-group label="Nơi sống:" class="col-md-6">
+                  <!-- Trường chọn ngày mất -->
+                  <b-form-group
+                    v-if="form.selectedStatus === 'false'"
+                    label="Ngày mất:"
+                    class="col-md-6"
+                    :state="isDeathdayValid"
+                    :invalid-feedback="deathdayErrorMessage"
+                  >
                     <b-form-input
-                      v-model="form.address"
-                      type="text"
-                      placeholder="Nhập nơi sinh..."
+                      v-model="form.deathday"
+                      type="date"
+                      class="mb-2"
+                      @input="validateDateOfDeath"
                     ></b-form-input>
                   </b-form-group>
                 </div>
@@ -150,7 +178,7 @@
                     type="submit"
                     variant="primary"
                     :disabled="!validForm"
-                    >Tạo người</b-button
+                    >Thêm người</b-button
                   >
                 </div>
               </b-form>
@@ -168,18 +196,12 @@
               v-b-toggle.sidebar-right
               :person="createdPersonData"
             />
-
           </div>
         </div>
       </div>
     </main>
 
-    <b-sidebar
-      id="sidebar-right"
-      :title="'Thông tin của ' + createdPersonData.personName"
-      right
-      shadow
-    >
+    <b-sidebar id="sidebar-right" right shadow>
       <sidebar-person :person="createdPersonData" />
     </b-sidebar>
   </div>
@@ -342,11 +364,6 @@ export default {
       this.nameErrorMessage = ''
       this.birthdayErrorMessage = ''
       this.deathdayErrorMessage = ''
-
-      this.show = false
-      this.$nextTick(() => {
-        this.show = true
-      })
     },
 
     deleteValueDeath() {

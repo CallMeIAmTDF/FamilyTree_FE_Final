@@ -1,10 +1,41 @@
 <template>
   <div>
-    <h2 class="text-center">Danh sách các sơ đồ</h2>
+    <h1 class="text-center p-3" style="font-weight: bold">
+      Danh sách các sơ đồ
+    </h1>
     <div class="container">
-      <button class="btn btn-success" @click="$bvModal.show('modalCreate')">
-        Thêm sơ đồ
-      </button>
+      <div class="d-flex justify-content-between align-items-center mx-4">
+        <div class="nav nav-pills">
+          <a
+            :class="{ active: activeTab === 'used' }"
+            class="nav-item nav-link"
+            style="cursor: pointer; font-weight: bold;"
+            @click="activeTab = 'used'"
+          >
+            Sơ đồ sở hữu
+          </a>
+          <a
+            :class="{ active: activeTab === 'joined' }"
+            class="nav-item nav-link"
+            style="cursor: pointer; font-weight: bold;"
+            @click="activeTab = 'joined'"
+          >
+            Sơ đồ tham gia
+          </a>
+        </div>
+        <button
+          class="btn btn-success my-4"
+          style="font-weight: bold;"
+          @click="$bvModal.show('modalCreate')"
+        >
+          Thêm sơ đồ
+        </button>
+      </div>
+      <div class="p-4" style="background-color: #ddd; border-radius: 16px">
+        <slide-family-tree-used v-if="activeTab === 'used'" />
+        <slide-family-tree-joined v-else-if="activeTab === 'joined'" />
+      </div>
+      <div class="p-4"></div>
     </div>
     <b-modal id="modalCreate" hide-footer title="Nhập tên sơ đồ">
       <b-form @submit.prevent="onSubmit">
@@ -12,69 +43,49 @@
           <b-form-input v-model="form.nameTree" title="Nhập tên" required>
           </b-form-input>
         </b-form-group>
-        <b-button type="submit" variant="primary">Tạo sơ dồ</b-button>
+        <b-button type="submit" variant="primary">Tạo sơ đồ</b-button>
       </b-form>
     </b-modal>
   </div>
 </template>
 
 <script>
+import SlideFamilyTreeJoined from '~/components/slideFamilyTreeJoined.vue'
+import SlideFamilyTreeUsed from '~/components/slideFamilyTreeUsed.vue'
+
 export default {
+  components: {
+    SlideFamilyTreeUsed,
+    SlideFamilyTreeJoined,
+  },
   data() {
     return {
+      activeTab: 'used', // Tab mặc định được chọn khi trang được tải
       form: {
-        nameTree: '',
+        nameTree: '', // Biến để lưu trữ tên sơ đồ mới
       },
-    }
-  },
-
-  mounted() {
-    // Kiểm tra nếu có accessToken trong localStorage
-    if (localStorage.getItem('accessToken')) {
-      // Ngược lại, giữ nguyên trang
-    } else {
-      // Chuyển hướng về trang /account/dang_nhap nếu không có accessToken
-      this.$router.push('/account/dang_nhap')
     }
   },
 
   methods: {
     async onSubmit() {
       try {
-        const newTree = await this.$axios.$post(
-          `http://localhost:8080/familyTree/create`,
-          {
-            familyTreeId: null,
-            userId: null,
-            familyTreeName: this.form.nameTree,
-          }
-        )
-
-        // Thực hiện thành công: ẩn modal và hiển thị toast thông báo
-        this.$bvModal.hide('modalCreate')
-        this.showSuccessToast('Tạo sơ thành công!')
-
-        // eslint-disable-next-line no-console
-        console.log('success')
-
-        const newTreeId = newTree.data.familyTreeId
-
-        this.$router.push({
-          path: '/so_do_cay',
-          query: { id: newTreeId },
+        await this.$axios.$post('http://localhost:8080/familyTree/create', {
+          familyTreeId: null,
+          userId: null,
+          familyTreeName: this.form.nameTree,
         })
-
-        // eslint-disable-next-line no-console
-        console.log(newTreeId)
-        // eslint-disable-next-line no-console
-        console.log(newTree)
+        this.$bvModal.hide('modalCreate')
+        this.showSuccessToast('Tạo sơ đồ thành công!')
+        // Reload lại trang sử dụng $router.go()
+        this.$router.go() // Sẽ reload lại trang hiện tại
       } catch (error) {
-        // Xử lý khi có lỗi: hiển thị thông báo lỗi
-        this.showErrorToast('Có lỗi xảy ra khi tạo sơ!')
+        this.showErrorToast('Có lỗi xảy ra khi tạo sơ đồ!')
         // eslint-disable-next-line no-console
         console.error(error)
       }
     },
+
     showSuccessToast(message) {
       this.$bvToast.toast(message, {
         title: 'Thành công',
@@ -93,4 +104,9 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.nav-pills .nav-link.active {
+  background-color: #007bff;
+  color: white;
+}
+</style>

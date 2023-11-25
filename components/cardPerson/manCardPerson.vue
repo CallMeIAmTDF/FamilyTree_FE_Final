@@ -107,7 +107,7 @@
       size="lg"
       centered
     >
-      <form-infor-parent :item="person" />
+      <form-infor-parent :item="person" @personCreated="hideModal" />
     </b-modal>
     <b-modal
       v-model="modalVisibleFather"
@@ -117,7 +117,7 @@
       size="lg"
       centered
     >
-      <form-infor-father :item="person" />
+      <form-infor-father :item="person" @personCreated="hideModal" />
     </b-modal>
     <b-modal
       v-model="modalVisibleMother"
@@ -127,7 +127,7 @@
       size="lg"
       centered
     >
-      <form-infor-mother :item="person" />
+      <form-infor-mother :item="person" @personCreated="hideModal" />
     </b-modal>
     <b-modal
       v-model="modalVisibleWife"
@@ -147,7 +147,7 @@
       size="lg"
       centered
     >
-      <form-infor-sibling :item="person" />
+      <form-infor-sibling :item="person" @personCreated="hideModal" />
     </b-modal>
     <b-modal
       v-model="modalVisibleChild"
@@ -157,7 +157,7 @@
       size="lg"
       centered
     >
-      <form-infor-child :item="person" />
+      <form-infor-child :item="person" @personCreated="hideModal" />
     </b-modal>
   </div>
 </template>
@@ -249,6 +249,16 @@ export default {
     },
     openModalChild() {
       this.modalVisibleChild = true
+    },
+
+    hideModal() {
+      // Sử dụng $refs để truy cập modal và ẩn nó đi
+      this.modalVisibleParent = false
+      this.modalVisibleFather = false
+      this.modalVisibleMother = false
+      this.modalVisibleWife = false
+      this.modalVisibleSibling = false
+      this.modalVisibleChild = false
     },
   },
 }

@@ -4,7 +4,7 @@
       v-if="show"
       class="b-form"
       enctype="multipart/form-data"
-      @submit="onSubmit"
+      @submit.prevent="onSubmit"
       @reset="onReset"
     >
       <div class="row">
@@ -85,6 +85,26 @@
         </div>
       </div>
       <div class="row">
+        <!-- trường nghề nghiệp -->
+        <b-form-group label="Nghề nghiệp:" class="col-md-6">
+          <b-form-input
+            v-model="form.job"
+            type="text"
+            placeholder="Nhập nghề nghiệp..."
+          ></b-form-input>
+        </b-form-group>
+
+        <!-- Trường chọn địa chỉ -->
+        <b-form-group label="Địa chỉ:" class="col-md-6">
+          <b-form-input
+            v-model="form.address"
+            type="text"
+            placeholder="Nhập địa chỉ..."
+          ></b-form-input>
+        </b-form-group>
+      </div>
+
+      <div class="row">
         <!-- Trường chọn ngày sinh -->
         <b-form-group
           label="Ngày sinh:"
@@ -92,49 +112,31 @@
           :state="isBirthdayValid"
           :invalid-feedback="birthdayErrorMessage"
         >
-          <b-form-datepicker
+          <b-form-input
             v-model="form.birthday"
+            type="date"
             class="mb-2"
             @input="validateDateOfBirth"
-          ></b-form-datepicker>
-        </b-form-group>
-        <!-- Trường chọn nơi sinh -->
-        <b-form-group label="Nơi sinh:" class="col-md-6">
-          <b-form-input
-            v-model="form.birthplace"
-            type="text"
-            placeholder="Nhập nơi sinh..."
           ></b-form-input>
         </b-form-group>
-      </div>
-      <div class="row">
+
         <!-- Trường chọn ngày mất -->
         <b-form-group
-          v-if="form.selectedStatus === '1'"
+          v-if="form.selectedStatus === 'false'"
           label="Ngày mất:"
           class="col-md-6"
           :state="isDeathdayValid"
           :invalid-feedback="deathdayErrorMessage"
         >
-          <b-form-datepicker
+          <b-form-input
             v-model="form.deathday"
+            type="date"
             class="mb-2"
             @input="validateDateOfDeath"
-          ></b-form-datepicker>
-        </b-form-group>
-        <!-- Trường chọn nơi mất -->
-        <b-form-group
-          v-if="form.selectedStatus === '1'"
-          label="Nơi chôn cất:"
-          class="col-md-6"
-        >
-          <b-form-input
-            v-model="form.deathplace"
-            type="text"
-            placeholder="Nhập nơi chôn cất..."
           ></b-form-input>
         </b-form-group>
       </div>
+
       <!-- Sử lý các sự kiện -->
       <div class="d-flex justify-content-end">
         <b-button type="reset" class="mr-3" variant="danger">Reset</b-button>
@@ -165,9 +167,9 @@ export default {
         selectedStatus: '',
         selectedParent: '',
         birthday: '',
-        birthplace: '',
+        address: '',
         deathday: '',
-        deathplace: '',
+        job: '',
       },
       show: true,
       validForm: false,
@@ -198,21 +200,19 @@ export default {
       this.form.selectedStatus = ''
       this.form.selectedParent = ''
       this.form.birthday = ''
-      this.form.birthplace = ''
+      this.form.address = ''
       this.form.deathday = ''
-      this.form.deathplace = ''
+      this.form.job = ''
       this.nameErrorMessage = ''
       this.birthdayErrorMessage = ''
       this.deathdayErrorMessage = ''
-      this.show = false
-      this.$nextTick(() => {
-        this.show = true
-      })
     },
+
     deleteValueDeath() {
       this.form.deathday = ''
-      this.form.deathplace = ''
+      this.deathdayErrorMessage = ''
     },
+
     async onFileChosen(event) {
       const file = event.target.files[0]
       if (file) {
@@ -296,6 +296,21 @@ export default {
       this.validateForm()
     },
 
+    showSuccessToast(message) {
+      this.$bvToast.toast(message, {
+        title: 'Thành công',
+        variant: 'success',
+        autoHideDelay: 5000,
+      })
+    },
+    showErrorToast(message) {
+      this.$bvToast.toast(message, {
+        title: 'Lỗi',
+        variant: 'danger',
+        autoHideDelay: 5000,
+      })
+    },
+
     async onSubmit() {
       try {
         await this.$axios.$post(
@@ -304,11 +319,11 @@ export default {
             personName: this.form.name,
             personGender: this.form.selectedSex,
             personDob: this.form.birthday,
-            personJob: null,
+            personJob: this.form.job,
             personReligion: null,
             personEthnic: null,
             personDod: this.form.deathday,
-            personAddress: null,
+            personAddress: this.form.address,
             parentsId: null,
             // familyTreeId: this.familyTreeId,
             familyTreeId: this.item.familyTreeId,
@@ -327,10 +342,14 @@ export default {
         // eslint-disable-next-line no-console
         console.log('success')
 
-        // this.$router.push('/account/dang_nhap')
+        this.$emit('personCreated')
+
+        this.showSuccessToast('Thêm chồng vào sơ đồ thành công')
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error)
+
+        this.showErrorToast('Có lỗi xảy ra khi thêm chồng vào sơ đồ!')
       }
     },
   },

@@ -1,40 +1,45 @@
 <template>
   <div class="px-3 py-2">
-    <b-img
-      :src="
-        person.personImage
-          ? person.personImage
-          : 'http://www.clipartbest.com/cliparts/aTq/zRq/aTqzRqXTM.png'
-      "
-      style="margin: auto; width: 200px; height: 200px"
-      fluid
-      thumbnail
-    ></b-img>
-
+    <div class="d-flex justify-content-center">
+      <b-img
+        :src="
+          person.personImage
+            ? person.personImage
+            : person.personGender === true
+            ? 'https://i.pinimg.com/originals/8d/a5/c3/8da5c3a06407303694d6381b23368f02.png'
+            : 'https://1.bp.blogspot.com/-_McRf03XFs0/XoVUziYcpFI/AAAAAAAAa2A/JjltmHu8M_EMP09rUkB3M7n1FKmrzxAAgCLcBGAsYHQ/s1600/Anh-dai-dien-cho-nu%2B%252839%2529.jpg'
+        "
+        style="margin: auto; width: 200px; height: 200px"
+        fluid
+        thumbnail
+      ></b-img>
+    </div>
     <br />
 
-    <div
-      class=""
-      style="
-        display: flex;
-        justify-content: space-around;
-        flex-direction: column;
-      "
-    >
-      <div class="mt-4">
+    <div class="">
+      <h3 class="text-center">Thông tin cá nhân</h3>
+      <div class="mt-4" style="height: 450px">
         <h6 style="font-weight: bold">Họ và tên: {{ person.personName }}</h6>
-        <h6>Giới tính: {{ person.personGender }}</h6>
-        <h6>Sinh nhật: {{ person.personDob }}</h6>
-        <hr />
+        <h6>Giới tính: {{ displayGender }}</h6>
+        <h6>Tình trạng: {{ displayStatus }}</h6>
         <p>Nghề nghiệp: {{ person.personJob }}</p>
         <p>Địa chỉ: {{ person.personAddress }}</p>
+        <p>Dân tộc: {{ person.personEthnic }}</p>
+        <p>Tôn giáo: {{ person.personReligion }}</p>
+        <p>Ngày sinh: {{ formatBirthDate }}</p>
+        <p>Ngày mất: {{ formatDeathDate }}</p>
+        <span>Mô tả: {{ person.personDescription }}</span>
       </div>
 
-      <div>
+      <hr />
+
+      <div class="d-flex justify-content-around">
         <b-button class="btn btn-warning" @click="editPerson"
           >Sửa thông tin</b-button
         >
-        <b-button class="btn btn-danger" @click="confirmDelete">Xóa thành viên</b-button>
+        <b-button class="btn btn-danger" @click="confirmDelete"
+          >Xóa thành viên</b-button
+        >
       </div>
       <b-modal
         id="modalEditPerson"
@@ -94,25 +99,25 @@
                   <b-form-radio value="false">Nữ</b-form-radio>
                 </b-form-radio-group>
               </b-form-group>
-            </div>
 
-            <!-- Trường tình trạng -->
-            <b-form-group
-              label="Tình trạng: "
-              class="mt-2"
-              :state="form.selectedStatus !== ''"
-            >
-              <b-form-radio-group
-                v-model="form.selectedStatus"
-                name="radio-status"
-                required
+              <!-- Trường tình trạng -->
+              <b-form-group
+                label="Tình trạng: "
+                class="mt-2"
+                :state="form.selectedStatus !== ''"
               >
-                <b-form-radio value="true" @change="deleteValueDeath"
-                  >Còn sống</b-form-radio
+                <b-form-radio-group
+                  v-model="form.selectedStatus"
+                  name="radio-status"
+                  required
                 >
-                <b-form-radio value="false">Từ trần</b-form-radio>
-              </b-form-radio-group>
-            </b-form-group>
+                  <b-form-radio value="true" @change="deleteValueDeath"
+                    >Còn sống</b-form-radio
+                  >
+                  <b-form-radio value="false">Từ trần</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+            </div>
 
             <!-- Hiển thị hình ảnh -->
             <div class="col-md-6 d-flex justify-content-center">
@@ -132,6 +137,46 @@
           </div>
 
           <div class="row">
+            <!-- trường nghề nghiệp -->
+            <b-form-group label="Nghề nghiệp:" class="col-md-6">
+              <b-form-input
+                v-model="form.job"
+                type="text"
+                placeholder="Nhập nghề nghiệp..."
+              ></b-form-input>
+            </b-form-group>
+
+            <!-- Trường chọn địa chỉ -->
+            <b-form-group label="Địa chỉ:" class="col-md-6">
+              <b-form-input
+                v-model="form.address"
+                type="text"
+                placeholder="Nhập địa chỉ..."
+              ></b-form-input>
+            </b-form-group>
+          </div>
+
+          <div class="row">
+            <!-- trường dân tộc -->
+            <b-form-group label="Dân tộc:" class="col-md-6">
+              <b-form-input
+                v-model="form.ethnic"
+                type="text"
+                placeholder="Thuộc dân tộc..."
+              ></b-form-input>
+            </b-form-group>
+
+            <!-- Trường tôn giáo -->
+            <b-form-group label="Tôn giáo:" class="col-md-6">
+              <b-form-input
+                v-model="form.religion"
+                type="text"
+                placeholder="Thuộc tôn giáo..."
+              ></b-form-input>
+            </b-form-group>
+          </div>
+
+          <div class="row">
             <!-- Trường chọn ngày sinh -->
             <b-form-group
               label="Ngày sinh:"
@@ -139,20 +184,39 @@
               :state="isBirthdayValid"
               :invalid-feedback="birthdayErrorMessage"
             >
-              <b-form-datepicker
+              <b-form-input
                 v-model="form.birthday"
+                type="date"
                 class="mb-2"
                 @input="validateDateOfBirth"
-              ></b-form-datepicker>
+              ></b-form-input>
             </b-form-group>
 
-            <!-- Trường chọn nơi sinh -->
-            <b-form-group label="Nơi sống:" class="col-md-6">
+            <!-- Trường chọn ngày mất -->
+            <b-form-group
+              v-if="form.selectedStatus === 'false'"
+              label="Ngày mất:"
+              class="col-md-6"
+              :state="isDeathdayValid"
+              :invalid-feedback="deathdayErrorMessage"
+            >
               <b-form-input
-                v-model="form.address"
-                type="text"
-                placeholder="Nhập nơi sinh..."
+                v-model="form.deathday"
+                type="date"
+                class="mb-2"
+                @input="validateDateOfDeath"
               ></b-form-input>
+            </b-form-group>
+          </div>
+
+          <div class="row">
+            <b-form-group label="Mô tả:" class="col-md-12">
+              <b-form-textarea
+                v-model="form.description"
+                placeholder=" ..."
+                rows="3"
+                max-rows="6"
+              ></b-form-textarea>
             </b-form-group>
           </div>
 
@@ -182,9 +246,6 @@ export default {
 
   data() {
     return {
-      selectedGender: '',
-      createdPersonData: {},
-
       form: {
         name: '',
         img: null,
@@ -192,7 +253,12 @@ export default {
         selectedSex: '',
         selectedStatus: '',
         birthday: '',
+        deathday: '',
         address: '',
+        job: '',
+        ethnic: '',
+        religion: '',
+        description: '',
       },
       show: true,
       familyTreeId: null,
@@ -206,6 +272,21 @@ export default {
     }
   },
 
+  computed: {
+    displayGender() {
+      return this.person.personGender === true ? 'Nam' : 'Nữ'
+    },
+    displayStatus() {
+      return this.person.personStatus === true ? 'Còn sống' : 'Từ trần'
+    },
+    formatBirthDate() {
+      return this.formatDate(this.person.personDob)
+    },
+    formatDeathDate() {
+      return this.formatDate(this.person.personDod)
+    },
+  },
+
   methods: {
     onReset(event) {
       event.preventDefault()
@@ -216,7 +297,12 @@ export default {
       this.form.selectedSex = ''
       this.form.selectedStatus = ''
       this.form.birthday = ''
+      this.form.deathday = ''
       this.form.address = ''
+      this.form.job = ''
+      this.form.ethnic = ''
+      this.form.religion = ''
+      this.form.description = ''
       this.nameErrorMessage = ''
       this.birthdayErrorMessage = ''
       this.deathdayErrorMessage = ''
@@ -224,7 +310,7 @@ export default {
 
     deleteValueDeath() {
       this.form.deathday = ''
-      this.form.deathplace = ''
+      this.form.deathdayErrorMessage = ''
     },
 
     async onFileChosen(event) {
@@ -316,6 +402,14 @@ export default {
       this.validateForm()
     },
 
+    formatDate(dateString) {
+      if (!dateString) return '' // Kiểm tra xem chuỗi ngày tháng có tồn tại không
+
+      const date = new Date(dateString)
+      const options = { year: 'numeric', month: 'numeric', day: 'numeric' }
+      return date.toLocaleDateString('en-US', options)
+    },
+
     showSuccessToast(message) {
       this.$bvToast.toast(message, {
         title: 'Thành công',
@@ -338,6 +432,11 @@ export default {
       this.form.selectedStatus = this.person.personStatus
       this.form.address = this.person.personAddress
       this.form.birthday = this.person.personDob
+      this.form.deathday = this.person.personDod
+      this.form.job = this.person.personJob
+      this.form.ethnic = this.person.personEthnic
+      this.form.religion = this.person.personReligion
+      this.form.description = this.person.personDescription
 
       // Hiển thị modal sửa thông tin
       this.$bvModal.show('modalEditPerson')
@@ -351,13 +450,13 @@ export default {
             personId: this.person.personId,
             personName: this.form.name,
             personDob: this.form.birthday,
-            personJob: null,
-            personReligion: null,
-            personEthnic: null,
-            personDod: null,
+            personJob: this.form.job,
+            personReligion: this.form.religion,
+            personEthnic: this.form.ethnic,
+            personDod: this.form.deathday,
             personAddress: this.form.address,
             personStatus: this.form.selectedStatus,
-            personDescription: null,
+            personDescription: this.form.description,
             personStory: null,
             fatherId: null,
             motherId: null,
@@ -386,22 +485,23 @@ export default {
 
     confirmDelete() {
       // Hiển thị hộp thoại xác nhận khi người dùng nhấn nút "Xóa"
-      if (confirm("Bạn có chắc muốn xóa thành viên này không?")) {
+      if (confirm('Bạn có chắc muốn xóa thành viên này không?')) {
         // Nếu người dùng xác nhận xóa, thực hiện xóa thành viên ở đây
-        this.deletePerson();
+        this.deletePerson()
       }
     },
 
     async deletePerson() {
       try {
-       await this.$axios.$delete(`http://localhost:8080/person/delete?personId=${this.person.personId}`)
+        await this.$axios.$delete(
+          `http://localhost:8080/person/delete?personId=${this.person.personId}`
+        )
 
-        this.showSuccessToast('Xóa thành viên thành công');
+        this.showSuccessToast('Xóa thành viên thành công')
       } catch (error) {
-
         // eslint-disable-next-line no-console
-        console.log(error);
-        this.showErrorToast('Có lỗi xảy ra khi xóa thành viên!');
+        console.log(error)
+        this.showErrorToast('Có lỗi xảy ra khi xóa thành viên!')
       }
     },
   },

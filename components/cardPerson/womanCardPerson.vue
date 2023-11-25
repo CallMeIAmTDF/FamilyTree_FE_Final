@@ -87,7 +87,11 @@
           >
 
           <!-- Hiển thị drop-item Thêm anh/chị/em nếu parentId là null -->
-          <b-dropdown-item id="item-sibling" :disabled="isParentIdNull" @click="openModalSibling">
+          <b-dropdown-item
+            id="item-sibling"
+            :disabled="isParentIdNull"
+            @click="openModalSibling"
+          >
             Thêm anh/chị/em
           </b-dropdown-item>
 
@@ -105,7 +109,7 @@
       size="lg"
       centered
     >
-      <form-infor-parent :item="person" />
+      <form-infor-parent :item="person" @personCreated="hideModal" />
     </b-modal>
     <b-modal
       v-model="modalVisibleFather"
@@ -115,7 +119,7 @@
       size="lg"
       centered
     >
-      <form-infor-father :item="person" />
+      <form-infor-father :item="person" @personCreated="hideModal"/>
     </b-modal>
     <b-modal
       v-model="modalVisibleMother"
@@ -125,7 +129,7 @@
       size="lg"
       centered
     >
-      <form-infor-mother :item="person" />
+      <form-infor-mother :item="person" @personCreated="hideModal"/>
     </b-modal>
     <b-modal
       v-model="modalVisibleHusband"
@@ -135,7 +139,7 @@
       size="lg"
       centered
     >
-      <form-infor-husband :item="person" />
+      <form-infor-husband :item="person" @personCreated="hideModal" />
     </b-modal>
     <b-modal
       v-model="modalVisibleSibling"
@@ -155,7 +159,7 @@
       size="lg"
       centered
     >
-      <form-infor-child :item="person" />
+      <form-infor-child :item="person" @personCreated="hideModal"/>
     </b-modal>
   </div>
 </template>
@@ -194,9 +198,9 @@ export default {
       modalVisibleChild: false,
 
       // person: {
-      //   familyTreeId: 20,
+      //   familyTreeId: 10,
       //   fatherId: null,
-      //   groupChildId: 55,
+      //   groupChildId: 44,
       //   motherId: null,
       //   parentsId: null,
       //   personAddress: null,
@@ -207,11 +211,11 @@ export default {
       //   personDod: null,
       //   personEthnic: null,
       //   personGender: false,
-      //   personId: 55,
+      //   personId: 44,
       //   personImage: null,
-      //   personIsDeleted: false,
+      //   personIsDeleted: null,
       //   personJob: null,
-      //   personName: 'thai',
+      //   personName: 'Thai',
       //   personRank: 0,
       //   personReligion: null,
       //   personStatus: true,
@@ -247,6 +251,16 @@ export default {
     },
     openModalChild() {
       this.modalVisibleChild = true
+    },
+
+    hideModal() {
+      // Sử dụng $refs để truy cập modal và ẩn nó đi
+      this.modalVisibleParent = false
+      this.modalVisibleFather = false
+      this.modalVisibleMother = false
+      this.modalVisibleHusband = false
+      this.modalVisibleSibling = false
+      this.modalVisibleChild = false
     },
   },
 }

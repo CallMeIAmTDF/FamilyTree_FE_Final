@@ -31,7 +31,7 @@
           <b-img
             thumbnail
             fluid
-            src="/img/Ảnh màn hình 2023-11-12 lúc 20.19.33.png"
+            src="/img/so_do_cay.png"
             alt="Image 1"
             style="
               width: 380px;

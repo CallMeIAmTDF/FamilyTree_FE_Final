@@ -11,20 +11,36 @@
           <b-navbar-nav v-if="showHeader">
             <b-nav-item href="/" active>Trang chủ</b-nav-item>
             <b-nav-item href="/danh_sach_so_do" active>Danh sách</b-nav-item>
+            <!-- <b-nav-item href="/so_do_cay?id=16" active>Sơ đồ</b-nav-item> -->
            
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
             <!-- Search của trang sơ đồ -->
-            <button
+            <b-button
               v-if="showSearch"
               v-b-modal.search-info
-              class="btn btn-light"
+              class="mr-3"
+              pill
+              variant="outline-light"
+              style="border: none;"
             >
               <strong>Tìm kiếm</strong>
               <b-icon icon="search" style="font-size: 20px"></b-icon>
-            </button>
+            </b-button>
+
+            <!-- Chia sẻ sơ đồ trang sơ đồ -->
+            <b-button
+              v-if="showSearch"
+              v-b-modal.search-info
+              pill
+              variant="outline-info"
+              style="border: none; color: #fff;"
+            >
+              <strong>Chia sẻ</strong>
+              <b-icon icon="search" style="font-size: 20px"></b-icon>
+            </b-button>
 
             <!-- Đăng nhập đăng kí của trang account -->
             <router-link
@@ -64,7 +80,6 @@
               <template #button-content>
                 <strong>{{ userInfo.fullName }}</strong>
               </template>
-              <b-dropdown-item>Profile</b-dropdown-item>
               <b-dropdown-item @click="signOut">Sign Out</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
