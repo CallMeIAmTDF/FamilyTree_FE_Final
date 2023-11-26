@@ -88,10 +88,8 @@
               name=""
               :disabled="form.selectedParent === ''"
             >
-              <option selected>Select one</option>
-              <option value="">New Delhi</option>
-              <option value="">Istanbul</option>
-              <option value="">Jakarta</option>
+              <option>Select one</option>
+              
             </b-form-select>
           </div>
         </div>

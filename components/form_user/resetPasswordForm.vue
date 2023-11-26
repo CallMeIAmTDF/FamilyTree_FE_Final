@@ -11,8 +11,8 @@
         <b-form
           class="b-form"
           enctype="multipart/form-data"
-          @submit="onSubmit"
-          @reset="onReset"
+          @submit.prevent="onSubmit"
+          @reset.prevent="onReset"
         >
           <div class="row">
             <div class="col-md">
@@ -39,7 +39,7 @@
               >Reset</b-button
             >
             <b-button type="submit" variant="primary" :disabled="!validForm"
-              >Đăng nhập</b-button
+              >Xác nhận</b-button
             >
           </div>
 
@@ -79,8 +79,7 @@ export default {
   },
 
   methods: {
-    onReset(event) {
-      event.preventDefault()
+    onReset() {
       // Reset our form values
       this.form.email = ''
       this.emailErrorMessage = ''
@@ -109,9 +108,28 @@ export default {
       this.validateForm()
     },
 
-    onSubmit(event) {
+    async onSubmit(event) {
       event.preventDefault()
-      alert(JSON.stringify(this.form))
+
+      try {
+        // Gọi API để đặt lại mật khẩu
+        const response = await this.$axios.$post(
+          `http://localhost:8080/users/forgetPassword?email=${this.form.email}`
+        )
+
+        // Xử lý kết quả từ API (nếu cần)
+        // eslint-disable-next-line no-console
+        console.log(response.data) // In thông tin từ API response nếu muốn
+
+        this.$router.push('/account/xac_nhan_otp')
+      } catch (error) {
+        // Xử lý lỗi nếu gọi API không thành công
+        // eslint-disable-next-line no-console
+        console.error(error)
+
+        // Xóa thông tin trên form khi gặp lỗi
+        this.onReset()
+      }
     },
   },
 }

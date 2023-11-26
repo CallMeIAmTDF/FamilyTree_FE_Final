@@ -1,7 +1,17 @@
-export default function ({ $axios, redirect }) {
+export default function ({ $axios, redirect, route }) {
   // Intercept request trước khi gửi
   $axios.onRequest((config) => {
     const accessToken = localStorage.getItem('accessToken')
+
+    // Kiểm tra xem nếu đường dẫn là trang đăng nhập, quên mật khẩu hoặc xác nhận OTP
+    if (
+      route.path === '/account/dang_nhap' ||
+      route.path === '/account/quen_mat_khau' ||
+      route.path === '/account/xac_nhan_otp'
+    ) {
+      // Không yêu cầu accessToken cho các trang đăng nhập, quên mật khẩu hoặc xác nhận OTP
+      return config
+    }
 
     if (accessToken) {
       // Thêm Authorization header vào request
@@ -16,7 +26,6 @@ export default function ({ $axios, redirect }) {
 
   // Intercept response sau khi nhận được
   $axios.onError(async (error) => {
-    // console.log({error})
     const originalRequest = error.config
 
     // Nếu response trả về mã lỗi 401 (Unauthorized) tức là accessToken hết hạn
@@ -25,6 +34,15 @@ export default function ({ $axios, redirect }) {
       error.response.status === 401 &&
       !originalRequest._retry
     ) {
+      // Kiểm tra xem nếu đường dẫn là trang đăng nhập, quên mật khẩu hoặc xác nhận OTP
+      if (
+        route.path === '/account/dang_nhap' ||
+        route.path === '/account/quen_mat_khau' ||
+        route.path === '/account/xac_nhan_otp'
+      ) {
+        return Promise.reject(error)
+      }
+
       originalRequest._retry = true
       const refreshToken = localStorage.getItem('refreshToken')
 

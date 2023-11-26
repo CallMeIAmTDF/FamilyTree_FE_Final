@@ -174,19 +174,19 @@ import FormInforHusband from '../form_add/form_add_spouse/formInforHusband.vue'
 export default {
   components: {
     formInforParent,
-    formInforFather,
+    formInforFather, 
     formInforMother,
     formInforSibling,
     formInforChild,
     FormInforHusband,
   },
 
-  props: {
-    person: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
+  // props: {
+  //   person: {
+  //     type: Object,
+  //     default: () => ({}),
+  //   },
+  // },
 
   data() {
     return {
@@ -197,32 +197,32 @@ export default {
       modalVisibleSibling: false,
       modalVisibleChild: false,
 
-      // person: {
-      //   familyTreeId: 10,
-      //   fatherId: null,
-      //   groupChildId: 44,
-      //   motherId: null,
-      //   parentsId: null,
-      //   personAddress: null,
-      //   personCreatedAt: '2023-11-23T01:55:50.085+00:00',
-      //   personDeletedAt: null,
-      //   personDescription: null,
-      //   personDob: null,
-      //   personDod: null,
-      //   personEthnic: null,
-      //   personGender: false,
-      //   personId: 44,
-      //   personImage: null,
-      //   personIsDeleted: null,
-      //   personJob: null,
-      //   personName: 'Thai',
-      //   personRank: 0,
-      //   personReligion: null,
-      //   personStatus: true,
-      //   personStory: null,
-      //   personUpdatedAt: null,
-      //   siblingNum: 1,
-      // },
+      person: {
+        familyTreeId: 11,
+        fatherId: 49,
+        groupChildId: 47,
+        motherId: 48,
+        parentsId: 34,
+        personAddress: null,
+        personCreatedAt: '2023-11-24 20:54:10.607',
+        personDeletedAt: null,
+        personDescription: null,
+        personDob: null,
+        personDod: null,
+        personEthnic: null,
+        personGender: false,
+        personId: 51,
+        personImage: null,
+        personIsDeleted: null,
+        personJob: null,
+        personName: 'Nguyễn Thành Chung',
+        personRank: 0,
+        personReligion: null,
+        personStatus: true,
+        personStory: null,
+        personUpdatedAt: null,
+        siblingNum: 1,
+      },
     }
   },
 

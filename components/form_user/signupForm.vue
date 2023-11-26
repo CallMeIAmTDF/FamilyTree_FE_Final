@@ -322,7 +322,7 @@ export default {
         await this.$axios.$post(`http://localhost:8080/users/register`, {
           userFullName: this.form.user_fullname,
           userEmail: this.form.user_email,
-          userPassword: this.form.user_password,
+          userPassword: this.form.user_password, 
           userImage: this.form.user_image,
           userGender: this.form.user_gender,
           userDob: this.form.user_dob,
