@@ -481,6 +481,8 @@ export default {
       try {
         const childPersonId = this.form.selectedChildren // Lấy giá trị personId của selectedChildren
         const level = parseFloat(this.form.selectedLevel)
+        // eslint-disable-next-line no-console
+        console.log('onSubmit event triggered')
 
         // Tìm thông tin chi tiết của selectedChildren từ danh sách children
         const selectedChild = this.children.find(
@@ -490,6 +492,20 @@ export default {
         if (selectedChild) {
           const siblingNumCurrent = selectedChild.siblingNum // Lấy giá trị siblingNum của selectedChildren
           const siblingNumNext = siblingNumCurrent + level
+
+          // Xác định fatherId và motherId dựa trên giới tính của người được tạo
+          let fatherId = null
+          let motherId = null
+
+          if (this.form.selectedSex === 'true') {
+            // Giới tính là nam
+            fatherId = this.item.personId
+            motherId = this.form.selectedMother
+          } else {
+            // Giới tính là nữ
+            fatherId = this.form.selectedFather
+            motherId = this.item.personId
+          }
 
           await this.$axios.$post(
             `http://localhost:8080/person/createChildren?siblingId=${childPersonId}`,
@@ -509,14 +525,60 @@ export default {
               personRank: null,
               personDescription: null,
               personStory: null,
-              fatherId: this.item.personId,
-              motherId: this.form.selectedMother,
+              fatherId,
+              motherId,
               personImage: this.form.imageSrc,
               siblingNum: siblingNumNext,
               groupChildId: null,
             }
           )
 
+          // eslint-disable-next-line no-console
+          console.log('success')
+
+          this.$emit('personCreated')
+
+          this.showSuccessToast('Thêm người vào sơ đồ thành công')
+        } else {
+          // Xác định fatherId và motherId dựa trên giới tính của người được tạo
+          let fatherId = null
+          let motherId = null
+
+          if (this.form.selectedSex === 'true') {
+            // Giới tính là nam
+            fatherId = this.item.personId
+            motherId = this.form.selectedMother
+          } else {
+            // Giới tính là nữ
+            fatherId = this.form.selectedFather
+            motherId = this.item.personId
+          }
+
+          await this.$axios.$post(
+            `http://localhost:8080/person/createChildren`,
+            {
+              personName: this.form.name,
+              personGender: this.form.selectedSex,
+              personDob: this.form.birthday,
+              personJob: this.form.job,
+              personReligion: null,
+              personEthnic: null,
+              personDod: this.form.deathday,
+              personAddress: this.form.address,
+              parentsId: null,
+              // familyTreeId: this.familyTreeId,
+              familyTreeId: this.item.familyTreeId,
+              personStatus: this.form.selectedStatus,
+              personRank: null,
+              personDescription: null,
+              personStory: null,
+              fatherId,
+              motherId,
+              personImage: this.form.imageSrc,
+              siblingNum: null,
+              groupChildId: null,
+            }
+          )
           // eslint-disable-next-line no-console
           console.log('success')
 

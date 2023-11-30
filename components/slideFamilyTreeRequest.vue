@@ -2,7 +2,7 @@
   <!-- Phần giao diện -->
   <div>
     <div class="row d-flex align-items-center mb-3">
-      <h2 class="col-md-4">Các sơ đồ tham gia</h2>
+      <h2 class="col-md-4">Sơ đồ chờ xác nhận</h2>
 
       <b-form-input
         v-model="filter"
@@ -39,11 +39,6 @@
           style="max-width: 20rem"
           class="mb-2 p-2"
         >
-          <a
-            :href="`/so_do_cay?id=${tree.familyTreeId}`"
-            class="btn btn-primary"
-            >Xem sơ đồ</a
-          >
         </b-card>
       </b-col>
     </b-row>
@@ -54,7 +49,7 @@
 export default {
   data() {
     return {
-      joinedTrees: [], // Dữ liệu sơ đồ sở hữu
+      requestJoin: [], // Dữ liệu sơ đồ sở hữu
       currentPage: 1, // Trang hiện tại
       perPage: 6, // Số lượng sơ đồ muốn hiển thị trên mỗi trang
       filter: '', // Từ khóa tìm kiếm
@@ -68,11 +63,11 @@ export default {
       return this.filteredTrees.slice(start, end)
     },
     totalTrees() {
-      return this.joinedTrees.length
+      return this.requestJoin.length
     },
     // Tính toán danh sách sơ đồ đã lọc dựa trên từ khóa tìm kiếm
     filteredTrees() {
-      return this.joinedTrees.filter((tree) =>
+      return this.requestJoin.filter((tree) =>
         tree.familyTreeName.toLowerCase().includes(this.filter.toLowerCase())
       )
     },
@@ -87,7 +82,7 @@ export default {
         const response = await this.$axios.$get(
           'http://localhost:8080/familyTree/list'
         )
-        this.joinedTrees = response.data.joined
+        this.requestJoin = response.data.requestJoin
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error)

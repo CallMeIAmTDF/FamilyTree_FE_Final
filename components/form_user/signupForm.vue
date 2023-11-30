@@ -18,7 +18,7 @@
           <!-- Trường họ và tên -->
           <b-form-group
             label="Họ và tên:"
-            class="col-md-6"
+            class="col-md"
             :state="isNameValid"
             :invalid-feedback="nameErrorMessage"
           >
@@ -30,19 +30,10 @@
               @blur="validateName"
             ></b-form-input>
           </b-form-group>
-
-          <!-- Trường chọn hình ảnh từ file -->
-          <b-form-group label="Chọn ảnh đại diện:" class="col-md-6">
-            <b-form-file
-              placeholder="Chọn ảnh..."
-              accept="image/*"
-              @change="onFileChosen"
-            ></b-form-file>
-          </b-form-group>
         </div>
 
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md">
             <!-- Trường email -->
             <b-form-group
               label="Email:"
@@ -90,55 +81,6 @@
             </b-form-group>
           </div>
 
-          <!-- Hiển thị hình ảnh -->
-          <div class="col-md-6 d-flex justify-content-center">
-            <img
-              class="mt-2"
-              width="200px"
-              height="100%"
-              :src="
-                form.user_image
-                  ? form.user_image
-                  : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
-              "
-              alt="person_image"
-              style="object-fit: cover"
-            />
-          </div>
-        </div>
-
-        <div class="row">
-          <!-- Trường chọn ngày sinh -->
-          <b-form-group
-            label="Ngày sinh:"
-            class="col-md-4"
-            :state="isBirthdayValid"
-            :invalid-feedback="birthdayErrorMessage"
-          >
-            <b-form-datepicker
-              v-model="form.user_dob"
-              class="mb-2"
-              @input="validateDateOfBirth"
-            ></b-form-datepicker>
-          </b-form-group>
-
-          <!-- Trường chọn địa chỉ -->
-          <b-form-group label="Địa chỉ:" class="col-md-4">
-            <b-form-input
-              v-model="form.user_address"
-              type="text"
-              placeholder="Nhập địa chỉ ..."
-            ></b-form-input>
-          </b-form-group>
-
-          <!-- Trường chọn địa chỉ -->
-          <b-form-group label="Số điện thoại:" class="col-md-4">
-            <b-form-input
-              v-model="form.user_phone"
-              type="text"
-              placeholder="Nhập số điện thoại ..."
-            ></b-form-input>
-          </b-form-group>
         </div>
 
         <!-- Sử lý các sự kiện -->

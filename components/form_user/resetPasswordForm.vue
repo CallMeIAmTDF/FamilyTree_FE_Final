@@ -30,6 +30,34 @@
                   @blur="validateEmail"
                 ></b-form-input>
               </b-form-group>
+
+              <!-- Trường password -->
+              <b-form-group
+                label="Mật khẩu mới:"
+                :state="isPasswordlValid"
+                :invalid-feedback="passwordErrorMessage"
+              >
+                <b-form-input
+                  v-model="form.password"
+                  :type="passwordFieldType"
+                  placeholder="Nhập mật khẩu mới..."
+                  required
+                  @blur="validatePassword"
+                ></b-form-input>
+                <b-input-group-append>
+                  <b-form-checkbox
+                    v-model="showPassword"
+                    switch
+                    @change="togglePasswordVisibility"
+                  ></b-form-checkbox>
+                  <label
+                    class="password-toggle-label"
+                    @click="togglePasswordVisibility"
+                  >
+                    Show Password
+                  </label>
+                </b-input-group-append>
+              </b-form-group>
             </div>
           </div>
 
@@ -61,11 +89,15 @@ export default {
     return {
       form: {
         email: '',
+        password: '',
       },
-
+      showPassword: false,
       validForm: false,
       isEmailValid: false,
+      isPasswordlValid: false,
       emailErrorMessage: '',
+      passwordErrorMessage: '',
+      passwordFieldType: 'password',
     }
   },
 
@@ -79,15 +111,24 @@ export default {
   },
 
   methods: {
-    onReset() {
+    onReset(event) {
+      event.preventDefault()
       // Reset our form values
+      this.showPassword = false
       this.form.email = ''
+      this.form.password = ''
       this.emailErrorMessage = ''
+      this.passwordErrorMessage = ''
     },
 
     validateForm() {
       // Kiểm tra các trường khác
-      if (this.form.email.length > 0 && this.form.email.length <= 50) {
+      if (
+        this.form.email.length > 0 &&
+        this.form.email.length <= 50 &&
+        this.form.password.length > 0 &&
+        this.form.password.length <= 50
+      ) {
         this.validForm = true
       } else {
         this.validForm = false
@@ -108,6 +149,25 @@ export default {
       this.validateForm()
     },
 
+    validatePassword() {
+      if (this.form.password.length === 0) {
+        this.isPasswordValid = false
+        this.passwordErrorMessage = 'Vui lòng nhập password.'
+      } else if (this.form.password.length > 50) {
+        this.isPasswordValid = false
+        this.passwordErrorMessage = 'Password không được vượt quá 50 ký tự.'
+      } else {
+        this.ispasswordValid = true
+        this.passwordErrorMessage = ''
+      }
+      this.validateForm()
+    },
+
+    togglePasswordVisibility() {
+      this.passwordFieldType =
+        this.passwordFieldType === 'password' ? 'text' : 'password'
+    },
+
     async onSubmit(event) {
       event.preventDefault()
 
@@ -121,7 +181,13 @@ export default {
         // eslint-disable-next-line no-console
         console.log(response.data) // In thông tin từ API response nếu muốn
 
-        this.$router.push('/account/xac_nhan_otp')
+        this.$router.push({
+          path: '/account/xac_nhan_otp',
+          query: {
+            email: this.form.email,
+            password: this.form.password,
+          },
+        })
       } catch (error) {
         // Xử lý lỗi nếu gọi API không thành công
         // eslint-disable-next-line no-console

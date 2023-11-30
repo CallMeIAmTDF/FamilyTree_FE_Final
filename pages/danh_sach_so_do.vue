@@ -22,6 +22,14 @@
           >
             Sơ đồ tham gia
           </a>
+          <a
+            :class="{ active: activeTab === 'requestJoin' }"
+            class="nav-item nav-link"
+            style="cursor: pointer; font-weight: bold;"
+            @click="activeTab = 'requestJoin'"
+          >
+            Sơ đồ đang chờ xác nhận
+          </a>
         </div>
         <button
           class="btn btn-success my-4"
@@ -34,6 +42,7 @@
       <div class="p-4" style="background-color: #ddd; border-radius: 16px">
         <slide-family-tree-used v-if="activeTab === 'used'" />
         <slide-family-tree-joined v-else-if="activeTab === 'joined'" />
+        <slide-family-tree-request v-else-if="activeTab === 'requestJoin'" />
       </div>
       <div class="p-4"></div>
     </div>
@@ -51,12 +60,14 @@
 
 <script>
 import SlideFamilyTreeJoined from '~/components/slideFamilyTreeJoined.vue'
+import SlideFamilyTreeRequest from '~/components/slideFamilyTreeRequest.vue'
 import SlideFamilyTreeUsed from '~/components/slideFamilyTreeUsed.vue'
 
 export default {
   components: {
     SlideFamilyTreeUsed,
     SlideFamilyTreeJoined,
+    SlideFamilyTreeRequest,
   },
   data() {
     return {

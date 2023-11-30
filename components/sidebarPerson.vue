@@ -95,8 +95,18 @@
                   name="radio-sex"
                   required
                 >
-                  <b-form-radio value="true">Nam</b-form-radio>
-                  <b-form-radio value="false">Nữ</b-form-radio>
+                  <b-form-radio
+                    value="true"
+                    :disabled="form.selectedSex !== ''"
+                  >
+                    Nam
+                  </b-form-radio>
+                  <b-form-radio
+                    value="false"
+                    :disabled="form.selectedSex !== ''"
+                  >
+                    Nữ
+                  </b-form-radio>
                 </b-form-radio-group>
               </b-form-group>
 

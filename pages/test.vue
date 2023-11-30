@@ -23,7 +23,7 @@ export default {
       createdPersonData: {
         personId: 43,
         personName: 'bố test2',
-        personGender: false,
+        personGender: true,
         personDob: '1966-03-12T00:00:00.000+00:00',
         personJob: 'bác sĩ',
         personReligion: "Phật",

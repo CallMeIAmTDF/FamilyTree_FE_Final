@@ -199,10 +199,10 @@ export default {
 
       person: {
         familyTreeId: 11,
-        fatherId: 49,
-        groupChildId: 47,
-        motherId: 48,
-        parentsId: 34,
+        fatherId: 65,
+        groupChildId: 49,
+        motherId: 66,
+        parentsId: 50,
         personAddress: null,
         personCreatedAt: '2023-11-24 20:54:10.607',
         personDeletedAt: null,
@@ -211,7 +211,7 @@ export default {
         personDod: null,
         personEthnic: null,
         personGender: false,
-        personId: 51,
+        personId: 49,
         personImage: null,
         personIsDeleted: null,
         personJob: null,

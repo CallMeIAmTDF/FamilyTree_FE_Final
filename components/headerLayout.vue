@@ -12,7 +12,6 @@
             <b-nav-item href="/" active>Trang chủ</b-nav-item>
             <b-nav-item href="/danh_sach_so_do" active>Danh sách</b-nav-item>
             <!-- <b-nav-item href="/so_do_cay?id=16" active>Sơ đồ</b-nav-item> -->
-           
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
@@ -24,22 +23,32 @@
               class="mr-3"
               pill
               variant="outline-light"
-              style="border: none;"
+              style="border: none"
             >
               <strong>Tìm kiếm</strong>
-              <b-icon icon="search" style="font-size: 20px"></b-icon>
             </b-button>
 
             <!-- Chia sẻ sơ đồ trang sơ đồ -->
             <b-button
               v-if="showSearch"
-              v-b-modal.search-info
+              v-b-modal.share-box
               pill
               variant="outline-info"
-              style="border: none; color: #fff;"
+              class="mr-3"
+              style="border: none; color: #fff"
             >
               <strong>Chia sẻ</strong>
-              <b-icon icon="search" style="font-size: 20px"></b-icon>
+            </b-button>
+
+            <!-- Danh sách ngươi dùng -->
+            <b-button
+              v-if="showSearch"
+              v-b-modal.control-user
+              pill
+              variant="outline-primary"
+              style="border: none; color: #fff"
+            >
+              <strong>QL người dùng</strong>
             </b-button>
 
             <!-- Đăng nhập đăng kí của trang account -->
@@ -94,16 +103,34 @@
       >
         <search-person />
       </b-modal>
+      <b-modal id="share-box" hide-footer title="Chia sẻ thông tin của ">
+        <share-box />
+      </b-modal>
+      <b-modal
+        id="control-user"
+        hide-footer
+        title="Quản lý thông tin người dùng của "
+      >
+        <list-tree-user />
+      </b-modal>
     </header>
   </div>
 </template>
 
 <script>
+import ListTreeUser from './listTreeUser.vue'
 import BellHeader from './notificationBell/bellHeader.vue'
 import NotificationCard from './notificationBell/notificationCard.vue'
 import searchPerson from './searchPerson.vue'
+import ShareBox from './shareBox.vue'
 export default {
-  components: { searchPerson, BellHeader, NotificationCard },
+  components: {
+    searchPerson,
+    BellHeader,
+    NotificationCard,
+    ShareBox,
+    ListTreeUser,
+  },
 
   data() {
     return {
@@ -156,11 +183,15 @@ export default {
   },
 
   mounted() {
-    // Kiểm tra nếu có userInfo trong localStorage
-    if (localStorage.getItem('userInfo')) {
-      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    if (typeof window !== 'undefined') {
+      // Kiểm tra nếu có userInfo trong localStorage
+      if (localStorage.getItem('userInfo')) {
+        this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      }
     }
   },
+
+  created() {},
 
   methods: {
     async signOutWithToken(token) {

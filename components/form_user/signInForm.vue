@@ -33,14 +33,14 @@
 
               <!-- Trường password -->
               <b-form-group
-                label="Password:"
+                label="Mật khẩu:"
                 :state="isPasswordlValid"
                 :invalid-feedback="passwordErrorMessage"
               >
                 <b-form-input
                   v-model="form.password"
                   :type="passwordFieldType"
-                  placeholder="Nhập password..."
+                  placeholder="Nhập mật khẩu..."
                   required
                   @blur="validatePassword"
                 ></b-form-input>
