@@ -149,8 +149,12 @@
 </template>
 <script>
 export default {
-
   props: {
+    id: {
+      type: Number,
+      default: null,
+    },
+
     item: {
       type: Object,
       default: () => ({}),
@@ -189,6 +193,7 @@ export default {
       },
     },
   },
+
   methods: {
     onReset(event) {
       event.preventDefault()
@@ -314,7 +319,7 @@ export default {
     async onSubmit() {
       try {
         await this.$axios.$post(
-          `http://localhost:8080/person/createSpouse?personId=${this.item.personId}`,
+          `http://localhost:8080/person/createSpouse?personId=${this.id}`,
           {
             personName: this.form.name,
             personGender: this.form.selectedSex,
@@ -345,6 +350,8 @@ export default {
         this.$emit('personCreated')
 
         this.showSuccessToast('Thêm chồng vào sơ đồ thành công')
+
+        await this.getPersonFamily();
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error)

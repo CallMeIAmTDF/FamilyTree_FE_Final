@@ -3,9 +3,9 @@
     <div class="d-flex justify-content-center">
       <b-img
         :src="
-          person.personImage
-            ? person.personImage
-            : person.personGender === true
+          personInfo.personImage
+            ? personInfo.personImage
+            : personInfo.personGender === true
             ? 'https://i.pinimg.com/originals/8d/a5/c3/8da5c3a06407303694d6381b23368f02.png'
             : 'https://1.bp.blogspot.com/-_McRf03XFs0/XoVUziYcpFI/AAAAAAAAa2A/JjltmHu8M_EMP09rUkB3M7n1FKmrzxAAgCLcBGAsYHQ/s1600/Anh-dai-dien-cho-nu%2B%252839%2529.jpg'
         "
@@ -19,16 +19,18 @@
     <div class="">
       <h3 class="text-center">Thông tin cá nhân</h3>
       <div class="mt-4" style="height: 450px">
-        <h6 style="font-weight: bold">Họ và tên: {{ person.personName }}</h6>
+        <h6 style="font-weight: bold">
+          Họ và tên: {{ personInfo.personName }}
+        </h6>
         <h6>Giới tính: {{ displayGender }}</h6>
         <h6>Tình trạng: {{ displayStatus }}</h6>
-        <p>Nghề nghiệp: {{ person.personJob }}</p>
-        <p>Địa chỉ: {{ person.personAddress }}</p>
-        <p>Dân tộc: {{ person.personEthnic }}</p>
-        <p>Tôn giáo: {{ person.personReligion }}</p>
+        <p>Nghề nghiệp: {{ personInfo.personJob }}</p>
+        <p>Địa chỉ: {{ personInfo.personAddress }}</p>
+        <p>Dân tộc: {{ personInfo.personEthnic }}</p>
+        <p>Tôn giáo: {{ personInfo.personReligion }}</p>
         <p>Ngày sinh: {{ formatBirthDate }}</p>
         <p>Ngày mất: {{ formatDeathDate }}</p>
-        <span>Mô tả: {{ person.personDescription }}</span>
+        <span>Mô tả: {{ personInfo.personDescription }}</span>
       </div>
 
       <hr />
@@ -45,7 +47,7 @@
         id="modalEditPerson"
         centered
         hide-footer
-        :title="'Sửa thông tin của ' + person.personName"
+        :title="'Sửa thông tin của ' + personInfo.personName"
       >
         <b-form
           v-if="show"
@@ -248,9 +250,9 @@
 <script>
 export default {
   props: {
-    person: {
-      type: Object,
-      default: () => ({}),
+    personid: {
+      type: Number,
+      required: true,
     },
   },
 
@@ -270,6 +272,7 @@ export default {
         religion: '',
         description: '',
       },
+      personInfo: {},
       show: true,
       familyTreeId: null,
       validForm: false,
@@ -284,17 +287,21 @@ export default {
 
   computed: {
     displayGender() {
-      return this.person.personGender === true ? 'Nam' : 'Nữ'
+      return this.personInfo.personGender === true ? 'Nam' : 'Nữ'
     },
     displayStatus() {
-      return this.person.personStatus === true ? 'Còn sống' : 'Từ trần'
+      return this.personInfo.personStatus === true ? 'Còn sống' : 'Từ trần'
     },
     formatBirthDate() {
-      return this.formatDate(this.person.personDob)
+      return this.formatDate(this.personInfo.personDob)
     },
     formatDeathDate() {
-      return this.formatDate(this.person.personDod)
+      return this.formatDate(this.personInfo.personDod)
     },
+  },
+
+  created() {
+    this.getPersonInfo()
   },
 
   methods: {
@@ -436,20 +443,38 @@ export default {
     },
 
     editPerson() {
-      this.form.name = this.person.personName
-      this.form.imageSrc = this.person.personImage
-      this.form.selectedSex = this.person.personGender
-      this.form.selectedStatus = this.person.personStatus
-      this.form.address = this.person.personAddress
-      this.form.birthday = this.person.personDob
-      this.form.deathday = this.person.personDod
-      this.form.job = this.person.personJob
-      this.form.ethnic = this.person.personEthnic
-      this.form.religion = this.person.personReligion
-      this.form.description = this.person.personDescription
+      this.form.name = this.personInfo.personName
+      this.form.imageSrc = this.personInfo.personImage
+      this.form.selectedSex = this.personInfo.personGender
+      this.form.selectedStatus = this.personInfo.personStatus
+      this.form.address = this.personInfo.personAddress
+      this.form.birthday = this.personInfo.personDob
+      this.form.deathday = this.personInfo.personDod
+      this.form.job = this.personInfo.personJob
+      this.form.ethnic = this.personInfo.personEthnic
+      this.form.religion = this.personInfo.personReligion
+      this.form.description = this.personInfo.personDescription
 
       // Hiển thị modal sửa thông tin
       this.$bvModal.show('modalEditPerson')
+    },
+
+    async getPersonInfo() {
+      try {
+        const response = await this.$axios.$get(
+          `http://localhost:8080/person/getInfo?personId=${this.personid}`
+        )
+        // // eslint-disable-next-line no-console
+        // console.log('successn get info')
+
+        // // eslint-disable-next-line no-console
+        // console.log(response)
+
+        this.personInfo = response.data
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error)
+      }
     },
 
     async onSubmit() {
@@ -457,7 +482,7 @@ export default {
         const response = await this.$axios.$put(
           `http://localhost:8080/person/update`,
           {
-            personId: this.person.personId,
+            personId: this.personid,
             personName: this.form.name,
             personDob: this.form.birthday,
             personJob: this.form.job,
@@ -504,7 +529,7 @@ export default {
     async deletePerson() {
       try {
         await this.$axios.$delete(
-          `http://localhost:8080/person/delete?personId=${this.person.personId}`
+          `http://localhost:8080/person/delete?personId=${this.personid}`
         )
 
         this.showSuccessToast('Xóa thành viên thành công')

@@ -93,7 +93,7 @@
         <b-form-group label="Chọn bố hoặc mẹ cho anh-chị-em" class="col-md-6">
           <b-form-select
             id="parents"
-            v-model="selectedParent"
+            v-model="form.selectedParent"
             @change="onSelectedParentChange"
           >
             <b-form-select-option :value="''" disabled
@@ -101,10 +101,10 @@
             >
             <b-form-select-option
               v-for="parent in parents"
-              :key="parent.id"
-              :value="parent.id"
+              :key="parent.personId"
+              :value="parent.personId"
             >
-              {{ parent.name }}
+              {{ parent.personName }}
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
@@ -115,8 +115,9 @@
         >
           <b-form-select
             id="spouses"
-            v-model="selectedSpouse"
-            :disabled="!parentSelected"
+            v-model="form.selectedSpouse"
+            :disabled="form.selectedParent === null"
+            @change="fetchChildren"
           >
             <b-form-select-option :value="''">Chọn</b-form-select-option>
             <b-form-select-option
@@ -228,6 +229,11 @@
 <script>
 export default {
   props: {
+    id: {
+      type: Number,
+      default: null,
+    },
+
     item: {
       type: Object,
       default: () => ({}),
@@ -246,6 +252,8 @@ export default {
         job: '',
         deathday: '',
         selectedChildren: null,
+        selectedParent: null,
+        selectedSpouse: null,
         selectedLevel: '',
       },
       children: [],
@@ -253,9 +261,6 @@ export default {
       spouses: [],
       show: true,
       familyTreeId: null,
-      selectedParent: null,
-      selectedSpouse: null,
-      parentSelected: false,
       validForm: false,
       isNameValid: false,
       nameErrorMessage: '',
@@ -275,16 +280,15 @@ export default {
     },
   },
 
+  // created() {},
+
   created() {
     // Lấy ID sản phẩm từ query parameter khi trang được tạo
     this.familyTreeId = this.$route.query.id
 
-    this.fetchChildrenBasedOnParent()
-  },
-
-  mounted() {
-    this.fetchParents()
-    this.fetchSpouses()
+    this.fetchParent()
+    this.fetchSpouse()
+    this.fetchChildren()
   },
 
   methods: {
@@ -296,10 +300,10 @@ export default {
       this.form.imageSrc = ''
       this.form.selectedSex = ''
       this.form.selectedStatus = ''
-      this.selectedParent = ''
-      this.form.selectedChildren = ''
+      this.form.selectedParent = null
+      this.form.selectedChildren = null
       this.form.selectedLevel = ''
-      this.selectedSpouse = ''
+      this.form.selectedSpouse = null
       this.form.birthday = ''
       this.form.address = ''
       this.form.job = ''
@@ -421,64 +425,32 @@ export default {
       })
     },
 
-    onSelectedParentChange() {
-      // Lấy thông tin giới tính của bố và mẹ từ mảng parents
-      const selectedParentInfo = this.parents.find(
-        (parent) => parent.id === this.selectedParent
+    async fetchParent() {
+      const response = await this.$axios.$get(
+        `http://localhost:8080/person/getInfo?personId=${this.id}`
       )
 
-      // Kiểm tra giới tính của bố hoặc mẹ được chọn
-      if (selectedParentInfo) {
-        if (selectedParentInfo.gender === true) {
-          // Nếu chọn bố, thực hiện các hành động tương ứng
-          this.fetchChildrenBasedOnParent('father')
-        } else {
-          // Nếu chọn mẹ, thực hiện các hành động tương ứng
-          this.fetchChildrenBasedOnParent('mother')
-        }
-      }
+      const fatherId = response.data.fatherId
+      const motherId = response.data.motherId
 
-      this.parentSelected = this.selectedParent
-      // eslint-disable-next-line no-console
-      console.log('Selected Parent:', this.selectedParent) // Kiểm tra xem giá trị của selectedParent có hiển thị đúng không
-      this.selectedSpouse = ''
-      this.fetchSpouses()
-      this.fetchChildrenBasedOnParent()
-    },
+      // Tạo mảng chứa hai giá trị fatherId và motherId
+      const parentIds = [fatherId, motherId]
 
-    async fetchParents() {
-      try {
-        const response = await this.$axios.get(
-          `http://localhost:8080/person/getInfo?personId=${this.item.personId}`
-        )
-        const data = response.data.data
-
-        const fatherResponse = await this.$axios.get(
-          `http://localhost:8080/person/getInfo?personId=${data.fatherId}`
-        )
-        const motherResponse = await this.$axios.get(
-          `http://localhost:8080/person/getInfo?personId=${data.motherId}`
+      for (const parentId of parentIds) {
+        const parentInfo = await this.$axios.$get(
+          `http://localhost:8080/person/getInfo?personId=${parentId}`
         )
 
-        const fatherName = fatherResponse.data.data.personName
-        const motherName = motherResponse.data.data.personName
-
-        this.parents = [
-          { id: data.fatherId, name: fatherName, gender: true },
-          { id: data.motherId, name: motherName, gender: false },
-        ]
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(error)
+        this.parents.push(parentInfo.data)
       }
     },
 
-    async fetchSpouses() {
+    async fetchSpouse() {
       try {
-        const response = await this.$axios.get(
-          `http://localhost:8080/person/getInfo?personId=${this.selectedParent}`
+        const res = await this.$axios.get(
+          `http://localhost:8080/person/getInfo?personId=${this.form.selectedParent}`
         )
-        const data = response.data.data
+        const data = res.data.data
 
         const spouseResponse = await Promise.all(
           data.wife.concat(data.husband).map((spouseId) => {
@@ -488,33 +460,57 @@ export default {
           })
         )
 
-        this.spouses = spouseResponse.map((response) => response.data.data)
+        this.spouses = spouseResponse.map((res) => res.data.data)
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error)
       }
     },
 
-    async fetchChildrenBasedOnParent(parentType) {
+    async fetchChildren() {
       try {
-        let apiEndpoint = ''
+        let childrenIdList = []
+        if (!this.form.selectedSpouse) {
+          const apiEndpoint1 = `http://localhost:8080/person/getChild?fatherId=${this.form.selectedParent}`
+          const apiEndpoint2 = `http://localhost:8080/person/getChild?motherId=${this.form.selectedParent}`
 
-        // Xây dựng URL API dựa trên bố hoặc mẹ được chọn
-        if (parentType === 'father') {
-          apiEndpoint = `http://localhost:8080/person/getChild?fatherId=${this.selectedParent}`
+          const [response1, response2] = await Promise.all([
+            this.$axios.$get(apiEndpoint1),
+            this.$axios.$get(apiEndpoint2),
+          ])
+
+          const children1 = response1.data || []
+          const children2 = response2.data || []
+
+          childrenIdList = [...children1, ...children2]
+
+          this.children = childrenIdList
         } else {
-          apiEndpoint = `http://localhost:8080/person/getChild?motherId=${this.selectedParent}`
+          const apiEndpoint1 = `http://localhost:8080/person/getChild?fatherId=${this.form.selectedParent}&motherId=${this.form.selectedSpouse}`
+          const apiEndpoint2 = `http://localhost:8080/person/getChild?fatherId=${this.form.selectedSpouse}&motherId=${this.form.selectedParent}`
+          const [response1, response2] = await Promise.all([
+            this.$axios.$get(apiEndpoint1),
+            this.$axios.$get(apiEndpoint2),
+          ])
+
+          const children1 = response1.data || []
+          const children2 = response2.data || []
+
+          childrenIdList = [...children1, ...children2]
+
+          this.children = childrenIdList
         }
 
-        // Gọi API để lấy danh sách con
-        const response = await this.$axios.$get(apiEndpoint)
-        const childrenIdList = response.data || []
-
-        this.children = childrenIdList
+        // this.children = childrenInfoList.filter((child) => child !== null)
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Error fetching children:', error)
       }
+    },
+
+    onSelectedParentChange() {
+      this.fetchSpouse()
+      this.fetchChildren()
     },
 
     async onSubmit() {
@@ -535,32 +531,31 @@ export default {
           let fatherId = null
           let motherId = null
 
-          if (this.selectedParent !== null) {
-            const selectedParentInfo = this.parents.find(
-              (parent) => parent.id === this.selectedParent
-            )
+          // lọc giới tinh lấy ai đi của bố hoặc mẹ
+          const selectedParent = this.parents.find(
+            (parent) => parent.personId === this.form.selectedParent
+          )
 
-            if (selectedParentInfo) {
-              if (selectedParentInfo.gender === true) {
-                fatherId = this.selectedParent
-              } else {
-                motherId = this.selectedParent
-              }
+          if (selectedParent) {
+            if (selectedParent.personGender === 'Nam') {
+              fatherId = this.form.selectedParent
+            } else if (selectedParent.personGender === 'Nữ') {
+              motherId = this.form.selectedParent
             }
           }
 
-          // Điền giá trị cho fatherId và motherId nếu selectedSpouse chưa được chọn
+          // lọc giới tính lấy ai đi của người còn lại
+          if (this.form.selectedSpouse) {
+            const selectedSpouse = this.spouses.find(
+              (spouse) => spouse.personId === this.form.selectedSpouse
+            )
 
-          const selectedSpouseInfo = this.spouses.find(
-            (spouse) => spouse.personId !== this.selectedParent
-          )
-
-          if (selectedSpouseInfo) {
-            this.selectedSpouse = selectedSpouseInfo.personId
-            if (fatherId === null) {
-              fatherId = selectedSpouseInfo.personId
-            } else {
-              motherId = selectedSpouseInfo.personId
+            if (selectedSpouse) {
+              if (selectedSpouse.personGender === 'Nam') {
+                fatherId = this.form.selectedSpouse
+              } else if (selectedSpouse.personGender === 'Nữ') {
+                motherId = this.form.selectedSpouse
+              }
             }
           }
 

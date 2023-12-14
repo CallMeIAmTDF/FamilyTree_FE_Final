@@ -3,7 +3,6 @@
     <div id="zoom">
       <div id="tree" class="tree">
         <ul>
-
           <family-member
             v-if="newData.childrens && newData.childrens.length"
             :key="newData.data.id"
@@ -27,446 +26,7 @@ export default {
   },
   data() {
     return {
-      infoPersonFamily: {
-        1: {
-          data: {
-            id: 1,
-            parentId: 3,
-            info: {
-              name: 'Tôi',
-              gender: 'male',
-            },
-            spouseIds: [1],
-            groupId: 1,
-            side: '',
-            rank: 0,
-          },
-          fatherId: 4,
-          motherId: 19,
-          siblingIds: [10, 12],
-          spousePersonIds: [6],
-          childrenIds: [2, 7, 8],
-        },
-        2: {
-          data: {
-            id: 2,
-            parentId: 1,
-            info: {
-              name: 'Con 1',
-              gender: 'male',
-            },
-            spouseIds: [2],
-            groupId: 2,
-            side: '',
-            rank: -1,
-          },
-          fatherId: 1,
-          motherId: 6,
-          siblingIds: [7, 8],
-          spousePersonIds: [3],
-          childrenIds: [22],
-        },
-        3: {
-          data: {
-            id: 3,
-            parentId: null,
-            info: {
-              name: 'Vợ con 1',
-              gender: 'female',
-            },
-            spouseIds: [2],
-            groupId: 2,
-            side: '',
-            rank: -1,
-          },
-          fatherId: null,
-          motherId: null,
-          siblingIds: [],
-          spousePersonIds: [2],
-          childrenIds: [22],
-        },
-        4: {
-          data: {
-            id: 4,
-            parentId: 4,
-            info: {
-              name: 'Bố',
-              gender: 'male',
-            },
-            spouseIds: [3],
-            groupId: 3,
-            side: '0',
-            rank: 1,
-          },
-          fatherId: 5,
-          motherId: 15,
-          siblingIds: [13],
-          spousePersonIds: [19],
-          childrenIds: [1, 10, 12],
-        },
-        5: {
-          data: {
-            id: 5,
-            parentId: null,
-            info: {
-              name: 'Ông nội',
-              gender: 'male',
-            },
-            spouseIds: [4, 12],
-            groupId: 4,
-            side: '00',
-            rank: 2,
-          },
-          fatherId: null,
-          motherId: null,
-          siblingIds: [],
-          spousePersonIds: [15, 20],
-          childrenIds: [4, 13],
-        },
-        6: {
-          data: {
-            id: 6,
-            parentId: null,
-            info: {
-              name: 'Vợ tôi',
-              gender: 'female',
-            },
-            spouseIds: [1],
-            groupId: 1,
-            side: '',
-            rank: 0,
-          },
-          fatherId: null,
-          motherId: null,
-          siblingIds: [],
-          spousePersonIds: [1],
-          childrenIds: [2, 7, 8],
-        },
-        7: {
-          data: {
-            id: 7,
-            parentId: 1,
-            info: {
-              name: 'Con 2',
-              gender: 'male',
-            },
-            spouseIds: [5],
-            groupId: 5,
-            side: '',
-            rank: -1,
-          },
-          fatherId: 1,
-          motherId: 6,
-          siblingIds: [2, 8],
-          spousePersonIds: [],
-          childrenIds: [],
-        },
-        8: {
-          data: {
-            id: 8,
-            parentId: 1,
-            info: {
-              name: 'Con 3',
-              gender: 'female',
-            },
-            spouseIds: [6],
-            groupId: 6,
-            side: '',
-            rank: -1,
-          },
-          fatherId: 1,
-          motherId: 6,
-          siblingIds: [2, 7],
-          spousePersonIds: [9],
-          childrenIds: [],
-        },
-        9: {
-          data: {
-            id: 9,
-            parentId: null,
-            info: {
-              name: 'Chồng con 3',
-              gender: 'male',
-            },
-            spouseIds: [6],
-            groupId: 6,
-            side: '',
-            rank: -1,
-          },
-          fatherId: null,
-          motherId: null,
-          siblingIds: [],
-          spousePersonIds: [8],
-          childrenIds: [],
-        },
-        10: {
-          data: {
-            id: 10,
-            parentId: 3,
-            info: {
-              name: 'Chị tôi',
-              gender: 'female',
-            },
-            spouseIds: [7, 13],
-            groupId: 7,
-            side: '',
-            rank: 0,
-          },
-          fatherId: 4,
-          motherId: 19,
-          siblingIds: [1, 12],
-          spousePersonIds: [11, 21],
-          childrenIds: [],
-        },
-        11: {
-          data: {
-            id: 11,
-            parentId: null,
-            info: {
-              name: 'Chồng chị tôi',
-              gender: 'male',
-            },
-            spouseIds: [7],
-            groupId: 7,
-            side: '',
-            rank: 0,
-          },
-          fatherId: null,
-          motherId: null,
-          siblingIds: [],
-          spousePersonIds: [10],
-          childrenIds: [],
-        },
-        12: {
-          data: {
-            id: 12,
-            parentId: 3,
-            info: {
-              name: 'Em gái tôi',
-              gender: 'female',
-            },
-            spouseIds: [8],
-            groupId: 8,
-            side: '',
-            rank: 0,
-          },
-          fatherId: 4,
-          motherId: 19,
-          siblingIds: [1, 10],
-          spousePersonIds: [],
-          childrenIds: [],
-        },
-        13: {
-          data: {
-            id: 13,
-            parentId: 4,
-            info: {
-              name: 'Bác trai',
-              gender: 'male',
-            },
-            spouseIds: [9, 10],
-            groupId: 9,
-            side: '',
-            rank: 1,
-          },
-          fatherId: 5,
-          motherId: 15,
-          siblingIds: [4],
-          spousePersonIds: [14, 16],
-          childrenIds: [17],
-        },
-        14: {
-          data: {
-            id: 14,
-            parentId: null,
-            info: {
-              name: 'Bác gái',
-              gender: 'female',
-            },
-            spouseIds: [9],
-            groupId: 9,
-            side: '',
-            rank: 1,
-          },
-          fatherId: null,
-          motherId: null,
-          siblingIds: [],
-          spousePersonIds: [13],
-          childrenIds: [17],
-        },
-        15: {
-          data: {
-            id: 15,
-            parentId: null,
-            info: {
-              name: 'Bà nội',
-              gender: 'female',
-            },
-            spouseIds: [4],
-            groupId: 4,
-            side: '01',
-            rank: 2,
-          },
-          fatherId: null,
-          motherId: null,
-          siblingIds: [],
-          spousePersonIds: [5],
-          childrenIds: [4, 13],
-        },
-        16: {
-          data: {
-            id: 16,
-            parentId: null,
-            info: {
-              name: 'Bác gái 2',
-              gender: 'female',
-            },
-            spouseIds: [10],
-            groupId: 9,
-            side: '',
-            rank: 1,
-          },
-          fatherId: null,
-          motherId: null,
-          siblingIds: [],
-          spousePersonIds: [13],
-          childrenIds: [],
-        },
-        17: {
-          data: {
-            id: 17,
-            parentId: 9,
-            info: {
-              name: 'Con bác',
-              gender: 'female',
-            },
-            spouseIds: [11],
-            groupId: 10,
-            side: '',
-            rank: 1,
-          },
-          fatherId: 13,
-          motherId: 14,
-          siblingIds: [],
-          spousePersonIds: [18],
-          childrenIds: [],
-        },
-        18: {
-          data: {
-            id: 18,
-            parentId: null,
-            info: {
-              name: 'Chồng con bác',
-              gender: 'male',
-            },
-            spouseIds: [11],
-            groupId: 10,
-            side: '',
-            rank: 1,
-          },
-          fatherId: null,
-          motherId: null,
-          siblingIds: [],
-          spousePersonIds: [17],
-          childrenIds: [],
-        },
-        19: {
-          data: {
-            id: 19,
-            parentId: null,
-            info: {
-              name: 'Mẹ',
-              gender: 'female',
-            },
-            spouseIds: [3],
-            groupId: 3,
-            side: '1',
-            rank: 1,
-          },
-          fatherId: null,
-          motherId: null,
-          siblingIds: [],
-          spousePersonIds: [4],
-          childrenIds: [1, 10, 12],
-        },
-        20: {
-          data: {
-            id: 20,
-            parentId: null,
-            info: {
-              name: 'Bà nội 2',
-              gender: 'female',
-            },
-            spouseIds: [12],
-            groupId: 4,
-            side: '',
-            rank: 2,
-          },
-          fatherId: null,
-          motherId: null,
-          siblingIds: [],
-          spousePersonIds: [5],
-          childrenIds: [],
-        },
-        21: {
-          data: {
-            id: 21,
-            parentId: null,
-            info: {
-              name: 'Chồng 2 của chị',
-              gender: 'male',
-            },
-            spouseIds: [13],
-            groupId: 7,
-            side: '',
-            rank: 1,
-          },
-          fatherId: null,
-          motherId: null,
-          siblingIds: [],
-          spousePersonIds: [10],
-          childrenIds: [],
-        },
-        22: {
-          data: {
-            id: 22,
-            parentId: 2,
-            info: {
-              name: 'Con con 1',
-              gender: 'male',
-            },
-            spouseIds: [14],
-            groupId: 10,
-            side: '',
-            rank: -2,
-          },
-          fatherId: 2,
-          motherId: 3,
-          siblingIds: [],
-          spousePersonIds: [],
-          childrenIds: [23],
-        },
-        23: {
-          data: {
-            id: 23,
-            parentId: 14,
-            info: {
-              name: 'Cháu con 1',
-              gender: 'female',
-            },
-            spouseIds: [15],
-            groupId: 11,
-            side: '',
-            rank: -3,
-          },
-          fatherId: 22,
-          motherId: null,
-          siblingIds: [],
-          spousePersonIds: [],
-          childrenIds: [],
-        },
-      },
-
+      infoPersonFamily: {},
       newData: {},
     }
   },
@@ -476,10 +36,13 @@ export default {
       return [this.newData]
     },
   },
+
+  created() {
+    this.getPersonFamily()
+  },
+
   mounted() {
-    this.newData = this.convertFamilyData(this.infoPersonFamily, 5)
-    // eslint-disable-next-line no-console
-    console.log({ newData: this.newData })
+    this.newData = {}
 
     let scale = 0.833334
     let panning = false
@@ -539,7 +102,27 @@ export default {
       setTransform()
     })
   },
+  
   methods: {
+    async getPersonFamily() {
+      try {
+        const res = await this.$axios.get(
+          'http://localhost:8080/familyTree/getDataV2?pid=47'
+        )
+
+        this.infoPersonFamily = res.data.data
+
+        this.newData = this.convertFamilyData(this.infoPersonFamily, 65)
+        // eslint-disable-next-line no-console
+        console.log({ newData: this.newData })
+        // eslint-disable-next-line no-console
+        console.log(this.infoPersonFamily)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error)
+      }
+    },
+
     convertFamilyData(data, personId) {
       const person = data[personId]
       const result = {

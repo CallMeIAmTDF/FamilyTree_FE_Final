@@ -41,7 +41,7 @@
         <div class="infor">
           <div class="person-name mt-2">
             <h6 style="font-size: 12px; color: #202121; margin-bottom: 0">
-              {{ person.personName }}
+              {{ person.name }}
             </h6>
           </div>
           <div class="identify">
@@ -101,63 +101,87 @@
     </div>
     <b-modal
       v-model="modalVisibleParent"
-      :title="'Thêm bố hoặc mẹ của ' + person.personName"
+      :title="'Thêm bố hoặc mẹ của ' + person.name"
       hide-footer
       class="modal_add"
       size="lg"
       centered
     >
-      <form-infor-parent :item="person" @personCreated="hideModal" />
+      <form-infor-parent
+        :id="personId"
+        :item="person"
+        @personCreated="hideModal"
+      />
     </b-modal>
     <b-modal
       v-model="modalVisibleFather"
-      :title="'Thêm bố của ' + person.personName"
+      :title="'Thêm bố của ' + person.name"
       hide-footer
       class="modal_add"
       size="lg"
       centered
     >
-      <form-infor-father :item="person" @personCreated="hideModal" />
+      <form-infor-father
+        :id="personId"
+        :item="person"
+        @personCreated="hideModal"
+      />
     </b-modal>
     <b-modal
       v-model="modalVisibleMother"
-      :title="'Thêm mẹ của ' + person.personName"
+      :title="'Thêm mẹ của ' + person.name"
       hide-footer
       class="modal_add"
       size="lg"
       centered
     >
-      <form-infor-mother :item="person" @personCreated="hideModal" />
+      <form-infor-mother
+        :id="personId"
+        :item="person"
+        @personCreated="hideModal"
+      />
     </b-modal>
     <b-modal
       v-model="modalVisibleWife"
-      :title="'Thêm vợ của ' + person.personName"
+      :title="'Thêm vợ của ' + person.name"
       hide-footer
       class="modal_add"
       size="lg"
       centered
     >
-      <form-infor-wife :item="person" @personCreated="hideModal" />
+      <form-infor-wife
+        :id="personId"
+        :item="person"
+        @personCreated="hideModal"
+      />
     </b-modal>
     <b-modal
       v-model="modalVisibleSibling"
-      :title="'Thêm anh/chị/em của ' + person.personName"
+      :title="'Thêm anh/chị/em của ' + person.name"
       hide-footer
       class="modal_add"
       size="lg"
       centered
     >
-      <form-infor-sibling :item="person" @personCreated="hideModal" />
+      <form-infor-sibling
+        :id="personId"
+        :item="person"
+        @personCreated="hideModal"
+      />
     </b-modal>
     <b-modal
       v-model="modalVisibleChild"
-      :title="'Thêm con cái của ' + person.personName"
+      :title="'Thêm con cái của ' + person.name"
       hide-footer
       class="modal_add"
       size="lg"
       centered
     >
-      <form-infor-child :item="person" @personCreated="hideModal" />
+      <form-infor-child
+        :id="personId"
+        :item="person"
+        @personCreated="hideModal"
+      />
     </b-modal>
   </div>
 </template>
@@ -179,12 +203,17 @@ export default {
     FormInforWife,
   },
 
-  // props: {
-  //   person: {
-  //     type: Object,
-  //     default: () => ({}),
-  //   },
-  // },
+  props: {
+    personId: {
+      type: Number,
+      default: null,
+    },
+
+    person: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
 
   data() {
     return {
@@ -195,32 +224,32 @@ export default {
       modalVisibleSibling: false,
       modalVisibleChild: false,
 
-      person: {
-        familyTreeId: 11,
-        fatherId: 65,
-        groupChildId: 69,
-        motherId: 49,
-        parentsId: 34 ,
-        personAddress: null,
-        personCreatedAt: '2023-11-24 20:54:10.607',
-        personDeletedAt: null,
-        personDescription: null,
-        personDob: null,
-        personDod: null,
-        personEthnic: null,
-        personGender: true,
-        personId: 49,
-        personImage: null,
-        personIsDeleted: null,
-        personJob: null,
-        personName: 'Nguyễn Thành Chung',
-        personRank: 0,
-        personReligion: null,
-        personStatus: true,
-        personStory: null,
-        personUpdatedAt: null,
-        siblingNum: 1,
-      },
+      // person: {
+      //   familyTreeId: 11,
+      //   fatherId: 65,
+      //   groupChildId: 69,
+      //   motherId: 49,
+      //   parentsId: 34 ,
+      //   personAddress: null,
+      //   personCreatedAt: '2023-11-24 20:54:10.607',
+      //   personDeletedAt: null,
+      //   personDescription: null,
+      //   personDob: null,
+      //   personDod: null,
+      //   personEthnic: null,
+      //   personGender: true,
+      //   personId: 49,
+      //   personImage: null,
+      //   personIsDeleted: null,
+      //   personJob: null,
+      //   personName: 'Nguyễn Thành Chung',
+      //   personRank: 0,
+      //   personReligion: null,
+      //   personStatus: true,
+      //   personStory: null,
+      //   personUpdatedAt: null,
+      //   siblingNum: 1,
+      // },
     }
   },
 

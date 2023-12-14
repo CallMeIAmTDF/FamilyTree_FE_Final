@@ -183,43 +183,32 @@
                 </div>
               </b-form>
             </b-modal>
-            <!-- Thẻ hiển thị người nam -->
-            <man-card-person
-              v-if="selectedGender === 'true' && !showAddFirstPerson"
-              v-b-toggle.sidebar-right
-              :person="createdPersonData"
-            />
 
-            <!-- Thẻ hiển thị người nữ -->
-            <woman-card-person
-              v-if="selectedGender === 'false' && !showAddFirstPerson"
-              v-b-toggle.sidebar-right
-              :person="createdPersonData"
-            />
+            <ul>
+              <div>
+                <family-member
+                  v-if="newData.childrens && newData.childrens.length"
+                  :key="newData.data.id"
+                  :member="newData"
+                  :info-person-family="infoPersonFamily"
+                />
+              </div>
+            </ul>
           </div>
         </div>
       </div>
     </main>
-
-    <b-sidebar id="sidebar-right" right shadow>
-      <sidebar-person :person="createdPersonData" />
-    </b-sidebar>
   </div>
 </template>
 
 <script>
-// import treeNodeDown from '../components/treeNode/treeNodeDown.vue'
 import firstCardPerson from '~/components/cardPerson/firstCardPerson.vue'
-import manCardPerson from '~/components/cardPerson/manCardPerson.vue'
-import womanCardPerson from '~/components/cardPerson/womanCardPerson.vue'
-import SidebarPerson from '~/components/sidebarPerson.vue'
+import FamilyMember from '~/components/familyTree/FamilyMember.vue'
+
 export default {
-  // components: { treeNodeDown },
   components: {
     firstCardPerson,
-    manCardPerson,
-    womanCardPerson,
-    SidebarPerson,
+    FamilyMember,
   },
 
   data() {
@@ -228,6 +217,9 @@ export default {
       showAddFirstPerson: true,
       selectedGender: '',
       createdPersonData: {},
+      infoPersonFamily: {},
+      newData: {},
+      newData2: {},
 
       form: {
         name: '',
@@ -249,7 +241,12 @@ export default {
       deathdayErrorMessage: '',
     }
   },
-  computed: {},
+
+  computed: {
+    familyMembers() {
+      return [this.newData]
+    },
+  },
 
   watch: {
     form: {
@@ -259,33 +256,13 @@ export default {
       },
     },
   },
-  // layout: 'treeLayout',
-  mounted() {
-    // Kiểm tra nếu có accessToken trong localStorage
-    if (localStorage.getItem('accessToken')) {
-      // Kiểm tra nếu đường dẫn hiện tại là "/account/dang_nhap" hoặc "/account/dang_ki"
-      const currentPath = this.$route.path
 
-      // eslint-disable-next-line no-console
-      console.log(currentPath)
+  created() {
+    // Lấy ID sản phẩm từ query parameter khi trang được tạo
+    this.familyTreeId = this.$route.query.id
+  },
 
-      // eslint-disable-next-line no-console
-      console.log(this.$route.query.id)
-      if (
-        currentPath === '/account/dang_nhap' ||
-        currentPath === '/account/dang_ki' ||
-        currentPath === '/account/quen_mat_khau' ||
-        currentPath === '/account/xac_nhan_otp' ||
-        currentPath === '/account/trang_chao_mung'
-      ) {
-        this.$router.push('/so_do_cay')
-      }
-      // Ngược lại, giữ nguyên trang
-    } else {
-      // Chuyển hướng về trang /account/dang_nhap nếu không có accessToken
-      this.$router.push('/account/dang_nhap')
-    }
-
+  async mounted() {
     let scale = 0.833334
     let panning = false
     let pointX = -41046.9
@@ -343,11 +320,33 @@ export default {
       pointX += 1
       setTransform()
     })
-  },
 
-  created() {
-    // Lấy ID sản phẩm từ query parameter khi trang được tạo
-    this.familyTreeId = this.$route.query.id
+    // Kiểm tra nếu có accessToken trong localStorage
+    if (localStorage.getItem('accessToken')) {
+      // Kiểm tra nếu đường dẫn hiện tại là "/account/dang_nhap" hoặc "/account/dang_ki"
+      const currentPath = this.$route
+
+      // eslint-disable-next-line no-console
+      console.log(currentPath)
+
+      // eslint-disable-next-line no-console
+      console.log(this.$route.query.id)
+      if (
+        currentPath === '/account/dang_nhap' ||
+        currentPath === '/account/dang_ki' ||
+        currentPath === '/account/quen_mat_khau' ||
+        currentPath === '/account/xac_nhan_otp' ||
+        currentPath === '/account/trang_chao_mung'
+      ) {
+        this.$router.push('/so_do_cay')
+      }
+      // Ngược lại, giữ nguyên trang
+    } else {
+      // Chuyển hướng về trang /account/dang_nhap nếu không có accessToken
+      this.$router.push('/account/dang_nhap')
+    }
+
+    await this.getPersonFamily()
   },
 
   methods: {
@@ -475,6 +474,92 @@ export default {
       })
     },
 
+    async getPersonFamily() {
+      try {
+        const res = await this.$axios.get(
+          'http://localhost:8080/familyTree/getDataV2?pid=47'
+        )
+        const centerId = 47
+
+        this.infoPersonFamily = res.data.data
+
+        // eslint-disable-next-line no-console
+        console.log(res.data.data)
+        if (this.infoPersonFamily[centerId].data.info.fatherId != null) {
+          // eslint-disable-next-line no-console
+          console.log(this.infoPersonFamily[this.infoPersonFamily[centerId].data.info.fatherId].data.side)
+          // root = '0'
+        } 
+        // else if cos mej root = '1'
+        // else root =''
+
+        // if check nuts {
+        //   root = nhaans
+        // }
+
+        this.newDataId = this.getHighestConsecutivePerson(res.data, '0')
+        this.newData = this.convertFamilyData(
+          this.infoPersonFamily,
+          this.newDataId
+        )
+
+        // eslint-disable-next-line no-console
+        console.log({ newData: this.newData })
+        // eslint-disable-next-line no-console
+        console.log({ newDataId: this.newDataId })
+        // eslint-disable-next-line no-console
+        console.log({ infoPersonFamily: this.infoPersonFamily })
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error)
+      }
+    },
+
+    convertFamilyData(data, personId) {
+      const person = data[personId]
+      const result = {
+        data: person.data,
+        spouses: [],
+        childrens: [],
+      }
+
+      if (person.spousePersonIds.length > 0) {
+        person.spousePersonIds.forEach((spouseId) => {
+          const spouse = data[spouseId]
+          result.spouses.push(spouse)
+        })
+      }
+
+      if (person.childrenIds.length > 0) {
+        person.childrenIds.forEach((childId) => {
+          const child = data[childId]
+          const childObj = {
+            data: child,
+            spouses: [],
+            childrens: [],
+          }
+
+          if (child.spousePersonIds.length > 0) {
+            child.spousePersonIds.forEach((childSpouseId) => {
+              const childSpouse = data[childSpouseId]
+              childObj.spouses.push(childSpouse)
+            })
+          }
+
+          if (child.childrenIds.length > 0) {
+            const grandchildren = child.childrenIds.map((grandchildId) => {
+              return this.convertFamilyData(data, grandchildId)
+            })
+            childObj.childrens = grandchildren
+          }
+
+          result.childrens.push(childObj)
+        })
+      }
+
+      return result
+    },
+
     async onSubmit() {
       try {
         const response = await this.$axios.$post(
@@ -531,6 +616,31 @@ export default {
 
         this.showErrorToast('Có lỗi xảy ra khi tạo người đầu tiên!')
       }
+    },
+
+    getHighestConsecutivePerson(data, root) {
+      let maxConsecutive = 0
+      let currentConsecutive = 0
+
+      let personId = ''
+
+      Object.values(data.data).forEach((person) => {
+        if (person.data.side.startsWith(root)) {
+          currentConsecutive++
+
+          if (currentConsecutive >= maxConsecutive) {
+            maxConsecutive = currentConsecutive
+            personId = person.data.id
+          }
+        } else {
+          currentConsecutive = 0
+        }
+      })
+
+      // eslint-disable-next-line no-console
+      console.log('personId:' + personId)
+
+      return personId
     },
   },
 }

@@ -150,6 +150,11 @@
 <script>
 export default {
   props: {
+    id: {
+      type: Number,
+      default: null,
+    },
+
     item: {
       type: Object,
       default: () => ({}),
@@ -311,7 +316,7 @@ export default {
     async onSubmit() {
       try {
         await this.$axios.$post(
-          `http://localhost:8080/person/createSpouse?personId=${this.item.personId}`,
+          `http://localhost:8080/person/createSpouse?personId=${this.id}`,
           {
             personName: this.form.name,
             personGender: this.form.selectedSex,

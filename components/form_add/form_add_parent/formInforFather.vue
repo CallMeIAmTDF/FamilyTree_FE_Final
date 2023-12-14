@@ -156,6 +156,11 @@
 <script>
 export default {
   props: {
+    id: {
+      type: Number,
+      default: null,
+    },
+
     item: {
       type: Object,
       default: () => ({}),
@@ -325,7 +330,7 @@ export default {
     async onSubmit() {
       try {
         await this.$axios.$post(
-          `http://localhost:8080/person/createParents?personId=${this.item.personId}`,
+          `http://localhost:8080/person/createParents?personId=${this.id}`,
           {
             personName: this.form.name,
             personGender: this.form.selectedSex,
@@ -356,7 +361,6 @@ export default {
         this.$emit('personCreated')
 
         this.showSuccessToast('Thêm bố vào sơ đồ thành công')
-
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error)

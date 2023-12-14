@@ -92,11 +92,11 @@
       <div class="row">
         <!-- Chọn bố -->
         <b-form-group
-          v-if="item.personGender === false"
+          v-if="item.gender === 'Female'"
           class="col-md-6"
           label="Chọn bố cho con"
         >
-          <b-form-select v-model="form.selectedFather">
+          <b-form-select v-model="form.selectedFather" @change="fetchChildren">
             <b-form-select-option :value="null" disabled
               >Chọn</b-form-select-option
             >
@@ -112,11 +112,11 @@
 
         <!-- Chọn mẹ  -->
         <b-form-group
-          v-if="item.personGender === true"
+          v-if="item.gender === 'Male'"
           class="col-md-6"
           label="Chọn mẹ cho con"
         >
-          <b-form-select v-model="form.selectedMother">
+          <b-form-select v-model="form.selectedMother" @change="fetchChildren">
             <b-form-select-option value="null" disabled
               >Chọn</b-form-select-option
             >
@@ -230,6 +230,11 @@
 <script>
 export default {
   props: {
+    id: {
+      type: Number,
+      default: null,
+    },
+
     item: {
       type: Object,
       default: () => ({}),
@@ -422,7 +427,7 @@ export default {
     async fetchWives() {
       // Lấy thông tin của người
       const response = await this.$axios.$get(
-        `http://localhost:8080/person/getInfo?personId=${this.item.personId}`
+        `http://localhost:8080/person/getInfo?personId=${this.id}`
       )
       const wivesIdList = response.data.wife || []
 
@@ -438,7 +443,7 @@ export default {
     async fetchHusbands() {
       // Lấy thông tin của người
       const response = await this.$axios.$get(
-        `http://localhost:8080/person/getInfo?personId=${this.item.personId}`
+        `http://localhost:8080/person/getInfo?personId=${this.id}`
       )
       const husbandsIdList = response.data.husband || []
 
@@ -454,10 +459,16 @@ export default {
     async fetchChildren() {
       let endpoint = ''
 
-      if (this.item.personGender === true) {
-        endpoint = `http://localhost:8080/person/getChild?fatherId=${this.item.personId}`
-      } else {
-        endpoint = `http://localhost:8080/person/getChild?motherId=${this.item.personId}`
+      if (this.item.gender === 'Male') {
+        if (!this.form.selectedMother) {
+          endpoint = `http://localhost:8080/person/getChild?fatherId=${this.id}`
+        } else
+          endpoint = `http://localhost:8080/person/getChild?fatherId=${this.id}&motherId=${this.form.selectedMother}`
+      } else if (this.item.gender === 'Female') {
+        if (!this.form.selectedFather) {
+          endpoint = `http://localhost:8080/person/getChild?&motherId=${this.id}`
+        } else
+          endpoint = `http://localhost:8080/person/getChild?fatherId=${this.form.selectedFather}&motherId=${this.id}`
       }
 
       try {
@@ -497,14 +508,14 @@ export default {
           let fatherId = null
           let motherId = null
 
-          if (this.form.selectedSex === 'true') {
+          if (this.item.gender === 'Male') {
             // Giới tính là nam
-            fatherId = this.item.personId
+            fatherId = this.id
             motherId = this.form.selectedMother
           } else {
             // Giới tính là nữ
             fatherId = this.form.selectedFather
-            motherId = this.item.personId
+            motherId = this.id
           }
 
           await this.$axios.$post(
@@ -544,14 +555,14 @@ export default {
           let fatherId = null
           let motherId = null
 
-          if (this.form.selectedSex === 'true') {
+          if (this.item.gender === 'Male') {
             // Giới tính là nam
-            fatherId = this.item.personId
+            fatherId = this.id
             motherId = this.form.selectedMother
           } else {
             // Giới tính là nữ
             fatherId = this.form.selectedFather
-            motherId = this.item.personId
+            motherId = this.id
           }
 
           await this.$axios.$post(

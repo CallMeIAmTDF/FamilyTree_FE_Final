@@ -6,9 +6,9 @@
 
     <man-card-person />
 
-    <b-sidebar id="sidebar-right" right shadow>
+    <!-- <b-sidebar id="sidebar-right" right shadow>
       <sidebar-person :person="createdPersonData" />
-    </b-sidebar>
+    </b-sidebar> -->
   </div>
 </template>
 

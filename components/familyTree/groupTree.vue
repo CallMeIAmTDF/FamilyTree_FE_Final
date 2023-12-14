@@ -1,29 +1,81 @@
 <template>
-  <div class="group">
+  <div class="group" :style="getGroupStyle(personId)">
     <div
-      class="person male"
-      :data-person-id="infoPersonFamily[personId].data.id"
-      :data-spouseids-id="infoPersonFamily[personId].data.spouseIds"
+      v-if="infoPersonFamily[personId].data.info.gender === 'Male'"
+      class="d-flex"
     >
-      {{ infoPersonFamily[personId].data.info.name }}
+      <man-card-person
+        v-b-toggle="'person-sidebar-' + infoPersonFamily[personId].data.id"
+        class="person"
+        :data-person-id="infoPersonFamily[personId].data.id"
+        :data-spouseids-id="infoPersonFamily[personId].data.spouseIds"
+        :person="infoPersonFamily[personId].data.info"
+        :person-id="infoPersonFamily[personId].data.id"
+      />
+      <woman-card-person
+        v-for="id in infoPersonFamily[personId].spousePersonIds"
+        :key="infoPersonFamily[id].data.id"
+        v-b-toggle="'person-sidebar-' + infoPersonFamily[id].data.id"
+        class="person"
+        :data-spouseids-id="infoPersonFamily[personId].data.spouseIds"
+        :person-id="infoPersonFamily[id].data.id"
+        :person="infoPersonFamily[id].data.info"
+      />
     </div>
+
     <div
-      v-for="id in infoPersonFamily[personId].spousePersonIds"
-      :key="infoPersonFamily[id].data.id"
-      class="person female"
-      :data-spouseids-id="infoPersonFamily[personId].data.spouseIds"
+      v-if="infoPersonFamily[personId].data.info.gender === 'Female'"
+      class="d-flex"
     >
-      {{ infoPersonFamily[id].data.info.name }}
+      <man-card-person
+        v-for="id in infoPersonFamily[personId].spousePersonIds"
+        :key="infoPersonFamily[id].data.id"
+        v-b-toggle="'person-sidebar-' + infoPersonFamily[id].data.id"
+        class="person"
+        :data-person-id="infoPersonFamily[personId].data.id"
+        :data-spouseids-id="infoPersonFamily[personId].data.spouseIds"
+        :person="infoPersonFamily[id].data.info"
+        :person-id="infoPersonFamily[id].data.id"
+      />
+      <woman-card-person
+        v-b-toggle="'person-sidebar-' + infoPersonFamily[personId].data.id"
+        class="person"
+        :data-spouseids-id="infoPersonFamily[personId].data.spouseIds"
+        :person-id="infoPersonFamily[personId].data.id"
+        :person="infoPersonFamily[personId].data.info"
+      />
     </div>
+
+    <b-sidebar
+      :id="
+        infoPersonFamily[personId].data.id
+          ? 'person-sidebar-' + infoPersonFamily[personId].data.id
+          : 'person-sidebar-' + infoPersonFamily[id].data.id
+      "
+      right
+      shadow
+    >
+      <sidebar-person
+        :personid="
+          infoPersonFamily[personId].data.id
+            ? infoPersonFamily[personId].data.id
+            : infoPersonFamily[id].data.id
+        "
+      />
+    </b-sidebar>
   </div>
 </template>
 
 <script>
+import manCardPerson from '../cardPerson/manCardPerson.vue'
+import WomanCardPerson from '../cardPerson/womanCardPerson.vue'
+import SidebarPerson from '../sidebarPerson.vue'
 export default {
+  components: { manCardPerson, WomanCardPerson, SidebarPerson },
   props: {
     infoPersonFamily: {
-        type: Object,
-        default: () => ({}),
+      type: Object,
+      default: () => ({}),
     },
     personId: {
       type: Number,
@@ -32,8 +84,29 @@ export default {
   },
   mounted() {
     // eslint-disable-next-line no-console
-    console.log({personId: this.personId, person: this.infoPersonFamily[this.personId]})
-  }
+    // console.log({
+    //   personId: this.personId,
+    //   person: this.infoPersonFamily[this.personId],
+    // })
+  },
+
+  methods: {
+    getGroupStyle(personId) {
+      let style = ''
+      const person = this.infoPersonFamily[personId]
+
+      if (person.spousePersonIds.length > 0) {
+        const px = 138 * person.spousePersonIds.length
+        if (person.data.info.gender === 'Male') {
+          style = `padding-left: ${px}px;`
+        } else {
+          style = `padding-right: ${px}px;`
+        }
+      }
+
+      return style
+    },
+  },
 }
 </script>
 <style scoped>
@@ -46,8 +119,6 @@ export default {
 }
 
 .person {
-  width: 200px;
-  height: 350px;
   border-radius: 4px;
 
   font-size: 48px;
