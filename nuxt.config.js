@@ -1,4 +1,10 @@
 export default {
+  // Server configuration
+  server: {
+    host: '127.0.0.1',
+    port: 3000,
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'FamilyConnect',

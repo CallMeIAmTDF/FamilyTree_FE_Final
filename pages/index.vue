@@ -93,7 +93,7 @@
         thức về bản thân.
       </p>
 
-      <b-button variant="primary" href="/so_do_cay">Xem sơ đồ</b-button>
+      <b-button variant="primary" href="/danh_sach_so_do">Xem sơ đồ</b-button>
     </b-jumbotron>
   </div>
 </template>

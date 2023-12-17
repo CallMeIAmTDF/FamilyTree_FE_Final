@@ -4,7 +4,7 @@
   >
     <div class="position-relative">
       <div class="card p-2 text-center">
-        <h6>Nhập OTP để xác nhận đăng kí!</h6>
+        <h6>Nhập OTP để xác nhận đặt lại mật khẩu!</h6>
         <div>
           <span style="color: #999"
             >Mã xác minh đã được gửi đến email của bạn</span
@@ -51,25 +51,49 @@ export default {
         this.$refs.otpInput[index + 1].focus()
       }
     },
-    validateOTP() {
+
+    showSuccessToast(message) {
+      this.$bvToast.toast(message, {
+        title: 'Thành công',
+        variant: 'success',
+        autoHideDelay: 5000,
+      })
+    },
+    showErrorToast(message) {
+      this.$bvToast.toast(message, {
+        title: 'Lỗi',
+        variant: 'danger',
+        autoHideDelay: 5000,
+      })
+    },
+
+    async validateOTP() {
       const otpValue = this.otp.join('')
 
       try {
-        this.$axios.$post(
+        const response = await this.$axios.$post(
           `http://localhost:8080/users/forgetPassword/checkOtp`,
           {
             email: this.$route.query.email,
             password: this.$route.query.password,
             otp: otpValue,
           }
-        )
+        );
 
-        this.$router.push('/account/dang_nhap')
+        // Nếu mã OTP chính xác
+        if (response && response.success) {
+          this.showSuccessToast('Thay đổi mật khẩu thành công');
+          this.$router.push('/account/dang_nhap');
+        } else {
+          this.showErrorToast('Otp không chính xác');
+        }
       } catch (error) {
         // eslint-disable-next-line no-console
-        console.log(error)
+        console.error(error);
+        this.showErrorToast('Đã xảy ra lỗi khi xác minh OTP');
       }
     },
+
     OTPInput() {
       const inputs = this.$el.querySelectorAll('#otp > *[id]')
       for (let i = 0; i < inputs.length; i++) {

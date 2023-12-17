@@ -29,10 +29,12 @@
               ref="copyInput"
               v-model="inputValue"
               class="copyLink"
+              style="color: #0b57d0"
+              readonly
             ></b-form-input>
             <b-input-group-append>
-              <b-button variant="outline-secondary" @click="copyText"
-                >Sao chép</b-button
+              <b-button variant="outline-primary" @click="copyText"
+                >Sao chép link</b-button
               >
             </b-input-group-append>
           </b-input-group>
@@ -41,36 +43,43 @@
       <div v-else-if="activeTab === 'copy'">
         <b-form-group class="col-md-12">
           <b-form-input
-            style="border: 2px solid #0b57d0"
-            placeholder="Chọn người trung tâm trong phả đồ"
-          ></b-form-input>
-        </b-form-group>
-        <h5 style="font-weight: bold">Xem phả đồ</h5>
-        <div class="container">
-          <b-dropdown
-            split
-            split-variant="outline-secondary"
-            variant="secondary"
-            text="Chọn hướng phả đồ mà bạn muốn xem"
+            v-model="nameTree"
+            placeholder="Tên sơ đồ cây"
             class="mb-3"
-            style="width: 100%"
-          >
-            <b-dropdown-item>Xem phả đồ họ nội</b-dropdown-item>
-            <b-dropdown-item>Xem phả đồ họ ngoại</b-dropdown-item>
-            <b-dropdown-item>Xem phả đồ của cả hai họ</b-dropdown-item>
-          </b-dropdown>
+          ></b-form-input>
+          <b-form-select v-model="selectPerson">
+            <b-form-select-option value="null" disabled
+              >Chọn người trung tâm</b-form-select-option
+            >
+            <b-form-select-option
+              v-for="per in person"
+              :key="per.data.id"
+              :value="per.data.id"
+            >
+              {{ per.data.info.name }}
+            </b-form-select-option>
+          </b-form-select>
+        </b-form-group>
+        <div class="container">
+          <b-form-select v-model="selectedSide" class="mb-3">
+            <b-form-select-option value="null" disabled
+              >Chọn hướng sơ đồ</b-form-select-option
+            >
+            <b-form-select-option value="2">
+              Xem phả đồ họ nội
+            </b-form-select-option>
+            <b-form-select-option value="1">
+              Xem phả đồ họ ngoại
+            </b-form-select-option>
+            <b-form-select-option value="3">
+              Xem phả đồ cả hai họ
+            </b-form-select-option>
+          </b-form-select>
 
           <b-input-group class="mb-3">
-            <b-form-input
-              ref="copyInput"
-              v-model="inputValue"
-              class="copyLink"
-            ></b-form-input>
-            <b-input-group-append>
-              <b-button variant="outline-secondary" @click="copyText"
-                >Sao chép</b-button
-              >
-            </b-input-group-append>
+            <b-button variant="primary" style="width: 100%" @click="getCopyTree"
+              >Copy sơ đồ</b-button
+            >
           </b-input-group>
         </div>
       </div>
@@ -84,8 +93,25 @@ export default {
     return {
       activeTab: 'shareLink',
       inputValue: '', // Giá trị của input
+      familyTreeId: null,
+      selectPerson: '',
+      selectedSide: '',
+      nameTree: '',
+      person: {},
     }
   },
+
+  created() {
+    this.getlinkShare()
+
+    this.getPerson()
+
+    this.familyTreeId = this.$route.query.id
+
+    // eslint-disable-next-line no-console
+    console.log(this.familyTreeId)
+  },
+
   methods: {
     copyText() {
       // Lấy tham chiếu tới phần tử input
@@ -115,9 +141,69 @@ export default {
       })
     },
 
+    async getPerson() {
+      try {
+        const res = await this.$axios.get(
+          'http://localhost:8080/familyTree/getDataV2?fid=' +
+            this.$route.query.id
+        )
+
+        // eslint-disable-next-line no-console
+        console.log('respónive:', res)
+
+        this.person = res.data.data
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error)
+      }
+    },
+
     async getlinkShare() {
-      
-    }
+      try {
+        const personId = localStorage.getItem('centerId')
+
+        const res = await this.$axios.$post(
+          'http://localhost:8080/linkSharing/create?familyTreeId=' +
+            this.$route.query.id +
+            '&personId=' +
+            personId
+        )
+
+        const link = res.data
+
+        const link2 = link.split('linkSharing?code=')[1]
+
+        this.inputValue = 'http://127.0.0.1:3000/so_do_cay?code=' + link2
+
+        // eslint-disable-next-line no-console
+        console.log(this.inputValue)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error)
+      }
+    },
+
+    async getCopyTree() {
+      try {
+        const response = await this.$axios.$post(
+          `http://localhost:8080/familyTree/copy?newName=${this.nameTree}&personId=${this.selectPerson}&side=${this.selectedSide}`
+        )
+
+        if (response.message === 'Sao chép thành công!') {
+          const idtree = response.data.familyTreeId
+
+          localStorage.setItem('centerId', 'undefined')
+          localStorage.setItem('side', 'undefined')
+          this.$router.push('/so_do_cay?id=' + idtree)
+        }
+
+        // eslint-disable-next-line no-console
+        console.log(response)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error)
+      }
+    },
   },
 }
 </script>

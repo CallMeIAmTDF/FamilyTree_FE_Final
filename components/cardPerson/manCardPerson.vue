@@ -1,9 +1,13 @@
 <template>
   <div class="">
     <div class="box male">
-      <div class="person">
+      <div class="person" @click="openModalInfoPerson">
         <div class="avatar">
+          <div v-if="person.personImage != null" class="imgSrc">
+            <img :src="person.personImage" alt="" />
+          </div>
           <svg
+            v-else
             class="iconCss_i1b8s8h6"
             role="img"
             viewBox="0 0 24 24"
@@ -45,12 +49,13 @@
             </h6>
           </div>
           <div class="identify">
-            <span style="color: #000; font-size: 10px">
-              <button>Xưng hô</button>
+            <span style="color: #000; font-size: 14px">
+              <button>{{ infoPersonFamily[personId].data.vocative }}</button>
             </span>
           </div>
         </div>
       </div>
+
       <div class="add btn">
         <b-dropdown
           dropright
@@ -97,6 +102,40 @@
             >Thêm con cái</b-dropdown-item
           >
         </b-dropdown>
+      </div>
+
+      <div
+        v-if="
+          (infoPersonFamily[personId].fatherId ||
+            infoPersonFamily[personId].motherId) &&
+          infoPersonFamily[personId].data.side != ''
+        "
+        class="extra-tree"
+        @click="sendSideToLocal(infoPersonFamily[personId].data.side)"
+      >
+        <svg
+          viewBox="0 0 16 16"
+          width="24px"
+          height="24px"
+          focusable="false"
+          role="img"
+          aria-label="chevron up"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="bi-chevron-up mx-auto b-icon bi"
+          data-v-41be6633=""
+        >
+          <g data-v-41be6633="">
+            <path
+              fill-rule="evenodd"
+              d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
+            ></path>
+          </g>
+        </svg>
       </div>
     </div>
     <b-modal
@@ -183,6 +222,9 @@
         @personCreated="hideModal"
       />
     </b-modal>
+    <b-modal v-model="modalVisibleInfoPerson" hide-footer>
+      <sidebar-person :personid="personId" />
+    </b-modal>
   </div>
 </template>
 
@@ -193,6 +235,7 @@ import formInforMother from '../form_add/form_add_parent/formInforMother.vue'
 import formInforSibling from '../form_add/form_add_sibling/formInfor.vue'
 import formInforChild from '../form_add/form_add_child/formInfor.vue'
 import FormInforWife from '../form_add/form_add_spouse/formInforWife.vue'
+import SidebarPerson from '../sidebarPerson.vue'
 export default {
   components: {
     formInforParent,
@@ -201,6 +244,7 @@ export default {
     formInforSibling,
     formInforChild,
     FormInforWife,
+    SidebarPerson,
   },
 
   props: {
@@ -213,6 +257,11 @@ export default {
       type: Object,
       default: () => ({}),
     },
+
+    infoPersonFamily: {
+      type: Object,
+      required: true,
+    },
   },
 
   data() {
@@ -223,33 +272,7 @@ export default {
       modalVisibleWife: false,
       modalVisibleSibling: false,
       modalVisibleChild: false,
-
-      // person: {
-      //   familyTreeId: 11,
-      //   fatherId: 65,
-      //   groupChildId: 69,
-      //   motherId: 49,
-      //   parentsId: 34 ,
-      //   personAddress: null,
-      //   personCreatedAt: '2023-11-24 20:54:10.607',
-      //   personDeletedAt: null,
-      //   personDescription: null,
-      //   personDob: null,
-      //   personDod: null,
-      //   personEthnic: null,
-      //   personGender: true,
-      //   personId: 49,
-      //   personImage: null,
-      //   personIsDeleted: null,
-      //   personJob: null,
-      //   personName: 'Nguyễn Thành Chung',
-      //   personRank: 0,
-      //   personReligion: null,
-      //   personStatus: true,
-      //   personStory: null,
-      //   personUpdatedAt: null,
-      //   siblingNum: 1,
-      // },
+      modalVisibleInfoPerson: false,
     }
   },
 
@@ -279,6 +302,9 @@ export default {
     openModalChild() {
       this.modalVisibleChild = true
     },
+    openModalInfoPerson() {
+      this.modalVisibleInfoPerson = true
+    },
 
     hideModal() {
       // Sử dụng $refs để truy cập modal và ẩn nó đi
@@ -288,6 +314,11 @@ export default {
       this.modalVisibleWife = false
       this.modalVisibleSibling = false
       this.modalVisibleChild = false
+    },
+
+    sendSideToLocal(side) {
+      localStorage.setItem('side', side)
+      window.location.reload()
     },
   },
 }
@@ -324,10 +355,23 @@ export default {
   justify-content: center;
 }
 
+.avatar > .imgSrc {
+  height: 70px;
+  width: 70px;
+  margin-bottom: 8px;
+}
+
+.avatar > .imgSrc > img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .avatar > svg {
   height: 70px;
   width: 70px;
-  border-radius: 500px;
+  border-radius: 50%;
 }
 
 .infor {
@@ -354,14 +398,6 @@ export default {
 .infor > .identify > span > button:hover {
   background-color: #e1dcdc;
 }
-
-/* .box > .add {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 10px;
-    height: 10px;
-   } */
 
 .male > .add > .add-icon {
   position: absolute;
@@ -395,6 +431,28 @@ export default {
 }
 
 .male:hover {
+  background: #e9f1f7;
+}
+
+.extra-tree {
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  cursor: pointer;
+}
+
+.extra-tree:hover {
   background: #e9f1f7;
 }
 </style>

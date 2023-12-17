@@ -5,7 +5,7 @@
         :src="
           personInfo.personImage
             ? personInfo.personImage
-            : personInfo.personGender === true
+            : personInfo.personGender === 'Nam'
             ? 'https://i.pinimg.com/originals/8d/a5/c3/8da5c3a06407303694d6381b23368f02.png'
             : 'https://1.bp.blogspot.com/-_McRf03XFs0/XoVUziYcpFI/AAAAAAAAa2A/JjltmHu8M_EMP09rUkB3M7n1FKmrzxAAgCLcBGAsYHQ/s1600/Anh-dai-dien-cho-nu%2B%252839%2529.jpg'
         "
@@ -22,7 +22,7 @@
         <h6 style="font-weight: bold">
           Họ và tên: {{ personInfo.personName }}
         </h6>
-        <h6>Giới tính: {{ displayGender }}</h6>
+        <h6>Giới tính: {{ personInfo.personGender }}</h6>
         <h6>Tình trạng: {{ displayStatus }}</h6>
         <p>Nghề nghiệp: {{ personInfo.personJob }}</p>
         <p>Địa chỉ: {{ personInfo.personAddress }}</p>
@@ -76,7 +76,6 @@
             <!-- Trường chọn hình ảnh từ file -->
             <b-form-group label="Chọn ảnh đại diện:" class="col-md-6">
               <b-form-file
-                v-model="form.img"
                 placeholder="Chọn ảnh..."
                 accept="image/*"
                 @change="onFileChosen"
@@ -138,8 +137,8 @@
                 width="200px"
                 height="100%"
                 :src="
-                  form.imageSrc
-                    ? form.imageSrc
+                  form.img
+                    ? form.img
                     : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
                 "
                 alt="person_image"
@@ -260,8 +259,7 @@ export default {
     return {
       form: {
         name: '',
-        img: null,
-        imageSrc: null,
+        img: '',
         selectedSex: '',
         selectedStatus: '',
         birthday: '',
@@ -286,9 +284,6 @@ export default {
   },
 
   computed: {
-    displayGender() {
-      return this.personInfo.personGender === true ? 'Nam' : 'Nữ'
-    },
     displayStatus() {
       return this.personInfo.personStatus === true ? 'Còn sống' : 'Từ trần'
     },
@@ -310,7 +305,6 @@ export default {
       // Reset our form values
       this.form.name = ''
       this.form.img = ''
-      this.form.imageSrc = ''
       this.form.selectedSex = ''
       this.form.selectedStatus = ''
       this.form.birthday = ''
@@ -346,9 +340,9 @@ export default {
           })
 
           const data = await response.json()
-          this.form.imageSrc = data.data.link // Lưu đường dẫn hình ảnh vào biến imageSrc
+          this.form.img = data.data.link // Lưu đường dẫn hình ảnh vào biến imageSrc
           // eslint-disable-next-line no-console
-          console.log(this.form.imageSrc)
+          console.log(this.form.img)
           // eslint-disable-next-line no-console
           console.log(data.data.link)
         } catch (error) {
@@ -510,6 +504,7 @@ export default {
 
         // Đóng modal sau khi người đầu tiên được tạo thành công
         this.$bvModal.hide('modalEditPerson')
+        window.location.reload()
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error)
@@ -533,6 +528,7 @@ export default {
         )
 
         this.showSuccessToast('Xóa thành viên thành công')
+        window.location.reload()
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error)

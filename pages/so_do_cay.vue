@@ -5,194 +5,194 @@
       <div class="zoom_outer">
         <div id="zoom">
           <div class="tree">
-            <div
-              class="btn"
-              style="
-                width: 250px;
-                height: 100px;
-                font-size: 35px;
-                font-weight: bold;
-                transform: translate(100%, 0);
-              "
-              @click="$bvModal.show('modalCreatePerson')"
-            >
-              <div>
-                <first-card-person v-if="showAddFirstPerson" />
-              </div>
-            </div>
-            <b-modal
-              v-if="firstPersonCreated"
-              id="modalCreatePerson"
-              centered
-              hide-footer
-              title="Thêm người đầu tiên"
-            >
-              <b-form
-                v-if="show"
-                class="b-form"
-                enctype="multipart/form-data"
-                @submit.prevent="onSubmit"
-                @reset="onReset"
+            <div v-if="newData === null" class="firstPerson">
+              <div
+                class="btn"
+                style="
+                  width: 250px;
+                  height: 100px;
+                  font-size: 35px;
+                  font-weight: bold;
+                  transform: translate(100%, 0);
+                "
+                @click="$bvModal.show('modalCreatePerson')"
               >
-                <div class="row">
-                  <!-- Trường họ và tên -->
-                  <b-form-group
-                    label="Họ và tên:"
-                    class="col-md-6"
-                    :state="isNameValid"
-                    :invalid-feedback="nameErrorMessage"
-                  >
-                    <b-form-input
-                      v-model="form.name"
-                      type="text"
-                      placeholder="Nhập tên..."
-                      required
-                      @blur="validateName"
-                    ></b-form-input>
-                  </b-form-group>
-
-                  <!-- Trường chọn hình ảnh từ file -->
-                  <b-form-group label="Chọn ảnh đại diện:" class="col-md-6">
-                    <b-form-file
-                      v-model="form.img"
-                      placeholder="Chọn ảnh..."
-                      accept="image/*"
-                      @change="onFileChosen"
-                    ></b-form-file>
-                  </b-form-group>
+                <div>
+                  <first-card-person v-if="showAddFirstPerson" />
                 </div>
-
-                <div class="row">
-                  <div class="col-md-6">
-                    <!-- Trường giới tính -->
-                    <b-form-group
-                      label="Giới tính: "
-                      class="mt-3"
-                      :state="form.selectedSex !== ''"
-                    >
-                      <b-form-radio-group
-                        v-model="form.selectedSex"
-                        name="radio-sex"
-                        required
-                      >
-                        <b-form-radio value="true">Nam</b-form-radio>
-                        <b-form-radio value="false">Nữ</b-form-radio>
-                      </b-form-radio-group>
-                    </b-form-group>
-
-                    <!-- Trường tình trạng -->
-                    <b-form-group
-                      label="Tình trạng: "
-                      class="mt-2"
-                      :state="form.selectedStatus !== ''"
-                    >
-                      <b-form-radio-group
-                        v-model="form.selectedStatus"
-                        name="radio-status"
-                        required
-                      >
-                        <b-form-radio value="true" @change="deleteValueDeath"
-                          >Còn sống</b-form-radio
-                        >
-                        <b-form-radio value="false">Từ trần</b-form-radio>
-                      </b-form-radio-group>
-                    </b-form-group>
-                  </div>
-
-                  <!-- Hiển thị hình ảnh -->
-                  <div class="col-md-6 d-flex justify-content-center">
-                    <img
-                      class="mt-2"
-                      width="200px"
-                      height="100%"
-                      :src="
-                        form.imageSrc
-                          ? form.imageSrc
-                          : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
-                      "
-                      alt="person_image"
-                      style="object-fit: cover"
-                    />
-                  </div>
-                </div>
-
-                <div class="row">
-                  <!-- trường nghề nghiệp -->
-                  <b-form-group label="Nghề nghiệp:" class="col-md-6">
-                    <b-form-input
-                      v-model="form.job"
-                      type="text"
-                      placeholder="Nhập nghề nghiệp..."
-                    ></b-form-input>
-                  </b-form-group>
-
-                  <!-- Trường chọn địa chỉ -->
-                  <b-form-group label="Địa chỉ:" class="col-md-6">
-                    <b-form-input
-                      v-model="form.address"
-                      type="text"
-                      placeholder="Nhập địa chỉ..."
-                    ></b-form-input>
-                  </b-form-group>
-                </div>
-
-                <div class="row">
-                  <!-- Trường chọn ngày sinh -->
-                  <b-form-group
-                    label="Ngày sinh:"
-                    class="col-md-6"
-                    :state="isBirthdayValid"
-                    :invalid-feedback="birthdayErrorMessage"
-                  >
-                    <b-form-input
-                      v-model="form.birthday"
-                      type="date"
-                      class="mb-2"
-                      @input="validateDateOfBirth"
-                    ></b-form-input>
-                  </b-form-group>
-
-                  <!-- Trường chọn ngày mất -->
-                  <b-form-group
-                    v-if="form.selectedStatus === 'false'"
-                    label="Ngày mất:"
-                    class="col-md-6"
-                    :state="isDeathdayValid"
-                    :invalid-feedback="deathdayErrorMessage"
-                  >
-                    <b-form-input
-                      v-model="form.deathday"
-                      type="date"
-                      class="mb-2"
-                      @input="validateDateOfDeath"
-                    ></b-form-input>
-                  </b-form-group>
-                </div>
-
-                <!-- Sử lý các sự kiện -->
-                <div class="d-flex justify-content-end">
-                  <b-button type="reset" class="mr-3" variant="danger"
-                    >Reset</b-button
-                  >
-                  <b-button
-                    type="submit"
-                    variant="primary"
-                    :disabled="!validForm"
-                    >Thêm người</b-button
-                  >
-                </div>
-              </b-form>
-            </b-modal>
-
-            <ul>
-              <div>
-                <family-member
-                  v-if="newData.childrens && newData.childrens.length"
-                  :key="newData.data.id"
-                  :member="newData"
-                  :info-person-family="infoPersonFamily"
-                />
               </div>
+              <b-modal
+                v-if="firstPersonCreated"
+                id="modalCreatePerson"
+                centered
+                hide-footer
+                title="Thêm người đầu tiên"
+              >
+                <b-form
+                  v-if="show"
+                  class="b-form"
+                  enctype="multipart/form-data"
+                  @submit.prevent="onSubmit"
+                  @reset="onReset"
+                >
+                  <div class="row">
+                    <!-- Trường họ và tên -->
+                    <b-form-group
+                      label="Họ và tên:"
+                      class="col-md-6"
+                      :state="isNameValid"
+                      :invalid-feedback="nameErrorMessage"
+                    >
+                      <b-form-input
+                        v-model="form.name"
+                        type="text"
+                        placeholder="Nhập tên..."
+                        required
+                        @blur="validateName"
+                      ></b-form-input>
+                    </b-form-group>
+
+                    <!-- Trường chọn hình ảnh từ file -->
+                    <b-form-group label="Chọn ảnh đại diện:" class="col-md-6">
+                      <b-form-file
+                        v-model="form.img"
+                        placeholder="Chọn ảnh..."
+                        accept="image/*"
+                        @change="onFileChosen"
+                      ></b-form-file>
+                    </b-form-group>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <!-- Trường giới tính -->
+                      <b-form-group
+                        label="Giới tính: "
+                        class="mt-3"
+                        :state="form.selectedSex !== ''"
+                      >
+                        <b-form-radio-group
+                          v-model="form.selectedSex"
+                          name="radio-sex"
+                          required
+                        >
+                          <b-form-radio value="true">Nam</b-form-radio>
+                          <b-form-radio value="false">Nữ</b-form-radio>
+                        </b-form-radio-group>
+                      </b-form-group>
+
+                      <!-- Trường tình trạng -->
+                      <b-form-group
+                        label="Tình trạng: "
+                        class="mt-2"
+                        :state="form.selectedStatus !== ''"
+                      >
+                        <b-form-radio-group
+                          v-model="form.selectedStatus"
+                          name="radio-status"
+                          required
+                        >
+                          <b-form-radio value="true" @change="deleteValueDeath"
+                            >Còn sống</b-form-radio
+                          >
+                          <b-form-radio value="false">Từ trần</b-form-radio>
+                        </b-form-radio-group>
+                      </b-form-group>
+                    </div>
+
+                    <!-- Hiển thị hình ảnh -->
+                    <div class="col-md-6 d-flex justify-content-center">
+                      <img
+                        class="mt-2"
+                        width="200px"
+                        height="100%"
+                        :src="
+                          form.imageSrc
+                            ? form.imageSrc
+                            : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
+                        "
+                        alt="person_image"
+                        style="object-fit: cover"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <!-- trường nghề nghiệp -->
+                    <b-form-group label="Nghề nghiệp:" class="col-md-6">
+                      <b-form-input
+                        v-model="form.job"
+                        type="text"
+                        placeholder="Nhập nghề nghiệp..."
+                      ></b-form-input>
+                    </b-form-group>
+
+                    <!-- Trường chọn địa chỉ -->
+                    <b-form-group label="Địa chỉ:" class="col-md-6">
+                      <b-form-input
+                        v-model="form.address"
+                        type="text"
+                        placeholder="Nhập địa chỉ..."
+                      ></b-form-input>
+                    </b-form-group>
+                  </div>
+
+                  <div class="row">
+                    <!-- Trường chọn ngày sinh -->
+                    <b-form-group
+                      label="Ngày sinh:"
+                      class="col-md-6"
+                      :state="isBirthdayValid"
+                      :invalid-feedback="birthdayErrorMessage"
+                    >
+                      <b-form-input
+                        v-model="form.birthday"
+                        type="date"
+                        class="mb-2"
+                        @input="validateDateOfBirth"
+                      ></b-form-input>
+                    </b-form-group>
+
+                    <!-- Trường chọn ngày mất -->
+                    <b-form-group
+                      v-if="form.selectedStatus === 'false'"
+                      label="Ngày mất:"
+                      class="col-md-6"
+                      :state="isDeathdayValid"
+                      :invalid-feedback="deathdayErrorMessage"
+                    >
+                      <b-form-input
+                        v-model="form.deathday"
+                        type="date"
+                        class="mb-2"
+                        @input="validateDateOfDeath"
+                      ></b-form-input>
+                    </b-form-group>
+                  </div>
+
+                  <!-- Sử lý các sự kiện -->
+                  <div class="d-flex justify-content-end">
+                    <b-button type="reset" class="mr-3" variant="danger"
+                      >Reset</b-button
+                    >
+                    <b-button
+                      type="submit"
+                      variant="primary"
+                      :disabled="!validForm"
+                      >Thêm người</b-button
+                    >
+                  </div>
+                </b-form>
+              </b-modal>
+            </div>
+
+            <ul v-else>
+              <family-member
+                v-if="newData.childrens && newData.childrens.length"
+                :key="newData.data.id"
+                :member="newData"
+                :info-person-family="infoPersonFamily"
+              />
             </ul>
           </div>
         </div>
@@ -216,10 +216,12 @@ export default {
       firstPersonCreated: true,
       showAddFirstPerson: true,
       selectedGender: '',
+      rootValue: '',
       createdPersonData: {},
       infoPersonFamily: {},
       newData: {},
       newData2: {},
+      centerId: 0,
 
       form: {
         name: '',
@@ -231,7 +233,8 @@ export default {
         address: '',
       },
       show: true,
-      familyTreeId: null,
+      familyTreeId: '',
+      familyCode: '',
       validForm: false,
       isNameValid: false,
       nameErrorMessage: '',
@@ -259,14 +262,18 @@ export default {
 
   created() {
     // Lấy ID sản phẩm từ query parameter khi trang được tạo
+    this.familyCode = this.$route.query.code
     this.familyTreeId = this.$route.query.id
+
+    // eslint-disable-next-line no-console
+    console.log('code: ', this.familyCode)
   },
 
   async mounted() {
-    let scale = 0.833334
+    let scale = 0.24
     let panning = false
-    let pointX = -41046.9
-    let pointY = -41408.2
+    let pointX = -11242.8
+    let pointY = -11659.8
     let start = { x: 0, y: 0 }
 
     const zoom = document.getElementById('zoom')
@@ -326,11 +333,11 @@ export default {
       // Kiểm tra nếu đường dẫn hiện tại là "/account/dang_nhap" hoặc "/account/dang_ki"
       const currentPath = this.$route
 
-      // eslint-disable-next-line no-console
-      console.log(currentPath)
+      // // eslint-disable-next-line no-console
+      // console.log(currentPath)
 
-      // eslint-disable-next-line no-console
-      console.log(this.$route.query.id)
+      // // eslint-disable-next-line no-console
+      // console.log(this.$route.query.id)
       if (
         currentPath === '/account/dang_nhap' ||
         currentPath === '/account/dang_ki' ||
@@ -474,30 +481,98 @@ export default {
       })
     },
 
+    // async getFamilyTree() {
+    //   if (this.familyCode === 'undefined' || this.familyCode === null) {
+    //     this.familyTreeId = this.$route.query.id
+    //   } else {
+    //     try {
+    //       const getfamilytree = await this.$axios.get('http://localhost:8080/getFamilyIdByCode?code='+ this.$route.query.code)
+
+    //       // eslint-disable-next-line no-console
+    //       console.log('getfamilytree', getfamilytree)
+    //       if(getfamilytree.fid != null) {
+    //         this.familyTreeId = getfamilytree.fid
+    //       }
+    //     } catch (error) {
+    //       // eslint-disable-next-line no-console
+    //       console.error(error)
+    //     }
+    //   }
+    // },
+
     async getPersonFamily() {
+      if (this.familyCode === 'undefined' || this.familyCode === null) {
+        this.familyTreeId = this.$route.query.id
+      } else {
+        try {
+          const getfamilytree = await this.$axios.get('http://localhost:8080/getFamilyIdByCode?code='+ this.$route.query.code)
+
+          // eslint-disable-next-line no-console
+          console.log('getfamilytree', getfamilytree)
+          if(getfamilytree.data != null) {
+            this.familyTreeId = getfamilytree.data.fid
+          }
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(error)
+        }
+      }
+
       try {
         const res = await this.$axios.get(
-          'http://localhost:8080/familyTree/getDataV2?pid=47'
+          `http://localhost:8080/familyTree/getDataV2?fid=${this.familyTreeId}`
         )
-        const centerId = 47
+
+        // eslint-disable-next-line no-console
+        console.log('res', res.data)
+
+        if (
+          localStorage.getItem('centerId') === 'undefined' ||
+          localStorage.getItem('centerId') === null
+        ) {
+          const data = res.data.data
+          // eslint-disable-next-line no-console
+          console.log('chạy data:', data)
+
+          for (const key in data) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+              const person = data[key]
+              if (person.data.vocative === 'Tôi') {
+                this.centerId = person.data.id // Lấy ID của người có vocative là 'Tôi'
+                localStorage.setItem('centerId', this.centerId)
+                break // Kết thúc khi tìm thấy người có vocative là 'Tôi'
+              }
+            }
+          }
+        } else {
+          this.centerId = localStorage.getItem('centerId')
+        }
 
         this.infoPersonFamily = res.data.data
 
         // eslint-disable-next-line no-console
         console.log(res.data.data)
-        if (this.infoPersonFamily[centerId].data.info.fatherId != null) {
-          // eslint-disable-next-line no-console
-          console.log(this.infoPersonFamily[this.infoPersonFamily[centerId].data.info.fatherId].data.side)
-          // root = '0'
-        } 
-        // else if cos mej root = '1'
-        // else root =''
 
-        // if check nuts {
-        //   root = nhaans
-        // }
+        if (
+          localStorage.getItem('side') === 'undefined' ||
+          localStorage.getItem('side') === null
+        ) {
+          localStorage.setItem('side', '')
+        }
 
-        this.newDataId = this.getHighestConsecutivePerson(res.data, '0')
+        this.rootValue = localStorage.getItem('side')
+
+        // eslint-disable-next-line no-console
+        console.log('root: ', this.rootValue)
+
+        this.newDataId = this.getHighestConsecutivePerson(
+          res.data,
+          this.rootValue
+        )
+
+        // eslint-disable-next-line no-console
+        console.log({ newdâttid: this.newDataId })
+
         this.newData = this.convertFamilyData(
           this.infoPersonFamily,
           this.newDataId
@@ -619,6 +694,16 @@ export default {
     },
 
     getHighestConsecutivePerson(data, root) {
+      if (root === '') {
+        if (this.infoPersonFamily[this.centerId].data.info.fatherId != null) {
+          root = '0'
+        } else if (
+          this.infoPersonFamily[this.centerId].data.info.motherId != null
+        ) {
+          root = '1'
+        }
+      }
+
       let maxConsecutive = 0
       let currentConsecutive = 0
 

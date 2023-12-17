@@ -5,21 +5,21 @@
       class="d-flex"
     >
       <man-card-person
-        v-b-toggle="'person-sidebar-' + infoPersonFamily[personId].data.id"
         class="person"
         :data-person-id="infoPersonFamily[personId].data.id"
         :data-spouseids-id="infoPersonFamily[personId].data.spouseIds"
         :person="infoPersonFamily[personId].data.info"
         :person-id="infoPersonFamily[personId].data.id"
+        :info-person-family="infoPersonFamily"
       />
       <woman-card-person
         v-for="id in infoPersonFamily[personId].spousePersonIds"
         :key="infoPersonFamily[id].data.id"
-        v-b-toggle="'person-sidebar-' + infoPersonFamily[id].data.id"
         class="person"
         :data-spouseids-id="infoPersonFamily[personId].data.spouseIds"
         :person-id="infoPersonFamily[id].data.id"
         :person="infoPersonFamily[id].data.info"
+        :info-person-family="infoPersonFamily"
       />
     </div>
 
@@ -30,48 +30,30 @@
       <man-card-person
         v-for="id in infoPersonFamily[personId].spousePersonIds"
         :key="infoPersonFamily[id].data.id"
-        v-b-toggle="'person-sidebar-' + infoPersonFamily[id].data.id"
         class="person"
         :data-person-id="infoPersonFamily[personId].data.id"
         :data-spouseids-id="infoPersonFamily[personId].data.spouseIds"
         :person="infoPersonFamily[id].data.info"
         :person-id="infoPersonFamily[id].data.id"
+        :info-person-family="infoPersonFamily"
       />
       <woman-card-person
-        v-b-toggle="'person-sidebar-' + infoPersonFamily[personId].data.id"
         class="person"
         :data-spouseids-id="infoPersonFamily[personId].data.spouseIds"
         :person-id="infoPersonFamily[personId].data.id"
         :person="infoPersonFamily[personId].data.info"
+        :info-person-family="infoPersonFamily"
       />
     </div>
-
-    <b-sidebar
-      :id="
-        infoPersonFamily[personId].data.id
-          ? 'person-sidebar-' + infoPersonFamily[personId].data.id
-          : 'person-sidebar-' + infoPersonFamily[id].data.id
-      "
-      right
-      shadow
-    >
-      <sidebar-person
-        :personid="
-          infoPersonFamily[personId].data.id
-            ? infoPersonFamily[personId].data.id
-            : infoPersonFamily[id].data.id
-        "
-      />
-    </b-sidebar>
   </div>
 </template>
 
 <script>
 import manCardPerson from '../cardPerson/manCardPerson.vue'
 import WomanCardPerson from '../cardPerson/womanCardPerson.vue'
-import SidebarPerson from '../sidebarPerson.vue'
+
 export default {
-  components: { manCardPerson, WomanCardPerson, SidebarPerson },
+  components: { manCardPerson, WomanCardPerson },
   props: {
     infoPersonFamily: {
       type: Object,

@@ -26,7 +26,6 @@
         <!-- Trường chọn hình ảnh từ file -->
         <b-form-group label="Chọn ảnh đại diện:" class="col-md-6">
           <b-form-file
-            v-model="form.img"
             placeholder="Chọn ảnh..."
             accept="image/*"
             @change="onFileChosen"
@@ -75,8 +74,8 @@
             width="200px"
             height="100%"
             :src="
-              form.imageSrc
-                ? form.imageSrc
+              form.img
+                ? form.img
                 : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
             "
             alt="person_image"
@@ -165,8 +164,7 @@ export default {
     return {
       form: {
         name: '',
-        img: null,
-        imageSrc: null,
+        img: '',
         selectedSex: true,
         selectedStatus: '',
         selectedParent: '',
@@ -200,7 +198,6 @@ export default {
       // Reset our form values
       this.form.name = ''
       this.form.img = ''
-      this.form.imageSrc = ''
       this.form.selectedSex = ''
       this.form.selectedStatus = ''
       this.form.selectedParent = ''
@@ -232,9 +229,9 @@ export default {
             body: formData,
           })
           const data = await response.json()
-          this.form.imageSrc = data.data.link // Lưu đường dẫn hình ảnh vào biến imageSrc
+          this.form.img = data.data.link // Lưu đường dẫn hình ảnh vào biến img
           // eslint-disable-next-line no-console
-          console.log(this.form.imageSrc)
+          console.log(this.form.img)
           // eslint-disable-next-line no-console
           console.log(data.data.link)
         } catch (error) {
