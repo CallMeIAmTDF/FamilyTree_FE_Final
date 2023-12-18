@@ -5,7 +5,18 @@
       <div class="zoom_outer">
         <div id="zoom">
           <div class="tree">
-            <div v-if="newData === null" class="firstPerson">
+            <div v-if="newData.data">
+              <ul>
+                <family-member
+                  v-if="newData.childrens"
+                  :key="newData.data.id"
+                  :member="newData"
+                  :info-person-family="infoPersonFamily"
+                />
+              </ul>
+            </div>
+
+            <div v-else class="firstPerson">
               <div
                 class="btn"
                 style="
@@ -185,15 +196,6 @@
                 </b-form>
               </b-modal>
             </div>
-
-            <ul v-else>
-              <family-member
-                v-if="newData.childrens && newData.childrens.length"
-                :key="newData.data.id"
-                :member="newData"
-                :info-person-family="infoPersonFamily"
-              />
-            </ul>
           </div>
         </div>
       </div>
@@ -332,12 +334,6 @@ export default {
     if (localStorage.getItem('accessToken')) {
       // Kiểm tra nếu đường dẫn hiện tại là "/account/dang_nhap" hoặc "/account/dang_ki"
       const currentPath = this.$route
-
-      // // eslint-disable-next-line no-console
-      // console.log(currentPath)
-
-      // // eslint-disable-next-line no-console
-      // console.log(this.$route.query.id)
       if (
         currentPath === '/account/dang_nhap' ||
         currentPath === '/account/dang_ki' ||
@@ -481,35 +477,23 @@ export default {
       })
     },
 
-    // async getFamilyTree() {
-    //   if (this.familyCode === 'undefined' || this.familyCode === null) {
-    //     this.familyTreeId = this.$route.query.id
-    //   } else {
-    //     try {
-    //       const getfamilytree = await this.$axios.get('http://localhost:8080/getFamilyIdByCode?code='+ this.$route.query.code)
-
-    //       // eslint-disable-next-line no-console
-    //       console.log('getfamilytree', getfamilytree)
-    //       if(getfamilytree.fid != null) {
-    //         this.familyTreeId = getfamilytree.fid
-    //       }
-    //     } catch (error) {
-    //       // eslint-disable-next-line no-console
-    //       console.error(error)
-    //     }
-    //   }
-    // },
-
     async getPersonFamily() {
-      if (this.familyCode === 'undefined' || this.familyCode === null) {
+      if (
+        this.$route.query.code === undefined ||
+        this.$route.query.code === 'undefined' ||
+        this.$route.query.code === null
+      ) {
         this.familyTreeId = this.$route.query.id
       } else {
         try {
-          const getfamilytree = await this.$axios.get('http://localhost:8080/getFamilyIdByCode?code='+ this.$route.query.code)
+          const getfamilytree = await this.$axios.get(
+            'http://localhost:8080/getFamilyIdByCode?code=' +
+              this.$route.query.code
+          )
 
           // eslint-disable-next-line no-console
           console.log('getfamilytree', getfamilytree)
-          if(getfamilytree.data != null) {
+          if (getfamilytree.data != null) {
             this.familyTreeId = getfamilytree.data.fid
           }
         } catch (error) {
@@ -519,14 +503,62 @@ export default {
       }
 
       try {
-        const res = await this.$axios.get(
-          `http://localhost:8080/familyTree/getDataV2?fid=${this.familyTreeId}`
-        )
-
-        // eslint-disable-next-line no-console
-        console.log('res', res.data)
+        let res
 
         if (
+          this.$route.query.code !== undefined &&
+          this.$route.query.code !== 'undefined' &&
+          this.$route.query.code !== null
+        ) {
+
+          const join = await this.$axios.get(
+            'http://localhost:8080/getFamilyIdByCode?code=' +
+              this.$route.query.code
+          )
+          if (join.data.UserStatus === 1) {
+            this.$router.push('/so_do_cay?id=' + join.data.fid)
+          }
+
+          try {
+            res = await this.$axios.get(
+              'http://localhost:8080/getDataV2ByCode?code=' +
+                this.$route.query.code
+            )
+          } catch (error) {}
+        } else {
+          if (
+            localStorage.getItem('centerId') !== null &&
+            localStorage.getItem('centerId') !== undefined
+          ) {
+            res = await this.$axios.get(
+              'http://localhost:8080/familyTree/getDataV2?fid=' +
+                this.familyTreeId +
+                '&pid=' +
+                localStorage.getItem('centerId')
+            )
+          } else {
+            res = await this.$axios.get(
+              'http://localhost:8080/familyTree/getDataV2?fid=' +
+                this.familyTreeId
+            )
+          }
+          if (
+            res.data.message !== 'Lấy danh sách hiển thị Person thành công!'
+          ) {
+            res = await this.$axios.get(
+              'http://localhost:8080/familyTree/getDataV2?fid=' +
+                this.familyTreeId
+            )
+          }
+        }
+
+        // eslint-disable-next-line no-console
+        console.log('res', res.data.message)
+
+        localStorage.removeItem('centerId') // Remove centerId from localStorage
+
+        if (
+          localStorage.getItem('centerId') === undefined ||
           localStorage.getItem('centerId') === 'undefined' ||
           localStorage.getItem('centerId') === null
         ) {
@@ -553,7 +585,10 @@ export default {
         // eslint-disable-next-line no-console
         console.log(res.data.data)
 
+        // localStorage.removeItem('side') // Remove side from localStorage
+
         if (
+          localStorage.getItem('side') === undefined ||
           localStorage.getItem('side') === 'undefined' ||
           localStorage.getItem('side') === null
         ) {
@@ -685,6 +720,8 @@ export default {
 
         // Đóng modal sau khi người đầu tiên được tạo thành công
         this.$bvModal.hide('modalCreatePerson')
+
+        window.location.reload()
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error)
@@ -701,7 +738,11 @@ export default {
           this.infoPersonFamily[this.centerId].data.info.motherId != null
         ) {
           root = '1'
+        } else {
+          return this.centerId
         }
+
+
       }
 
       let maxConsecutive = 0
@@ -725,6 +766,11 @@ export default {
       // eslint-disable-next-line no-console
       console.log('personId:' + personId)
 
+      if (personId === '') {
+        localStorage.setItem('side', '')
+
+        personId = this.getHighestConsecutivePerson(data, '')
+      }
       return personId
     },
   },

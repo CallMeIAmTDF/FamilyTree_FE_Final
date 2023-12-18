@@ -194,6 +194,7 @@ export default {
 
           localStorage.setItem('centerId', 'undefined')
           localStorage.setItem('side', 'undefined')
+          window.location.reload()
           this.$router.push('/so_do_cay?id=' + idtree)
         }
 

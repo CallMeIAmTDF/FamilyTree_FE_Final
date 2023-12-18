@@ -39,6 +39,9 @@
         <b-button class="btn btn-warning" @click="editPerson"
           >Sửa thông tin</b-button
         >
+        <b-button class="btn btn-primary" @click="changeTree"
+          >Chuyển cây</b-button
+        >
         <b-button class="btn btn-danger" @click="confirmDelete"
           >Xóa thành viên</b-button
         >
@@ -535,6 +538,13 @@ export default {
         this.showErrorToast('Có lỗi xảy ra khi xóa thành viên!')
       }
     },
+
+    changeTree() {
+      localStorage.setItem('centerId', this.personid)
+      localStorage.setItem('side', undefined)
+
+      window.location.reload()
+    }
   },
 }
 </script>

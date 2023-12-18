@@ -568,7 +568,6 @@ export default {
               personDod: this.form.deathday,
               personAddress: this.form.address,
               parentsId: null,
-              // familyTreeId: this.familyTreeId,
               familyTreeId: this.item.familyTreeId,
               personStatus: this.form.selectedStatus,
               personRank: null,
@@ -586,6 +585,8 @@ export default {
           console.log('success')
 
           this.$emit('personCreated')
+
+          window.location.reload()
 
           this.showSuccessToast('Thêm người vào sơ đồ thành công')
         }

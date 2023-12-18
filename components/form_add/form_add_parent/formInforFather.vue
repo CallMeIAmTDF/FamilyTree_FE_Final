@@ -357,6 +357,8 @@ export default {
 
         this.$emit('personCreated')
 
+        window.location.reload()
+
         this.showSuccessToast('Thêm bố vào sơ đồ thành công')
       } catch (error) {
         // eslint-disable-next-line no-console

@@ -16,6 +16,18 @@
 
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
+            <!-- Jointrang sơ đồ -->
+            <b-button
+              v-if="joinTree && actionJoin !== 1"
+              class="mr-3"
+              pill
+              variant="light"
+              style="border: none"
+              @click="requestJoin"
+            >
+              <strong v-if="actionJoin === -1">Tham gia</strong>
+              <strong v-else-if="actionJoin === 0">Đã yêu cầu</strong>
+            </b-button>
             <!-- Search của trang sơ đồ -->
             <b-button
               v-if="showSearch"
@@ -98,7 +110,7 @@
         id="search-info"
         centered
         hide-footer
-        size="xl"
+        size="lg"
         title="Tìm kiếm người thân"
       >
         <search-person />
@@ -137,6 +149,8 @@ export default {
       userInfo: {
         fullName: '',
       },
+
+      actionJoin: '',
     }
   },
 
@@ -170,6 +184,10 @@ export default {
       return this.$route.path === '/so_do_cay'
     },
 
+    joinTree() {
+      return this.$route.path === '/so_do_cay'
+    },
+
     showNotifi() {
       // Điều kiện để hiển thị thông báo
       return !(
@@ -191,7 +209,9 @@ export default {
     }
   },
 
-  created() {},
+  created() {
+    this.getJoinTree()
+  },
 
   methods: {
     async signOutWithToken(token) {
@@ -207,6 +227,8 @@ export default {
         localStorage.removeItem('userInfo')
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
+        localStorage.removeItem('centerId')
+        localStorage.removeItem('side')
 
         // Chuyển hướng người dùng về trang đăng nhập hoặc trang chủ (tuỳ vào luồng của bạn)
         this.$router.push('/trang_chao_mung') // Điều hướng về trang đăng nhập
@@ -253,6 +275,38 @@ export default {
         this.$router.push('/account/dang_nhap') // Chuyển hướng về trang đăng nhập
       }
     },
+
+    async getJoinTree() {
+      let join
+
+      if (this.$route.query.id !== null && this.$route.query.id !== undefined) {
+        join = await this.$axios.get(
+          'http://localhost:8080/checkStatusUser?fid=' + this.$route.query.id
+        )
+      }
+
+      if (
+        this.$route.query.code !== null &&
+        this.$route.query.code !== undefined
+      ) {
+        join = await this.$axios.get(
+          'http://localhost:8080/getFamilyIdByCode?code=' +
+            this.$route.query.code
+        )
+      }
+      // eslint-disable-next-line no-console
+      console.log('join: ', join)
+
+      this.actionJoin = join.data.UserStatus ? join.data.UserStatus : 0
+    },
+
+    async requestJoin() {
+      const action = await this.$axios.post('http://localhost:8080/linkSharing?code=' + this.$route.query.code)
+
+      window.location.reload()
+      // eslint-disable-next-line no-console
+      console.log('action: ', action)
+    }
   },
 }
 </script>

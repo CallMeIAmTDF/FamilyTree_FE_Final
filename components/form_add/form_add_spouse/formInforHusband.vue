@@ -346,6 +346,8 @@ export default {
 
         this.$emit('personCreated')
 
+        window.location.reload()
+
         this.showSuccessToast('Thêm chồng vào sơ đồ thành công')
 
         await this.getPersonFamily();

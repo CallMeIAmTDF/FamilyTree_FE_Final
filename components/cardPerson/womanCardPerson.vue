@@ -268,6 +268,7 @@ export default {
       modalVisibleSibling: false,
       modalVisibleChild: false,
       modalVisibleInfoPerson: false,
+
     }
   },
 
@@ -277,6 +278,7 @@ export default {
       return this.person.parentsId === null
     },
   },
+
 
   methods: {
     openModalParent() {

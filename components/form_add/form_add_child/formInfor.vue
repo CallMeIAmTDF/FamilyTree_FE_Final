@@ -546,6 +546,8 @@ export default {
 
           this.$emit('personCreated')
 
+          window.location.reload()
+
           this.showSuccessToast('Thêm người vào sơ đồ thành công')
         } else {
           // Xác định fatherId và motherId dựa trên giới tính của người được tạo
@@ -591,6 +593,8 @@ export default {
           console.log('success')
 
           this.$emit('personCreated')
+
+          window.location.reload()
 
           this.showSuccessToast('Thêm người vào sơ đồ thành công')
         }
