@@ -50,14 +50,16 @@
             </div>
             <div class="content col-md-8">
               <h5 class="name">{{ person.personName }}</h5>
-              <h6 class="job">Giới tính: {{ person.personGender }}</h6>
-              <h6 class="age">Ngày sinh: {{ person.personDob }}</h6>
+              <h6 class="job">
+                Giới tính: {{ getGenderText(person.personGender) }}
+              </h6>
+              <h6 class="age">Ngày sinh: {{ formatDate(person.personDob) }}</h6>
             </div>
           </div>
         </li>
       </ul>
     </div>
-    
+
     <b-modal v-model="modalVisibleInfoPerson" hide-footer>
       <sidebar-person :personid="selectedPersonId" />
     </b-modal>
@@ -78,7 +80,7 @@ export default {
       listPerson: [],
 
       modalVisibleInfoPerson: false,
-      selectedPersonId: null
+      selectedPersonId: null,
     }
   },
 
@@ -111,6 +113,20 @@ export default {
     openModalInfoPerson(personId) {
       this.selectedPersonId = personId
       this.modalVisibleInfoPerson = true
+    },
+
+    getGenderText(isMale) {
+      return isMale ? 'Nam' : 'Nữ'
+    },
+
+    formatDate(dateString) {
+      if (!dateString) return '' // Check if the date string exists
+
+      const date = new Date(dateString)
+      if (isNaN(date.getTime())) return '' // Check if the date is valid
+
+      const options = { year: 'numeric', month: 'numeric', day: 'numeric' }
+      return date.toLocaleDateString('en-US', options)
     },
   },
 }

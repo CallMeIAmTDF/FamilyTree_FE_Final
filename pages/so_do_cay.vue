@@ -12,6 +12,7 @@
                   :key="newData.data.id"
                   :member="newData"
                   :info-person-family="infoPersonFamily"
+                  :action-join="actionJoin"
                 />
               </ul>
             </div>
@@ -224,6 +225,7 @@ export default {
       newData: {},
       newData2: {},
       centerId: 0,
+      actionJoin: '',
 
       form: {
         name: '',
@@ -350,6 +352,7 @@ export default {
     }
 
     await this.getPersonFamily()
+    await this.getJoinTree()
   },
 
   methods: {
@@ -510,7 +513,6 @@ export default {
           this.$route.query.code !== 'undefined' &&
           this.$route.query.code !== null
         ) {
-
           const join = await this.$axios.get(
             'http://localhost:8080/getFamilyIdByCode?code=' +
               this.$route.query.code
@@ -707,7 +709,7 @@ export default {
         // eslint-disable-next-line no-console
         console.log(response)
 
-        this.showSuccessToast('Thêm người đầu tiên vào sơ đồ thành công')
+        this.showSuccessToast('Thêm người đầu tiên vào phả đồ thành công')
 
         // Sau khi thêm người đầu tiên thành công, ẩn thẻ firstPersonCard
         this.showAddFirstPerson = false
@@ -741,8 +743,6 @@ export default {
         } else {
           return this.centerId
         }
-
-
       }
 
       let maxConsecutive = 0
@@ -772,6 +772,30 @@ export default {
         personId = this.getHighestConsecutivePerson(data, '')
       }
       return personId
+    },
+
+    async getJoinTree() {
+      let join
+
+      if (this.$route.query.id !== null && this.$route.query.id !== undefined) {
+        join = await this.$axios.get(
+          'http://localhost:8080/checkStatusUser?fid=' + this.$route.query.id
+        )
+      }
+
+      if (
+        this.$route.query.code !== null &&
+        this.$route.query.code !== undefined
+      ) {
+        join = await this.$axios.get(
+          'http://localhost:8080/getFamilyIdByCode?code=' +
+            this.$route.query.code
+        )
+      }
+      // eslint-disable-next-line no-console
+      console.log('join: ', join)
+
+      this.actionJoin = join.data.UserStatus ? join.data.UserStatus : 0
     },
   },
 }

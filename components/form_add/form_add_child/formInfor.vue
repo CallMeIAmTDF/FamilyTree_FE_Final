@@ -548,7 +548,7 @@ export default {
 
           window.location.reload()
 
-          this.showSuccessToast('Thêm người vào sơ đồ thành công')
+          this.showSuccessToast('Thêm người vào phả đồ thành công')
         } else {
           // Xác định fatherId và motherId dựa trên giới tính của người được tạo
           let fatherId = null
@@ -596,13 +596,13 @@ export default {
 
           window.location.reload()
 
-          this.showSuccessToast('Thêm người vào sơ đồ thành công')
+          this.showSuccessToast('Thêm người vào phả đồ thành công')
         }
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error)
 
-        this.showErrorToast('Có lỗi xảy ra khi thêm người vào sơ đồ!')
+        this.showErrorToast('Có lỗi xảy ra khi thêm người vào phả đồ!')
       }
     },
   },

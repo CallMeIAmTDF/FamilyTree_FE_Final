@@ -31,7 +31,7 @@
       >
         <div class="py-1 px-3 col-md-8">
           <h5 class="name">{{ item.name }}</h5>
-          <span v-if="item.roleId === 3" style="color: #333">Chủ sơ đồ</span>
+          <span v-if="item.roleId === 3" style="color: #333">Chủ phả đồ</span>
           <span v-else-if="item.roleId === 2" style="color: #333"
             >Quản trị viên</span
           >
@@ -76,17 +76,17 @@
                   Cấp quyền quản trị
                 </template>
                 <template v-else-if="action === 'kick'">
-                  Xóa khỏi sơ đồ
+                  Xóa khỏi phả đồ
                 </template>
               </div>
               <div v-else>
                 <template
                   v-if="action === 'downRole' && currentUserRoleId === 3"
                 >
-                  Xoá quyền quản trị sơ đồ
+                  Xoá quyền quản trị phả đồ
                 </template>
                 <template v-else-if="action === 'kick'">
-                  Xóa khỏi sơ đồ
+                  Xóa khỏi phả đồ
                 </template>
               </div>
             </b-dropdown-item>

@@ -22,7 +22,7 @@
     </nav>
     <div class="wrapper mt-3">
       <div v-if="activeTab === 'shareLink'">
-        <h5 style="font-weight: bold">Chia sẻ sơ đồ</h5>
+        <h5 style="font-weight: bold">Chia sẻ phả đồ</h5>
         <div class="container">
           <b-input-group class="mb-3">
             <b-form-input
@@ -44,7 +44,7 @@
         <b-form-group class="col-md-12">
           <b-form-input
             v-model="nameTree"
-            placeholder="Tên sơ đồ cây"
+            placeholder="Tên phả đồ"
             class="mb-3"
           ></b-form-input>
           <b-form-select v-model="selectPerson">
@@ -63,7 +63,7 @@
         <div class="container">
           <b-form-select v-model="selectedSide" class="mb-3">
             <b-form-select-option value="null" disabled
-              >Chọn hướng sơ đồ</b-form-select-option
+              >Chọn hướng phả đồ</b-form-select-option
             >
             <b-form-select-option value="2">
               Xem phả đồ họ nội
@@ -78,7 +78,7 @@
 
           <b-input-group class="mb-3">
             <b-button variant="primary" style="width: 100%" @click="getCopyTree"
-              >Copy sơ đồ</b-button
+              >Copy phả đồ</b-button
             >
           </b-input-group>
         </div>

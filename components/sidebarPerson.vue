@@ -36,13 +36,13 @@
       <hr />
 
       <div class="d-flex justify-content-around">
-        <b-button class="btn btn-warning" @click="editPerson"
+        <b-button v-if="actionJoin === 1" class="btn btn-warning" @click="editPerson"
           >Sửa thông tin</b-button
         >
         <b-button class="btn btn-primary" @click="changeTree"
           >Chuyển cây</b-button
         >
-        <b-button class="btn btn-danger" @click="confirmDelete"
+        <b-button v-if="actionJoin === 1" class="btn btn-danger" @click="confirmDelete"
           >Xóa thành viên</b-button
         >
       </div>
@@ -256,6 +256,11 @@ export default {
       type: Number,
       required: true,
     },
+
+    actionJoin: {
+      type: Number,
+      default: 0
+    }
   },
 
   data() {

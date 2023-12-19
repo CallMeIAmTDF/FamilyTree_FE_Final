@@ -56,7 +56,7 @@
         </div>
       </div>
 
-      <div class="add btn">
+      <div v-if="actionJoin === 1" class="add btn">
         <b-dropdown
           dropright
           class="add-icon icon-plus"
@@ -223,7 +223,7 @@
       />
     </b-modal>
     <b-modal v-model="modalVisibleInfoPerson" hide-footer>
-      <sidebar-person :personid="personId" />
+      <sidebar-person :personid="personId" :action-join="actionJoin"/>
     </b-modal>
   </div>
 </template>
@@ -262,6 +262,11 @@ export default {
       type: Object,
       required: true,
     },
+
+    actionJoin: {
+      type: Number,
+      default: 0
+    }
   },
 
   data() {

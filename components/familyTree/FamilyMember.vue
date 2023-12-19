@@ -3,6 +3,7 @@
     <group-tree
       :info-person-family="infoPersonFamily"
       :person-id="member.data.data?.id ? member.data.data.id : member.data.id"
+      :action-join="actionJoin"
     />
     <ul v-if="member.childrens && member.childrens.length">
         <family-member
@@ -10,6 +11,7 @@
           :key="child.data.data?.id ? child.data.data.id : child.data.id"
           :member="child"
           :info-person-family="infoPersonFamily"
+          :action-join="actionJoin"
         />
     </ul>
   </li>
@@ -23,10 +25,16 @@ export default {
       type: Object,
       required: true,
     },
+
     infoPersonFamily: {
       type: Object,
       required: true,
     },
+
+    actionJoin: {
+      type: Number,
+      default: 0
+    }
 },
 mounted() {
     // eslint-disable-next-line no-console

@@ -348,14 +348,14 @@ export default {
 
         window.location.reload()
 
-        this.showSuccessToast('Thêm chồng vào sơ đồ thành công')
+        this.showSuccessToast('Thêm chồng vào phả đồ thành công')
 
         await this.getPersonFamily();
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error)
 
-        this.showErrorToast('Có lỗi xảy ra khi thêm chồng vào sơ đồ!')
+        this.showErrorToast('Có lỗi xảy ra khi thêm chồng vào phả đồ!')
       }
     },
   },

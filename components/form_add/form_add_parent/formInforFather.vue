@@ -359,12 +359,12 @@ export default {
 
         window.location.reload()
 
-        this.showSuccessToast('Thêm bố vào sơ đồ thành công')
+        this.showSuccessToast('Thêm bố vào phả đồ thành công')
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error)
 
-        this.showErrorToast('Có lỗi xảy ra khi thêm bố vào sơ đồ!')
+        this.showErrorToast('Có lỗi xảy ra khi thêm bố vào phả đồ!')
       }
     },
   },

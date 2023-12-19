@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="text-center p-3" style="font-weight: bold">
-      Danh sách các sơ đồ
+      Danh sách các phả đồ
     </h1>
     <div class="container">
       <div class="d-flex justify-content-between align-items-center mx-4">
@@ -9,34 +9,34 @@
           <a
             :class="{ active: activeTab === 'used' }"
             class="nav-item nav-link"
-            style="cursor: pointer; font-weight: bold;"
+            style="cursor: pointer; font-weight: bold"
             @click="activeTab = 'used'"
           >
-            Sơ đồ sở hữu
+            Phả đồ sở hữu
           </a>
           <a
             :class="{ active: activeTab === 'joined' }"
             class="nav-item nav-link"
-            style="cursor: pointer; font-weight: bold;"
+            style="cursor: pointer; font-weight: bold"
             @click="activeTab = 'joined'"
           >
-            Sơ đồ tham gia
+            Phả đồ tham gia
           </a>
           <a
             :class="{ active: activeTab === 'requestJoin' }"
             class="nav-item nav-link"
-            style="cursor: pointer; font-weight: bold;"
+            style="cursor: pointer; font-weight: bold"
             @click="activeTab = 'requestJoin'"
           >
-            Sơ đồ đang chờ xác nhận
+            Phả đồ đang chờ xác nhận
           </a>
         </div>
         <button
           class="btn btn-success my-4"
-          style="font-weight: bold;"
+          style="font-weight: bold"
           @click="$bvModal.show('modalCreate')"
         >
-          Thêm sơ đồ
+          Thêm phả đồ
         </button>
       </div>
       <div class="p-4" style="background-color: #ddd; border-radius: 16px">
@@ -46,13 +46,13 @@
       </div>
       <div class="p-4"></div>
     </div>
-    <b-modal id="modalCreate" hide-footer title="Nhập tên sơ đồ">
+    <b-modal id="modalCreate" hide-footer title="Nhập tên phả đồ">
       <b-form @submit.prevent="onSubmit">
         <b-form-group>
           <b-form-input v-model="form.nameTree" title="Nhập tên" required>
           </b-form-input>
         </b-form-group>
-        <b-button type="submit" variant="primary">Tạo sơ đồ</b-button>
+        <b-button type="submit" variant="primary">Tạo phả đồ</b-button>
       </b-form>
     </b-modal>
   </div>
@@ -87,11 +87,11 @@ export default {
           familyTreeName: this.form.nameTree,
         })
         this.$bvModal.hide('modalCreate')
-        this.showSuccessToast('Tạo sơ đồ thành công!')
+        this.showSuccessToast('Tạo phả đồ thành công!')
         // Reload lại trang sử dụng $router.go()
         this.$router.go() // Sẽ reload lại trang hiện tại
       } catch (error) {
-        this.showErrorToast('Có lỗi xảy ra khi tạo sơ đồ!')
+        this.showErrorToast('Có lỗi xảy ra khi tạo phả đồ!')
         // eslint-disable-next-line no-console
         console.error(error)
       }

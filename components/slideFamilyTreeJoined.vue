@@ -2,13 +2,13 @@
   <!-- Phần giao diện -->
   <div>
     <div class="row d-flex align-items-center mb-3">
-      <h2 class="col-md-4">Các sơ đồ tham gia</h2>
+      <h2 class="col-md-4">Các phả đồ tham gia</h2>
 
       <b-form-input
         v-model="filter"
         class="col-md-4"
         type="search"
-        placeholder="Tìm kiếm sơ đồ"
+        placeholder="Tìm kiếm phả đồ"
       ></b-form-input>
 
       <!-- Phân trang -->
@@ -32,7 +32,7 @@
       >
         <!-- Hiển thị thông tin sơ đồ -->
         <b-card
-          :title="'Sơ đồ: ' + tree.familyTreeName"
+          :title="'Phả đồ: ' + tree.familyTreeName"
           img-src="http://3.bp.blogspot.com/-kT-Behs3TDI/UOwj8ukeXSI/AAAAAAAAQ5M/qvTs9xXrHHg/s1600/Gia+Pha+Hoang+Chi+Toc.jpg"
           img-top
           tag="article"
@@ -42,7 +42,7 @@
           <a
             :href="`/so_do_cay?id=${tree.familyTreeId}`"
             class="btn btn-primary"
-            >Xem sơ đồ</a
+            >Xem phả đồ</a
           >
         </b-card>
       </b-col>

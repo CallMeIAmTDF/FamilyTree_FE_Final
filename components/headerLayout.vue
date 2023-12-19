@@ -10,7 +10,7 @@
           <!-- Nav trang chủ -->
           <b-navbar-nav v-if="showHeader">
             <b-nav-item href="/" active>Trang chủ</b-nav-item>
-            <b-nav-item href="/danh_sach_so_do" active>Danh sách</b-nav-item>
+            <b-nav-item href="/danh_sach_so_do" active>Danh sách phả đồ</b-nav-item>
             <!-- <b-nav-item href="/so_do_cay?id=16" active>Sơ đồ</b-nav-item> -->
           </b-navbar-nav>
 
@@ -115,13 +115,13 @@
       >
         <search-person />
       </b-modal>
-      <b-modal id="share-box" hide-footer title="Chia sẻ thông tin của ">
+      <b-modal id="share-box" hide-footer title="Chia sẻ thông tin">
         <share-box />
       </b-modal>
       <b-modal
         id="control-user"
         hide-footer
-        title="Quản lý thông tin người dùng của "
+        title="Quản lý thông tin người dùng"
       >
         <list-tree-user />
       </b-modal>
@@ -207,10 +207,10 @@ export default {
         this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       }
     }
+    this.getJoinTree()
   },
 
   created() {
-    this.getJoinTree()
   },
 
   methods: {
