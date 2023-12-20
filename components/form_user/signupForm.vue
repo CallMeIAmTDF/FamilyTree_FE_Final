@@ -80,7 +80,6 @@
               </b-form-radio-group>
             </b-form-group>
           </div>
-
         </div>
 
         <!-- Sử lý các sự kiện -->
@@ -261,21 +260,46 @@ export default {
 
     async onSubmit() {
       try {
-        await this.$axios.$post(`http://localhost:8080/users/register`, {
-          userFullName: this.form.user_fullname,
-          userEmail: this.form.user_email,
-          userPassword: this.form.user_password, 
-          userImage: this.form.user_image,
-          userGender: this.form.user_gender,
-          userDob: this.form.user_dob,
-          userAddress: this.form.user_address,
-          userPhoneNum: this.form.user_phone,
-        })
+        const response = await this.$axios.$post(
+          `http://localhost:8080/users/register`,
+          {
+            userFullName: this.form.user_fullname,
+            userEmail: this.form.user_email,
+            userPassword: this.form.user_password,
+            userImage: this.form.user_image,
+            userGender: this.form.user_gender,
+            userDob: this.form.user_dob,
+            userAddress: this.form.user_address,
+            userPhoneNum: this.form.user_phone,
+          }
+        )
 
-        // eslint-disable-next-line no-console
-        console.log('success')
+        if (response.data && response.status === 'OK') {
+          // eslint-disable-next-line no-console
+          console.log('success')
 
-        this.$router.push('/account/dang_nhap')
+          this.$bvToast.toast(response.message, {
+            title: 'Đã xảy ra lỗi',
+            variant: 'success',
+            autoHideDelay: 5000, // Hiển thị trong 5 giây
+          })
+
+          setTimeout(() => {
+            this.$router.push({
+              path: '/account/dang_nhap',
+              query: {
+                email: this.form.email,
+                password: this.form.password,
+              },
+            })
+          }, 3000)
+        } else {
+          this.$bvToast.toast(response.message, {
+            title: 'Đã xảy ra lỗi',
+            variant: 'danger',
+            autoHideDelay: 5000, // Hiển thị trong 5 giây
+          })
+        }
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error)

@@ -173,6 +173,7 @@ export default {
 
       try {
         // Gọi API để đặt lại mật khẩu
+
         const response = await this.$axios.$post(
           `http://localhost:8080/users/forgetPassword?email=${this.form.email}`
         )
@@ -181,20 +182,35 @@ export default {
         // eslint-disable-next-line no-console
         console.log(response.data) // In thông tin từ API response nếu muốn
 
-        this.$router.push({
-          path: '/account/xac_nhan_otp',
-          query: {
-            email: this.form.email,
-            password: this.form.password,
-          },
-        })
+        if (response.status === 'OK') {
+          this.$router.push({
+            path: '/account/xac_nhan_otp',
+            query: {
+              email: this.form.email,
+              password: this.form.password,
+            },
+          })
+        } else {
+          // Xử lý khi đăng nhập không thành công
+
+          this.$bvToast.toast(response.message, {
+            title: 'Đã xảy ra lỗi',
+            variant: 'danger',
+            autoHideDelay: 5000, // Hiển thị trong 5 giây
+          })
+
+        }
       } catch (error) {
         // Xử lý lỗi nếu gọi API không thành công
         // eslint-disable-next-line no-console
         console.error(error)
 
-        // Xóa thông tin trên form khi gặp lỗi
-        this.onReset()
+        this.$bvToast.toast(error.message, {
+          title: 'Đã xảy ra lỗi',
+          variant: 'danger',
+          autoHideDelay: 5000,
+        })
+
       }
     },
   },

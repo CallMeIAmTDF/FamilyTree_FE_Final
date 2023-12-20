@@ -104,12 +104,14 @@ export default {
   created() {
     this.getlinkShare()
 
-    this.getPerson()
-
     this.familyTreeId = this.$route.query.id
 
     // eslint-disable-next-line no-console
     console.log(this.familyTreeId)
+  },
+
+  async mounted() {
+    await this.getPerson()
   },
 
   methods: {
@@ -192,10 +194,13 @@ export default {
         if (response.message === 'Sao chép thành công!') {
           const idtree = response.data.familyTreeId
 
+          // eslint-disable-next-line no-console
+          console.log('idtree: ' + idtree)
+
           localStorage.setItem('centerId', 'undefined')
           localStorage.setItem('side', 'undefined')
-          window.location.reload()
-          this.$router.push('/so_do_cay?id=' + idtree)
+
+          window.location.href = '/so_do_cay?id=' + idtree
         }
 
         // eslint-disable-next-line no-console

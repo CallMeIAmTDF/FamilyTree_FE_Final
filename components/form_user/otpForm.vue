@@ -82,15 +82,15 @@ export default {
 
         // Nếu mã OTP chính xác
         if (response && response.success) {
-          this.showSuccessToast('Thay đổi mật khẩu thành công');
+          this.showSuccessToast(response.message);
           this.$router.push('/account/dang_nhap');
         } else {
-          this.showErrorToast('Otp không chính xác');
+          this.showErrorToast(response.message);
         }
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error);
-        this.showErrorToast('Đã xảy ra lỗi khi xác minh OTP');
+        this.showErrorToast(error.message);
       }
     },
 

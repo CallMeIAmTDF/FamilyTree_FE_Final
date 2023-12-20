@@ -223,7 +223,7 @@ export default {
           // eslint-disable-next-line no-console
           console.error('Đăng nhập thất bại!')
 
-          this.$bvToast.toast('Đăng nhập thất bại!', {
+          this.$bvToast.toast(response.message, {
           title: 'Đã xảy ra lỗi',
           variant: 'danger',
           autoHideDelay: 5000, // Hiển thị trong 5 giây

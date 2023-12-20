@@ -67,7 +67,6 @@
                     <!-- Trường chọn hình ảnh từ file -->
                     <b-form-group label="Chọn ảnh đại diện:" class="col-md-6">
                       <b-form-file
-                        v-model="form.img"
                         placeholder="Chọn ảnh..."
                         accept="image/*"
                         @change="onFileChosen"
@@ -119,8 +118,8 @@
                         width="200px"
                         height="100%"
                         :src="
-                          form.imageSrc
-                            ? form.imageSrc
+                          form.img
+                            ? form.img
                             : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
                         "
                         alt="person_image"
@@ -225,12 +224,11 @@ export default {
       newData: {},
       newData2: {},
       centerId: 0,
-      actionJoin: '',
+      actionJoin: 0,
 
       form: {
         name: '',
-        img: null,
-        imageSrc: null,
+        img: '',
         selectedSex: '',
         selectedStatus: '',
         birthday: '',
@@ -392,9 +390,9 @@ export default {
           })
 
           const data = await response.json()
-          this.form.imageSrc = data.data.link // Lưu đường dẫn hình ảnh vào biến imageSrc
+          this.form.img = data.data.link // Lưu đường dẫn hình ảnh vào biến img
           // eslint-disable-next-line no-console
-          console.log(this.form.imageSrc)
+          console.log(this.form.img)
           // eslint-disable-next-line no-console
           console.log(data.data.link)
         } catch (error) {
@@ -530,7 +528,9 @@ export default {
         } else {
           if (
             localStorage.getItem('centerId') !== null &&
-            localStorage.getItem('centerId') !== undefined
+            localStorage.getItem('centerId') !== 'null' &&
+            localStorage.getItem('centerId') !== undefined &&
+            localStorage.getItem('centerId') !== 'undefined'
           ) {
             res = await this.$axios.get(
               'http://localhost:8080/familyTree/getDataV2?fid=' +
@@ -562,7 +562,8 @@ export default {
         if (
           localStorage.getItem('centerId') === undefined ||
           localStorage.getItem('centerId') === 'undefined' ||
-          localStorage.getItem('centerId') === null
+          localStorage.getItem('centerId') === null ||
+          localStorage.getItem('centerId') === 'null'
         ) {
           const data = res.data.data
           // eslint-disable-next-line no-console
@@ -592,7 +593,8 @@ export default {
         if (
           localStorage.getItem('side') === undefined ||
           localStorage.getItem('side') === 'undefined' ||
-          localStorage.getItem('side') === null
+          localStorage.getItem('side') === null ||
+          localStorage.getItem('side') === 'null'
         ) {
           localStorage.setItem('side', '')
         }
@@ -623,7 +625,17 @@ export default {
         console.log({ infoPersonFamily: this.infoPersonFamily })
       } catch (error) {
         // eslint-disable-next-line no-console
-        console.log(error)
+        console.log('error:', error.message)
+
+        if (
+          error.message !==
+          "Cannot read properties of undefined (reading 'data')"
+        ) {
+          this.$nuxt.context.error({
+            statusCode: error.statusCode || 500,
+            message: error.message || 'Internal Server Error',
+          })
+        }
       }
     },
 
@@ -734,6 +746,12 @@ export default {
 
     getHighestConsecutivePerson(data, root) {
       if (root === '') {
+        if (
+          this.infoPersonFamily[this.centerId].data.parentId === null ||
+          this.infoPersonFamily[this.centerId].data.parentId === 'null'
+        ) {
+          return this.centerId
+        }
         if (this.infoPersonFamily[this.centerId].data.info.fatherId != null) {
           root = '0'
         } else if (

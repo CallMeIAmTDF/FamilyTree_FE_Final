@@ -2,7 +2,7 @@
   <div>
     <header style="position: relative; top: 0; left: 0">
       <b-navbar toggleable="lg" type="dark" variant="dark">
-        <b-navbar-brand href="#">Family Connect</b-navbar-brand>
+        <b-navbar-brand href="/trang_chao_mung">Family Connect</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -10,8 +10,9 @@
           <!-- Nav trang chủ -->
           <b-navbar-nav v-if="showHeader">
             <b-nav-item href="/" active>Trang chủ</b-nav-item>
-            <b-nav-item href="/danh_sach_so_do" active>Danh sách phả đồ</b-nav-item>
-            <!-- <b-nav-item href="/so_do_cay?id=16" active>Sơ đồ</b-nav-item> -->
+            <b-nav-item href="/danh_sach_so_do" active
+              >Danh sách phả đồ</b-nav-item
+            >
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
@@ -101,7 +102,7 @@
               <template #button-content>
                 <strong>{{ userInfo.fullName }}</strong>
               </template>
-              <b-dropdown-item @click="signOut">Sign Out</b-dropdown-item>
+              <b-dropdown-item @click="signOut">Đăng xuất</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
         </b-collapse>
@@ -150,7 +151,7 @@ export default {
         fullName: '',
       },
 
-      actionJoin: '',
+      actionJoin: 0,
     }
   },
 
@@ -200,20 +201,31 @@ export default {
     },
   },
 
-  mounted() {
+  created() {
     if (typeof window !== 'undefined') {
       // Kiểm tra nếu có userInfo trong localStorage
       if (localStorage.getItem('userInfo')) {
         this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       }
     }
-    this.getJoinTree()
   },
 
-  created() {
+  async mounted() {
+    await this.getJoinTree()
   },
 
   methods: {
+    signOut() {
+      const accessToken = localStorage.getItem('accessToken')
+      if (accessToken) {
+        // Nếu tồn tại access token, thực hiện đăng xuất với access token đó
+        this.signOutWithToken(accessToken)
+      } else {
+        // Nếu không tồn tại access token, xử lý đăng xuất thông thường
+        this.$router.push('/account/dang_nhap') // Chuyển hướng về trang đăng nhập
+      }
+    },
+
     async signOutWithToken(token) {
       try {
         // Gửi yêu cầu GET đến API để thực hiện sign out và truyền accessToken vào
@@ -236,7 +248,7 @@ export default {
         // eslint-disable-next-line no-console
         console.log('Đã đăng xuất thành công!')
       } catch (error) {
-        if (error.response && error.response.status === 401) {
+        if (error.response && error.response.status === 500) {
           // Nếu lỗi trả về là Unauthorized (401), có thể là access token hết hạn
           // Tiến hành gửi refreshToken để lấy lại access token mới
           try {
@@ -265,48 +277,47 @@ export default {
       }
     },
 
-    signOut() {
-      const accessToken = localStorage.getItem('accessToken')
-      if (accessToken) {
-        // Nếu tồn tại access token, thực hiện đăng xuất với access token đó
-        this.signOutWithToken(accessToken)
-      } else {
-        // Nếu không tồn tại access token, xử lý đăng xuất thông thường
-        this.$router.push('/account/dang_nhap') // Chuyển hướng về trang đăng nhập
-      }
-    },
-
     async getJoinTree() {
-      let join
+      let join = ''
 
-      if (this.$route.query.id !== null && this.$route.query.id !== undefined) {
-        join = await this.$axios.get(
-          'http://localhost:8080/checkStatusUser?fid=' + this.$route.query.id
-        )
-      }
-
-      if (
-        this.$route.query.code !== null &&
-        this.$route.query.code !== undefined
-      ) {
-        join = await this.$axios.get(
-          'http://localhost:8080/getFamilyIdByCode?code=' +
-            this.$route.query.code
-        )
-      }
       // eslint-disable-next-line no-console
-      console.log('join: ', join)
+      console.log('path: ', window.location.pathname)
 
-      this.actionJoin = join.data.UserStatus ? join.data.UserStatus : 0
+      if (window.location.pathname === '/so_do_cay') {
+        if (
+          this.$route.query.id !== null &&
+          this.$route.query.id !== undefined
+        ) {
+          join = await this.$axios.get(
+            'http://localhost:8080/checkStatusUser?fid=' + this.$route.query.id
+          )
+        }
+
+        if (
+          this.$route.query.code !== null &&
+          this.$route.query.code !== undefined
+        ) {
+          join = await this.$axios.get(
+            'http://localhost:8080/getFamilyIdByCode?code=' +
+              this.$route.query.code
+          )
+        }
+        // eslint-disable-next-line no-console
+        console.log('join: ', join)
+
+        this.actionJoin = join.data.UserStatus ? join.data.UserStatus : 0
+      } 
     },
 
     async requestJoin() {
-      const action = await this.$axios.post('http://localhost:8080/linkSharing?code=' + this.$route.query.code)
+      const action = await this.$axios.post(
+        'http://localhost:8080/linkSharing?code=' + this.$route.query.code
+      )
 
       window.location.reload()
       // eslint-disable-next-line no-console
       console.log('action: ', action)
-    }
+    },
   },
 }
 </script>

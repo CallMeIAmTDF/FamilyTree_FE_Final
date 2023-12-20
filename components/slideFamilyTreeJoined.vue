@@ -87,7 +87,8 @@ export default {
         const response = await this.$axios.$get(
           'http://localhost:8080/familyTree/list'
         )
-        this.joinedTrees = response.data.joined
+
+        this.joinedTrees = response.data.joined.sort((a, b) => b.familyTreeId - a.familyTreeId)
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error)

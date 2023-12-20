@@ -33,7 +33,7 @@ export default {
 
     actionJoin: {
       type: Number,
-      default: 0
+      required: true,
     }
 },
 mounted() {

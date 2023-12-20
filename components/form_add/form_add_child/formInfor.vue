@@ -92,7 +92,7 @@
         <!-- Chọn bố -->
         <b-form-group
           v-if="item.gender === 'Female'"
-          class="col-md-6"
+          class="col-md-4"
           label="Chọn bố cho con"
         >
           <b-form-select v-model="form.selectedFather" @change="fetchChildren">
@@ -112,7 +112,7 @@
         <!-- Chọn mẹ  -->
         <b-form-group
           v-if="item.gender === 'Male'"
-          class="col-md-6"
+          class="col-md-4"
           label="Chọn mẹ cho con"
         >
           <b-form-select v-model="form.selectedMother" @change="fetchChildren">
@@ -130,7 +130,7 @@
         </b-form-group>
 
         <!-- Chọn anh chị em  -->
-        <b-form-group class="col-md-2" label="Chọn chức vụ">
+        <b-form-group class="col-md-4" label="Chọn chức vụ">
           <b-form-select v-model="form.selectedLevel">
             <b-form-select-option :value="''" disabled
               >Chọn</b-form-select-option

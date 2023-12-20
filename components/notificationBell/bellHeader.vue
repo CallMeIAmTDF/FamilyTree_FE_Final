@@ -8,7 +8,7 @@
           ></path>
         </svg>
         <div class="numNotifi">
-          <span>50</span>
+          <span>!</span>
         </div>
       </div>
     </div>
@@ -30,13 +30,15 @@
    
    .numNotifi {
     position: absolute;
-    top: -8px;
-    left: 60%;
-    width: 20px;
+    width: 16px;
+    font-size: 14px;
+    top: -12px;
+    left: 130%;
     background: red;
-    border-radius: 8px;
+    border-radius: 50%;
     font-size: 10px;
     color: #fff;
     font-weight: bold;
+    transform: translateX(-50%);
    }
    </style>
