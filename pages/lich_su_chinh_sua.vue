@@ -79,18 +79,116 @@
             <div class="">
               <h3 class="text-center">Thông tin cá nhân</h3>
               <div class="mt-4" style="height: 450px">
-                <h6 style="font-weight: bold">
+                <h6
+                  :class="
+                    getHighlightClass(
+                      oldData.personName,
+                      newwData.personName,
+                      'left'
+                    )
+                  "
+                  style="font-weight: bold"
+                >
                   Họ và tên: {{ oldData.personName }}
                 </h6>
-                <h6>Giới tính: {{ formatGender(oldData.personGender) }}</h6>
-                <h6>Tình trạng: {{ formatStatus(oldData.personStatus) }}</h6>
-                <p>Nghề nghiệp: {{ oldData.personJob }}</p>
-                <p>Địa chỉ: {{ oldData.personAddress }}</p>
-                <p>Dân tộc: {{ oldData.personEthnic }}</p>
-                <p>Tôn giáo: {{ oldData.personReligion }}</p>
-                <p>Ngày sinh: {{ formatDateCreate(oldData.personDob) }}</p>
-                <p>Ngày mất: {{ formatDateCreate(oldData.personDod) }}</p>
-                <span>Mô tả: {{ oldData.personDescription }}</span>
+                <h6
+                  :class="
+                    getHighlightClass(
+                      oldData.personGender,
+                      newwData.personGender,
+                      'left'
+                    )
+                  "
+                >
+                  Giới tính: {{ formatGender(oldData.personGender) }}
+                </h6>
+                <h6
+                  :class="
+                    getHighlightClass(
+                      oldData.personStatus,
+                      newwData.personStatus,
+                      'left'
+                    )
+                  "
+                >
+                  Tình trạng: {{ formatStatus(oldData.personStatus) }}
+                </h6>
+                <p
+                  :class="
+                    getHighlightClass(
+                      oldData.personJob,
+                      newwData.personJob,
+                      'left'
+                    )
+                  "
+                >
+                  Nghề nghiệp: {{ oldData.personJob }}
+                </p>
+                <p
+                  :class="
+                    getHighlightClass(
+                      oldData.personAddress,
+                      newwData.personAddress,
+                      'left'
+                    )
+                  "
+                >
+                  Địa chỉ: {{ oldData.personAddress }}
+                </p>
+                <p
+                  :class="
+                    getHighlightClass(
+                      oldData.personEthnic,
+                      newwData.personEthnic,
+                      'left'
+                    )
+                  "
+                >
+                  Dân tộc: {{ oldData.personEthnic }}
+                </p>
+                <p
+                  :class="
+                    getHighlightClass(
+                      oldData.personReligion,
+                      newwData.personReligion,
+                      'left'
+                    )
+                  "
+                >
+                  Tôn giáo: {{ oldData.personReligion }}
+                </p>
+                <p
+                  :class="
+                    getHighlightClass(
+                      oldData.personDob,
+                      newwData.personDob,
+                      'left'
+                    )
+                  "
+                >
+                  Ngày sinh: {{ formatDateCreate(oldData.personDob) }}
+                </p>
+                <p
+                  :class="
+                    getHighlightClass(
+                      oldData.personDod,
+                      newwData.personDod,
+                      'left'
+                    )
+                  "
+                >
+                  Ngày mất: {{ formatDateCreate(oldData.personDod) }}
+                </p>
+                <span
+                  :class="
+                    getHighlightClass(
+                      oldData.personDescription,
+                      newwData.personDescription,
+                      'left'
+                    )
+                  "
+                  >Mô tả: {{ oldData.personDescription }}</span
+                >
               </div>
             </div>
           </div>
@@ -118,18 +216,116 @@
             <div class="">
               <h3 class="text-center">Thông tin cá nhân</h3>
               <div class="mt-4" style="height: 450px">
-                <h6 style="font-weight: bold">
+                <h6
+                  :class="
+                    getHighlightClass(
+                      oldData.personName,
+                      newwData.personName,
+                      'right'
+                    )
+                  "
+                  style="font-weight: bold"
+                >
                   Họ và tên: {{ newwData.personName }}
                 </h6>
-                <h6>Giới tính: {{ formatGender(newwData.personGender) }}</h6>
-                <h6>Tình trạng: {{ formatStatus(newwData.personStatus) }}</h6>
-                <p>Nghề nghiệp: {{ newwData.personJob }}</p>
-                <p>Địa chỉ: {{ newwData.personAddress }}</p>
-                <p>Dân tộc: {{ newwData.personEthnic }}</p>
-                <p>Tôn giáo: {{ newwData.personReligion }}</p>
-                <p>Ngày sinh: {{ formatDateCreate(newwData.personDob) }}</p>
-                <p>Ngày mất: {{ formatDateCreate(newwData.personDod) }}</p>
-                <span>Mô tả: {{ newwData.personDescription }}</span>
+                <h6
+                  :class="
+                    getHighlightClass(
+                      oldData.personGender,
+                      newwData.personGender,
+                      'right'
+                    )
+                  "
+                >
+                  Giới tính: {{ formatGender(newwData.personGender) }}
+                </h6>
+                <h6
+                  :class="
+                    getHighlightClass(
+                      oldData.personStatus,
+                      newwData.personStatus,
+                      'right'
+                    )
+                  "
+                >
+                  Tình trạng: {{ formatStatus(newwData.personStatus) }}
+                </h6>
+                <p
+                  :class="
+                    getHighlightClass(
+                      oldData.personJob,
+                      newwData.personJob,
+                      'right'
+                    )
+                  "
+                >
+                  Nghề nghiệp: {{ newwData.personJob }}
+                </p>
+                <p
+                  :class="
+                    getHighlightClass(
+                      oldData.personAddress,
+                      newwData.personAddress,
+                      'right'
+                    )
+                  "
+                >
+                  Địa chỉ: {{ newwData.personAddress }}
+                </p>
+                <p
+                  :class="
+                    getHighlightClass(
+                      oldData.personEthnic,
+                      newwData.personEthnic,
+                      'right'
+                    )
+                  "
+                >
+                  Dân tộc: {{ newwData.personEthnic }}
+                </p>
+                <p
+                  :class="
+                    getHighlightClass(
+                      oldData.personReligion,
+                      newwData.personReligion,
+                      'right'
+                    )
+                  "
+                >
+                  Tôn giáo: {{ newwData.personReligion }}
+                </p>
+                <p
+                  :class="
+                    getHighlightClass(
+                      oldData.personDob,
+                      newwData.personDob,
+                      'right'
+                    )
+                  "
+                >
+                  Ngày sinh: {{ formatDateCreate(newwData.personDob) }}
+                </p>
+                <p
+                  :class="
+                    getHighlightClass(
+                      oldData.personDod,
+                      newwData.personDod,
+                      'right'
+                    )
+                  "
+                >
+                  Ngày mất: {{ formatDateCreate(newwData.personDod) }}
+                </p>
+                <span
+                  :class="
+                    getHighlightClass(
+                      oldData.personDescription,
+                      newwData.personDescription,
+                      'right'
+                    )
+                  "
+                  >Mô tả: {{ newwData.personDescription }}</span
+                >
               </div>
             </div>
           </div>
@@ -179,7 +375,9 @@
                 <h6>
                   Tình trạng: {{ formatStatus(deletedInfo.personStatus) }}
                 </h6>
-                <p>Nghề nghiệp: {{ deletedInfo.personJob }}</p>
+                <p>
+                  Nghề nghiệp: {{ deletedInfo.personJob }}
+                </p>
                 <p>Địa chỉ: {{ deletedInfo.personAddress }}</p>
                 <p>Dân tộc: {{ deletedInfo.personEthnic }}</p>
                 <p>Tôn giáo: {{ deletedInfo.personReligion }}</p>
@@ -202,7 +400,7 @@
           class="itemHistory"
           @click="showCreatedData(item)"
         >
-          <h6 class="time">{{ formatDate(item.historyCreatedAt) }}</h6>
+          <h6 class="time">{{ item.historyAction === 'CREATED' ? formatDate(item.historyCreatedAt) : item.historyAction === 'UPDATED' ? formatDate(item.historyUpdatedAt) : formatDate(item.historyDeletedAt) }}</h6>
           <p v-if="item.historyAction === 'CREATED'" class="status create">
             Thêm mới
           </p>
@@ -266,18 +464,28 @@ export default {
     this.getHistory()
 
   },
-
+  
   methods: {
+    getHighlightClass(prevData, currentData, side) {
+      if (prevData && !currentData && side === 'left') {
+        return 'highlight-red'
+      } else if (currentData && prevData !== currentData && side === 'right') {
+        return 'highlight-green'
+      } else {
+        return 'khongcogi'
+      }
+    },
     async getHistory() {
       const listHistory = await this.$axios.get(
         'http://localhost:8080/history/list?familyTreeId=' +
           this.$route.query.treeId
       )
 
-      // eslint-disable-next-line no-console
-      console.log('listHistory', listHistory.data.data)
+      const dataSorted = listHistory.data.data.sort((a, b) => {
+        return b.historyId - a.historyId;
+      })
 
-      this.list = listHistory.data.data.reverse()
+      this.list = dataSorted
     },
 
     formatDate(dateString) {
@@ -400,4 +608,13 @@ export default {
 .repair {
   padding: 0 !important;
 }
+
+
+.highlight-green {
+  background-color: rgba(4, 155, 94, 0.4);
+}
+.highlight-red {
+  background-color: rgba(126, 5, 47, 0.4);
+}
+
 </style>
