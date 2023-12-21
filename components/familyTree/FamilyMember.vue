@@ -4,6 +4,7 @@
       :info-person-family="infoPersonFamily"
       :person-id="member.data.data?.id ? member.data.data.id : member.data.id"
       :action-join="actionJoin"
+      :first-id="firstId"
     />
     <ul v-if="member.childrens && member.childrens.length">
         <family-member
@@ -12,6 +13,7 @@
           :member="child"
           :info-person-family="infoPersonFamily"
           :action-join="actionJoin"
+          :first-id="firstId"
         />
     </ul>
   </li>
@@ -34,6 +36,11 @@ export default {
     actionJoin: {
       type: Number,
       required: true,
+    },
+
+    firstId: {
+      type: Number,
+      default: 0
     }
 },
 mounted() {

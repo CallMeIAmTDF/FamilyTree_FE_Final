@@ -12,6 +12,7 @@
         :person-id="infoPersonFamily[personId].data.id"
         :info-person-family="infoPersonFamily"
         :action-join="actionJoin"
+        :first-id="firstId"
       />
       <woman-card-person
         v-for="id in infoPersonFamily[personId].spousePersonIds"
@@ -22,6 +23,7 @@
         :person="infoPersonFamily[id].data.info"
         :info-person-family="infoPersonFamily"
         :action-join="actionJoin"
+        :first-id="firstId"
       />
     </div>
 
@@ -39,6 +41,7 @@
         :person-id="infoPersonFamily[id].data.id"
         :info-person-family="infoPersonFamily"
         :action-join="actionJoin"
+        :first-id="firstId"
       />
       <woman-card-person
         class="person"
@@ -47,6 +50,7 @@
         :person="infoPersonFamily[personId].data.info"
         :info-person-family="infoPersonFamily"
         :action-join="actionJoin"
+        :first-id="firstId"
       />
     </div>
   </div>
@@ -72,6 +76,11 @@ export default {
     actionJoin: {
       type: Number,
       required: true,
+    },
+
+    firstId: {
+      type: Number,
+      default: 0
     }
   },
   mounted() {

@@ -220,7 +220,11 @@
       />
     </b-modal>
     <b-modal v-model="modalVisibleInfoPerson" hide-footer>
-      <sidebar-person :personid="personId"  :action-join="actionJoin"/>
+      <sidebar-person
+        :personid="personId"
+        :action-join="actionJoin"
+        :first-id="firstId"
+      />
     </b-modal>
   </div>
 </template>
@@ -259,6 +263,11 @@ export default {
     },
 
     actionJoin: {
+      type: Number,
+      default: 0,
+    },
+
+    firstId: {
       type: Number,
       default: 0,
     },

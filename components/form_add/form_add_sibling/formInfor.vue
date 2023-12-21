@@ -472,6 +472,7 @@ export default {
         const data = res.data.data
 
         if (!!data === false) {
+          // eslint-disable-next-line no-console
           console.log("dong 478 - formInfo.vue - fetchSpouse(): khong lay duoc du lieu")
           return;
         }

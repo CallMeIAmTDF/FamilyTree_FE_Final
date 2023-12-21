@@ -41,13 +41,13 @@
           >Sửa thông tin</b-button
         >
         <b-button
-          v-if="!isLichSuChinhSuaPage"
+          v-if="personid != centerid"
           class="btn btn-primary"
           @click="changeTree"
           >Chuyển cây</b-button
         >
         <b-button
-          v-if="actionJoin === 1 && personid != centerid"
+          v-if="actionJoin === 1 && personid != centerid && personid != firstId"
           class="btn btn-danger"
           @click="confirmDelete"
           >Xóa thành viên</b-button
@@ -260,6 +260,11 @@ export default {
       type: Number,
       default: 0,
     },
+
+    firstId: {
+      type: Number,
+      default: 0,
+    },
   },
 
   data() {
@@ -295,7 +300,7 @@ export default {
     displayStatus() {
       return this.personInfo.personStatus === true ? 'Còn sống' : 'Từ trần'
     },
-    
+
     formatBirthDate() {
       return this.formatDate(this.personInfo.personDob)
     },
@@ -303,14 +308,13 @@ export default {
     formatDeathDate() {
       return this.formatDate(this.personInfo.personDod)
     },
-
-    isLichSuChinhSuaPage() {
-      return this.$route.path === '/lich_su_chinh_sua'
-    },
   },
 
   created() {
     this.getPersonInfo()
+
+    // eslint-disable-next-line no-console
+    console.log('firstId: ', this.firstId)
   },
 
   mounted() {
@@ -458,17 +462,22 @@ export default {
     },
 
     editPerson() {
-      this.form.name = this.personInfo.personName
-      this.form.imageSrc = this.personInfo.personImage
-      this.form.selectedSex = this.personInfo.personGender
-      this.form.selectedStatus = this.personInfo.personStatus
-      this.form.address = this.personInfo.personAddress
-      this.form.birthday = this.personInfo.personDob
-      this.form.deathday = this.personInfo.personDod
-      this.form.job = this.personInfo.personJob
-      this.form.ethnic = this.personInfo.personEthnic
-      this.form.religion = this.personInfo.personReligion
-      this.form.description = this.personInfo.personDescription
+      if (this.personInfo) {
+        const dateBirdthday = this.personInfo.personDob?.split('T')[0] || '' // Sử dụng optional chaining và default value
+        const dateDeathday = this.personInfo.personDod?.split('T')[0] || ''
+
+        this.form.name = this.personInfo.personName || ''
+        this.form.imageSrc = this.personInfo.personImage || ''
+        this.form.selectedSex = this.personInfo.personGender || ''
+        this.form.selectedStatus = this.personInfo.personStatus || ''
+        this.form.address = this.personInfo.personAddress || ''
+        this.form.birthday = dateBirdthday
+        this.form.deathday = dateDeathday
+        this.form.job = this.personInfo.personJob || ''
+        this.form.ethnic = this.personInfo.personEthnic || ''
+        this.form.religion = this.personInfo.personReligion || ''
+        this.form.description = this.personInfo.personDescription || ''
+      }
 
       // Hiển thị modal sửa thông tin
       this.$bvModal.show('modalEditPerson')

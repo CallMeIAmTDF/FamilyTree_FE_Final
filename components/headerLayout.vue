@@ -2,7 +2,7 @@
   <div>
     <header style="position: relative; top: 0; left: 0">
       <b-navbar toggleable="lg" type="dark" variant="dark">
-        <b-navbar-brand href="/trang_chao_mung">Family Connect</b-navbar-brand>
+        <b-navbar-brand href="/">Family Connect</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -24,11 +24,13 @@
               pill
               variant="light"
               style="border: none"
+              :disabled="actionJoin === 0"
               @click="requestJoin"
             >
               <strong v-if="actionJoin === -1">Tham gia</strong>
               <strong v-else-if="actionJoin === 0">Đã yêu cầu</strong>
             </b-button>
+
             <!-- Search của trang sơ đồ -->
             <b-button
               v-if="showSearch"
@@ -40,6 +42,7 @@
             >
               <strong>Tìm kiếm</strong>
             </b-button>
+
             <!-- lịch sử -->
             <b-button
               v-if="showSearch"
@@ -48,14 +51,18 @@
               variant="outline-light"
               style="border: none"
             >
-              <a class="ls" :href="'/lich_su_chinh_sua?treeId=' + treeId" style="">
-                <strong >Lịch sử</strong>
+              <a
+                class="ls"
+                :href="'/lich_su_chinh_sua?treeId=' + treeId"
+                style=""
+              >
+                <strong>Lịch sử</strong>
               </a>
             </b-button>
 
             <!-- Chia sẻ sơ đồ trang sơ đồ -->
             <b-button
-              v-if="showSearch"
+              v-if="showSearch && actionJoin === 1"
               v-b-modal.share-box
               pill
               variant="outline-info"
@@ -216,18 +223,14 @@ export default {
   },
 
   created() {
-    if (typeof window !== 'undefined') {
-      // Kiểm tra nếu có userInfo trong localStorage
-      if (localStorage.getItem('userInfo')) {
-        this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-      }
-    }
-
     this.treeId = this.$route.query.id
   },
 
-  async mounted() {
-    await this.getJoinTree()
+  mounted() {
+    if (localStorage.getItem('userInfo')) {
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    }
+    this.getJoinTree()
   },
 
   methods: {
@@ -347,5 +350,4 @@ export default {
 .ls:hover {
   color: #000;
 }
-
 </style>

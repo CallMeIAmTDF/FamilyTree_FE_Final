@@ -129,21 +129,18 @@ export default {
   mounted() {
     // Kiểm tra nếu có accessToken trong localStorage
     if (localStorage.getItem('accessToken')) {
-      // Kiểm tra nếu đường dẫn hiện tại là "/account/dang_nhap" hoặc "/account/dang_ki"
-      const currentPath = this.$route
+      // Kiểm tra nếu đường dẫn hiện tại là các trang đăng nhập, đăng ký, quên mật khẩu, xác nhận OTP, hoặc trang chào mừng
+      const currentPath = this.$route.path
 
-      // eslint-disable-next-line no-console
-      console.log(currentPath)
       if (
-        currentPath === '/account/dang_nhap' ||
-        currentPath === '/account/dang_ki' ||
-        currentPath === '/account/quen_mat_khau' ||
-        currentPath === '/account/xac_nhan_otp' ||
-        currentPath === '/account/trang_chao_mung'
+        currentPath.startsWith('/account/dang_nhap') ||
+        currentPath.startsWith('/account/dang_ki') ||
+        currentPath.startsWith('/account/quen_mat_khau') ||
+        currentPath.startsWith('/account/xac_nhan_otp') ||
+        currentPath.startsWith('/account/trang_chao_mung')
       ) {
         this.$router.push('/')
       }
-      // Ngược lại, giữ nguyên trang
     } else {
       // Chuyển hướng về trang /account/dang_nhap nếu không có accessToken
       this.$router.push('/account/dang_nhap')

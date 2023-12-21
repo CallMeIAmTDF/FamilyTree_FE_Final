@@ -21,8 +21,8 @@
             <div class="d-flex justify-content-center">
               <b-img
                 :src="
-                  createdInfo.personGender
-                    ? createdInfo.personGender
+                  createdInfo.personImage
+                    ? createdInfo.personImage
                     : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
                 "
                 style="margin: auto; width: 200px; height: 200px"
@@ -65,8 +65,8 @@
             <div class="d-flex justify-content-center">
               <b-img
                 :src="
-                  oldData.personGender
-                    ? oldData.personGender
+                  oldData.personImage
+                    ? oldData.personImage
                     : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
                 "
                 style="margin: auto; width: 200px; height: 200px"
@@ -104,8 +104,8 @@
             <div class="d-flex justify-content-center">
               <b-img
                 :src="
-                  newwData.personGender
-                    ? newwData.personGender
+                  newwData.personImage
+                    ? newwData.personImage
                     : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
                 "
                 style="margin: auto; width: 200px; height: 200px"
@@ -143,7 +143,7 @@
         class="beforRepair d-flex align-items-center justify-content-center"
         style="flex-direction: column"
       >
-        <h2 class="text-center">Thông tin được tạo mới</h2>
+        <h2 class="text-center">Thông tin người bị xóa</h2>
 
         <div
           class="content"
@@ -158,8 +158,8 @@
             <div class="d-flex justify-content-center">
               <b-img
                 :src="
-                  deletedInfo.personGender
-                    ? deletedInfo.personGender
+                  deletedInfo.personImage
+                    ? deletedInfo.personImage
                     : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
                 "
                 style="margin: auto; width: 200px; height: 200px"
@@ -232,8 +232,11 @@ export default {
       newwData: {},
 
       showDeletedData: false,
-      deletedInfo: {}
+      deletedInfo: {},
     }
+  },
+
+  created() {
   },
 
   mounted() {
@@ -261,6 +264,7 @@ export default {
     }
 
     this.getHistory()
+
   },
 
   methods: {
@@ -273,7 +277,7 @@ export default {
       // eslint-disable-next-line no-console
       console.log('listHistory', listHistory.data.data)
 
-      this.list = listHistory.data.data
+      this.list = listHistory.data.data.reverse()
     },
 
     formatDate(dateString) {
@@ -292,9 +296,7 @@ export default {
     },
 
     showCreatedData(item) {
-      if (
-        item.historyAction === 'CREATED' 
-      ) {
+      if (item.historyAction === 'CREATED') {
         this.createdInfo = JSON.parse(item.currentData)
         this.showCreatedInfo = true
       } else {
@@ -394,8 +396,8 @@ export default {
   color: #dc3545;
 }
 
-.created, .repair {
+.created,
+.repair {
   padding: 0 !important;
 }
-
 </style>

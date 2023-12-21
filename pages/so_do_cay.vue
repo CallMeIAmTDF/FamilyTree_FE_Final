@@ -13,6 +13,7 @@
                   :member="newData"
                   :info-person-family="infoPersonFamily"
                   :action-join="actionJoin"
+                  :first-id="firstId"
                 />
               </ul>
             </div>
@@ -234,6 +235,7 @@ export default {
       newData2: {},
       centerId: 0,
       actionJoin: 0,
+      firstId: 0,
 
       form: {
         name: '',
@@ -281,8 +283,8 @@ export default {
   },
 
   async mounted() {
-    document.querySelector('body').style.overflow = 'hidden';
-    
+    document.querySelector('body').style.overflow = 'hidden'
+
     let scale = 0.24
     let panning = false
     let pointX = -11242.8
@@ -537,6 +539,14 @@ export default {
             )
           } catch (error) {}
         } else {
+          const firstPerson = await this.$axios.get(
+            'http://localhost:8080/familyTree/firstPersonId?familyTreeId=' +
+              this.$route.query.id
+          )
+
+          // eslint-disable-next-line no-console
+          console.log('firstPerson', firstPerson.data)
+          this.firstId = firstPerson.data.data
           if (
             localStorage.getItem('centerId') !== null &&
             localStorage.getItem('centerId') !== 'null' &&
