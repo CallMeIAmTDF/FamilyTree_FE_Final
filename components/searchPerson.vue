@@ -41,9 +41,7 @@
                 :src="
                   person.personImage
                     ? person.personImage
-                    : person.personGender === true
-                    ? 'https://i.pinimg.com/originals/8d/a5/c3/8da5c3a06407303694d6381b23368f02.png'
-                    : 'https://1.bp.blogspot.com/-_McRf03XFs0/XoVUziYcpFI/AAAAAAAAa2A/JjltmHu8M_EMP09rUkB3M7n1FKmrzxAAgCLcBGAsYHQ/s1600/Anh-dai-dien-cho-nu%2B%252839%2529.jpg'
+                    : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
                 "
                 alt=""
               />

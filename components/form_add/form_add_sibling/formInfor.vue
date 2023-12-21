@@ -135,7 +135,7 @@
 
       <div class="row">
         <div class="col-md-6">
-          <div class="d-flex align-items-baseline ">
+          <div class="d-flex align-items-baseline">
             <div class=""><span>Người này có</span></div>
             <!-- Chọn chức vụ là anh chị em  -->
             <b-form-group class="col-md-8">
@@ -445,11 +445,13 @@ export default {
       const parentIds = [fatherId, motherId]
 
       for (const parentId of parentIds) {
-        const parentInfo = await this.$axios.$get(
-          `http://localhost:8080/person/getInfo?personId=${parentId}`
-        )
+        if (parentId) {
+          const parentInfo = await this.$axios.$get(
+            `http://localhost:8080/person/getInfo?personId=${parentId}`
+          )
 
-        this.parents.push(parentInfo.data)
+          this.parents.push(parentInfo.data)
+        }
       }
     },
 

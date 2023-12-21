@@ -6,11 +6,18 @@
       class="wrapper row"
     >
       <div class="content col-md-12">
-        <h6 class="name">
-          {{ JSON.parse(notification.content).message }}
-        </h6>
+        <b class="name">
+          {{ JSON.parse(notification.content).userName }}
+        </b>
+        <span>{{
+          JSON.parse(notification.content).message.replace(
+            JSON.parse(notification.content).userName,
+            ''
+          )
+        }}</span>
+        <br />
+        <p>Thời gian: {{ formatDate(notification.createdAt) }}</p>
       </div>
-      <hr>
     </div>
   </div>
 </template>
@@ -32,8 +39,6 @@ export default {
     }, 20000) // 20 giây là 20000 miligiây
   },
 
-  created() {},
-
   beforeDestroy() {
     // Xóa interval khi component bị hủy
     clearInterval(this.notificationInterval)
@@ -45,9 +50,24 @@ export default {
         'http://localhost:8080/notification/list'
       )
 
-      this.listNotifi = notifi.data.data
+      this.listNotifi = notifi.data.data.reverse()
       // eslint-disable-next-line no-console
       console.log('notidicatión: ', notifi)
+    },
+
+    formatDate(dateString) {
+      if (!dateString) return '' // Kiểm tra xem chuỗi ngày tháng có tồn tại không
+
+      const date = new Date(dateString)
+      const options = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+      }
+      return date.toLocaleDateString('en-US', options)
     },
   },
 }
@@ -67,5 +87,10 @@ export default {
 }
 .wrapper:hover {
   background: #ddd;
+}
+
+.content {
+  padding: 8px;
+  border-bottom: 1px #ccc solid;
 }
 </style>

@@ -23,7 +23,8 @@ export default {
         this.$route.path === '/account/dang_nhap' ||
         this.$route.path === '/account/dang_ki' ||
         this.$route.path === '/account/quen_mat_khau' ||
-        this.$route.path === '/account/xac_nhan_otp'
+        this.$route.path === '/account/xac_nhan_otp' ||
+        this.$route.path === '/lich_su_chinh_sua'
       )
     },
   },
@@ -35,7 +36,4 @@ main {
   background-color: #fff1dc;
 }
 
-.main{
-  overflow: hidden;
-}
 </style>

@@ -5,9 +5,7 @@
         :src="
           personInfo.personImage
             ? personInfo.personImage
-            : personInfo.personGender === 'Nam'
-            ? 'https://i.pinimg.com/originals/8d/a5/c3/8da5c3a06407303694d6381b23368f02.png'
-            : 'https://1.bp.blogspot.com/-_McRf03XFs0/XoVUziYcpFI/AAAAAAAAa2A/JjltmHu8M_EMP09rUkB3M7n1FKmrzxAAgCLcBGAsYHQ/s1600/Anh-dai-dien-cho-nu%2B%252839%2529.jpg'
+            : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
         "
         style="margin: auto; width: 200px; height: 200px"
         fluid
@@ -29,7 +27,7 @@
         <p>Dân tộc: {{ personInfo.personEthnic }}</p>
         <p>Tôn giáo: {{ personInfo.personReligion }}</p>
         <p>Ngày sinh: {{ formatBirthDate }}</p>
-        <p>Ngày mất: {{ formatDeathDate }}</p>
+        <p v-if="personInfo.personDod">Ngày mất: {{ formatDeathDate }}</p>
         <span>Mô tả: {{ personInfo.personDescription }}</span>
       </div>
 
@@ -42,7 +40,10 @@
           @click="editPerson"
           >Sửa thông tin</b-button
         >
-        <b-button class="btn btn-primary" @click="changeTree"
+        <b-button
+          v-if="!isLichSuChinhSuaPage"
+          class="btn btn-primary"
+          @click="changeTree"
           >Chuyển cây</b-button
         >
         <b-button
@@ -79,7 +80,6 @@
                 placeholder="Nhập tên..."
                 required
                 @blur="validateName"
-                @change="validateForm"
               ></b-form-input>
             </b-form-group>
 
@@ -105,18 +105,11 @@
                   v-model="form.selectedSex"
                   name="radio-sex"
                   required
-                  @change="validateForm"
                 >
-                  <b-form-radio
-                    value="true"
-                    :disabled="form.selectedSex !== ''"
-                  >
+                  <b-form-radio value="Nam" :disabled="form.selectedSex !== ''">
                     Nam
                   </b-form-radio>
-                  <b-form-radio
-                    value="false"
-                    :disabled="form.selectedSex !== ''"
-                  >
+                  <b-form-radio value="Nữ" :disabled="form.selectedSex !== ''">
                     Nữ
                   </b-form-radio>
                 </b-form-radio-group>
@@ -132,7 +125,6 @@
                   v-model="form.selectedStatus"
                   name="radio-status"
                   required
-                  @change="validateForm"
                 >
                   <b-form-radio value="true" @change="deleteValueDeath"
                     >Còn sống</b-form-radio
@@ -248,9 +240,7 @@
             <b-button type="reset" class="mr-3" variant="danger"
               >Reset</b-button
             >
-            <b-button type="submit" variant="primary" :disabled="!validForm"
-              >Sửa thông tin</b-button
-            >
+            <b-button type="submit" variant="primary">Sửa thông tin</b-button>
           </div>
         </b-form>
       </b-modal>
@@ -305,11 +295,17 @@ export default {
     displayStatus() {
       return this.personInfo.personStatus === true ? 'Còn sống' : 'Từ trần'
     },
+    
     formatBirthDate() {
       return this.formatDate(this.personInfo.personDob)
     },
+
     formatDeathDate() {
       return this.formatDate(this.personInfo.personDod)
+    },
+
+    isLichSuChinhSuaPage() {
+      return this.$route.path === '/lich_su_chinh_sua'
     },
   },
 
@@ -490,6 +486,9 @@ export default {
         // console.log(response)
 
         this.personInfo = response.data
+
+        // eslint-disable-next-line no-console
+        console.log('péon:', this.personInfo)
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error)

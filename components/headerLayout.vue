@@ -40,6 +40,18 @@
             >
               <strong>Tìm kiếm</strong>
             </b-button>
+            <!-- lịch sử -->
+            <b-button
+              v-if="showSearch"
+              class="mr-3"
+              pill
+              variant="outline-light"
+              style="border: none"
+            >
+              <a class="ls" :href="'/lich_su_chinh_sua?treeId=' + treeId" style="">
+                <strong >Lịch sử</strong>
+              </a>
+            </b-button>
 
             <!-- Chia sẻ sơ đồ trang sơ đồ -->
             <b-button
@@ -152,6 +164,8 @@ export default {
       },
 
       actionJoin: 0,
+
+      treeId: '',
     }
   },
 
@@ -208,6 +222,8 @@ export default {
         this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       }
     }
+
+    this.treeId = this.$route.query.id
   },
 
   async mounted() {
@@ -322,4 +338,14 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.ls {
+  text-decoration: none;
+  color: #fff;
+}
+
+.ls:hover {
+  color: #000;
+}
+
+</style>
