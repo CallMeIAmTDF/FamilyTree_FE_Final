@@ -394,7 +394,8 @@ export default {
   color: #dc3545;
 }
 
-.created {
+.created, .repair {
   padding: 0 !important;
 }
+
 </style>

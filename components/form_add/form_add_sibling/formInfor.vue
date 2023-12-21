@@ -92,7 +92,7 @@
       </div>
 
       <div class="row">
-        <b-form-group label="Chọn bố hoặc mẹ cho anh-chị-em" class="col-md-6">
+        <b-form-group label="Chọn bố/mẹ" class="col-md-6">
           <b-form-select
             id="parents"
             v-model="form.selectedParent"
@@ -103,16 +103,16 @@
             >
             <b-form-select-option
               v-for="parent in parents"
-              :key="parent.personId"
-              :value="parent.personId"
+              :key="parent?.personId"
+              :value="parent?.personId"
             >
-              {{ parent.personName }}
+              {{ parent?.personName }}
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
 
         <b-form-group
-          label="Chọn phụ huynh còn lại của anh-chị-em"
+          label="Chọn bố/mẹ còn lại"
           class="col-md-6"
         >
           <b-form-select
@@ -124,8 +124,8 @@
             <b-form-select-option :value="''">Chọn</b-form-select-option>
             <b-form-select-option
               v-for="spouse in spouses"
-              :key="spouse.personId"
-              :value="spouse.personId"
+              :key="spouse?.personId"
+              :value="spouse?.personId"
             >
               {{ spouse.personName }}
             </b-form-select-option>
@@ -294,10 +294,14 @@ export default {
   created() {
     // Lấy ID sản phẩm từ query parameter khi trang được tạo
     this.familyTreeId = this.$route.query.id
-
-    this.fetchParent()
-    this.fetchSpouse()
-    this.fetchChildren()
+    
+    if (this.id) {
+      this.fetchParent()
+    }
+    if (this.form.selectedParent) {
+      this.fetchSpouse()
+      this.fetchChildren()
+    }
   },
 
   methods: {
@@ -443,15 +447,20 @@ export default {
 
       // Tạo mảng chứa hai giá trị fatherId và motherId
       const parentIds = [fatherId, motherId]
+      if (fatherId) {
+        this.form.selectedParent = fatherId;
+      }
+      else {
+        this.form.selectedParent = motherId;
+      }
+      this.onSelectedParentChange();
 
       for (const parentId of parentIds) {
-        if (parentId) {
-          const parentInfo = await this.$axios.$get(
-            `http://localhost:8080/person/getInfo?personId=${parentId}`
-          )
+        const parentInfo = await this.$axios.$get(
+          `http://localhost:8080/person/getInfo?personId=${parentId}`
+        )
 
-          this.parents.push(parentInfo.data)
-        }
+        this.parents.push(parentInfo.data)
       }
     },
 
@@ -462,8 +471,13 @@ export default {
         )
         const data = res.data.data
 
+        if (!!data === false) {
+          console.log("dong 478 - formInfo.vue - fetchSpouse(): khong lay duoc du lieu")
+          return;
+        }
+
         const spouseResponse = await Promise.all(
-          data.wife.concat(data.husband).map((spouseId) => {
+          data?.wife.concat(data.husband).map((spouseId) => {
             return this.$axios.get(
               `http://localhost:8080/person/getInfo?personId=${spouseId}`
             )
@@ -471,6 +485,9 @@ export default {
         )
 
         this.spouses = spouseResponse.map((res) => res.data.data)
+        if (this.spouses.length === 1) {
+          this.form.selectedSpouse = this.spouses[0].personId;
+        }
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error)
