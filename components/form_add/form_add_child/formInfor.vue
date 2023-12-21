@@ -93,11 +93,11 @@
 
       <div class="row">
         <!-- Chọn bố -->
-        <b-form-group
-          v-if="item.gender === 'Female'"
-          class="col-md-12"
-          label="Chọn bố cho con"
-        >
+        <b-form-group v-if="item.gender === 'Female'" class="col-md-12">
+          <label
+            >Chọn bố cho con
+            <span style="color: red; margin-left: 2px">*</span>
+          </label>
           <b-form-select v-model="form.selectedFather" @change="fetchChildren">
             <b-form-select-option :value="null" disabled
               >Chọn</b-form-select-option
@@ -113,11 +113,11 @@
         </b-form-group>
 
         <!-- Chọn mẹ  -->
-        <b-form-group
-          v-if="item.gender === 'Male'"
-          class="col-md-12"
-          label="Chọn mẹ cho con"
-        >
+        <b-form-group v-if="item.gender === 'Male'" class="col-md-12">
+          <label
+            >Chọn mẹ cho con
+            <span style="color: red; margin-left: 2px">*</span>
+          </label>
           <b-form-select v-model="form.selectedMother" @change="fetchChildren">
             <b-form-select-option value="null" disabled
               >Chọn</b-form-select-option
@@ -133,10 +133,14 @@
         </b-form-group>
       </div>
 
-      <div class="row">
+      <div v-if="children?.length > 0" class="row">
         <div class="col-md-6">
           <div class="d-flex align-items-baseline">
-            <div><span>Người này có</span></div>
+            <div>
+              <p>
+                Người này có<span style="color: red; margin-left: 2px">*</span>
+              </p>
+            </div>
             <!-- Chọn anh chị em  -->
             <b-form-group class="col-md-8">
               <b-form-select v-model="form.selectedLevel">
