@@ -3,8 +3,8 @@
       <reset-password-form />
     </div>
    </template>
-   
-   
+
+
    <script>
    import resetPasswordForm from '../../components/form_user/resetPasswordForm.vue'
    export default {
@@ -25,13 +25,10 @@
       ) {
         window.location.href="/"
       }
-    } else {
-      // Chuyển hướng về trang /account/dang_nhap nếu không có accessToken
-      window.location.href="/account/quen_mat_khau"
     }
   },
    }
    </script>
-   
-   
+
+
    <style></style>

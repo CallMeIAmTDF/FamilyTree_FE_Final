@@ -1,39 +1,19 @@
 <template>
   <div>
-    <b-form
-      v-if="show"
-      class="b-form"
-      enctype="multipart/form-data"
-      @submit.prevent="onSubmit"
-      @reset="onReset"
-    >
+    <b-form v-if="show" class="b-form" enctype="multipart/form-data" @submit.prevent="onSubmit" @reset="onReset">
       <div class="row">
         <!-- Trường họ và tên -->
-        <b-form-group
-          class="col-md-6"
-          :state="isNameValid"
-          :invalid-feedback="nameErrorMessage"
-        >
-          <label
-            >Họ và tên
+        <b-form-group class="col-md-6" :state="isNameValid" :invalid-feedback="nameErrorMessage">
+          <label>Họ và tên
             <span style="color: red; margin-left: 2px">*</span>
           </label>
-          <b-form-input
-            v-model="form.name"
-            type="text"
-            placeholder="Nhập tên..."
-            required
-            @blur="validateName"
-          ></b-form-input>
+          <b-form-input v-model="form.name" type="text" placeholder="Nhập tên..." required
+            @blur="validateName"></b-form-input>
         </b-form-group>
 
         <!-- Trường chọn hình ảnh từ file -->
         <b-form-group label="Chọn ảnh đại diện:" class="col-md-6">
-          <b-form-file
-            placeholder="Chọn ảnh..."
-            accept="image/*"
-            @change="onFileChosen"
-          ></b-form-file>
+          <b-form-file placeholder="Chọn ảnh..." accept="image/*" @change="onFileChosen"></b-form-file>
         </b-form-group>
       </div>
 
@@ -41,15 +21,10 @@
         <div class="col-md-6">
           <!-- Trường giới tính -->
           <b-form-group class="mt-3" :state="form.selectedSex !== ''">
-            <label
-              >Giới tính
+            <label>Giới tính
               <span style="color: red; margin-left: 2px">*</span>
             </label>
-            <b-form-radio-group
-              v-model="form.selectedSex"
-              name="radio-sex"
-              required
-            >
+            <b-form-radio-group v-model="form.selectedSex" name="radio-sex" required>
               <b-form-radio value="true">Nam</b-form-radio>
               <b-form-radio value="false">Nữ</b-form-radio>
             </b-form-radio-group>
@@ -57,18 +32,11 @@
 
           <!-- Trường tình trạng -->
           <b-form-group class="mt-2" :state="form.selectedStatus !== ''">
-            <label
-              >Tình trạng
+            <label>Tình trạng
               <span style="color: red; margin-left: 2px">*</span>
             </label>
-            <b-form-radio-group
-              v-model="form.selectedStatus"
-              name="radio-status"
-              required
-            >
-              <b-form-radio value="true" @change="deleteValueDeath"
-                >Còn sống</b-form-radio
-              >
+            <b-form-radio-group v-model="form.selectedStatus" name="radio-status" required>
+              <b-form-radio value="true" @change="deleteValueDeath">Còn sống</b-form-radio>
               <b-form-radio value="false">Từ trần</b-form-radio>
             </b-form-radio-group>
           </b-form-group>
@@ -76,37 +44,22 @@
 
         <!-- Hiển thị hình ảnh -->
         <div class="col-md-6 d-flex justify-content-center">
-          <img
-            class="mt-2"
-            width="200px"
-            height="100%"
-            :src="
-              form.img
-                ? form.img
-                : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
-            "
-            alt="person_image"
-            style="object-fit: cover"
-          />
+          <img class="mt-2" width="200px" height="100%" :src="form.img
+              ? form.img
+              : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
+            " alt="person_image" style="object-fit: cover" />
         </div>
       </div>
 
       <div class="row">
         <!-- Chọn bố -->
         <b-form-group v-if="item.gender === 'Female'" class="col-md-12">
-          <label
-            >Chọn bố cho con
+          <label>Chọn bố cho con
             <span style="color: red; margin-left: 2px">*</span>
           </label>
           <b-form-select v-model="form.selectedFather" @change="fetchChildren">
-            <b-form-select-option :value="null" disabled
-              >Chọn</b-form-select-option
-            >
-            <b-form-select-option
-              v-for="hus in husbands"
-              :key="hus.personId"
-              :value="hus.personId"
-            >
+            <b-form-select-option :value="null" disabled>Chọn</b-form-select-option>
+            <b-form-select-option v-for="hus in husbands" :key="hus.personId" :value="hus.personId">
               {{ hus.personName }}
             </b-form-select-option>
           </b-form-select>
@@ -114,19 +67,12 @@
 
         <!-- Chọn mẹ  -->
         <b-form-group v-if="item.gender === 'Male'" class="col-md-12">
-          <label
-            >Chọn mẹ cho con
+          <label>Chọn mẹ cho con
             <span style="color: red; margin-left: 2px">*</span>
           </label>
           <b-form-select v-model="form.selectedMother" @change="fetchChildren">
-            <b-form-select-option value="null" disabled
-              >Chọn</b-form-select-option
-            >
-            <b-form-select-option
-              v-for="wife in wives"
-              :key="wife.personId"
-              :value="wife.personId"
-            >
+            <b-form-select-option value="null" disabled>Chọn</b-form-select-option>
+            <b-form-select-option v-for="wife in wives" :key="wife.personId" :value="wife.personId">
               {{ wife.personName }}
             </b-form-select-option>
           </b-form-select>
@@ -144,9 +90,7 @@
             <!-- Chọn anh chị em  -->
             <b-form-group class="col-md-8">
               <b-form-select v-model="form.selectedLevel">
-                <b-form-select-option :value="''" disabled
-                  >Chọn</b-form-select-option
-                >
+                <b-form-select-option :value="''" disabled>Chọn</b-form-select-option>
                 <b-form-select-option value="0.5">
                   anh hoặc chị gần nhất
                 </b-form-select-option>
@@ -162,14 +106,8 @@
         <!-- Chọn anh chị em gần nhất -->
         <b-form-group class="col-md-6">
           <b-form-select v-model="form.selectedChildren">
-            <b-form-select-option value="null" disabled
-              >Chọn</b-form-select-option
-            >
-            <b-form-select-option
-              v-for="child in children"
-              :key="child.personId"
-              :value="child.personId"
-            >
+            <b-form-select-option value="null" disabled>Chọn</b-form-select-option>
+            <b-form-select-option v-for="child in children" :key="child.personId" :value="child.personId">
               {{ child.personName }}
             </b-form-select-option>
           </b-form-select>
@@ -179,62 +117,33 @@
       <div class="row">
         <!-- trường nghề nghiệp -->
         <b-form-group label="Nghề nghiệp:" class="col-md-6">
-          <b-form-input
-            v-model="form.job"
-            type="text"
-            placeholder="Nhập nghề nghiệp..."
-          ></b-form-input>
+          <b-form-input v-model="form.job" type="text" placeholder="Nhập nghề nghiệp..."></b-form-input>
         </b-form-group>
 
         <!-- Trường chọn địa chỉ -->
         <b-form-group label="Địa chỉ:" class="col-md-6">
-          <b-form-input
-            v-model="form.address"
-            type="text"
-            placeholder="Nhập địa chỉ..."
-          ></b-form-input>
+          <b-form-input v-model="form.address" type="text" placeholder="Nhập địa chỉ..."></b-form-input>
         </b-form-group>
       </div>
 
       <div class="row">
         <!-- Trường chọn ngày sinh -->
-        <b-form-group
-          label="Ngày sinh:"
-          class="col-md-6"
-          :state="isBirthdayValid"
-          :invalid-feedback="birthdayErrorMessage"
-        >
-          <b-form-input
-            v-model="form.birthday"
-            type="date"
-            class="mb-2"
-            @input="validateDateOfBirth"
-          ></b-form-input>
+        <b-form-group label="Ngày sinh:" class="col-md-6" :state="isBirthdayValid"
+          :invalid-feedback="birthdayErrorMessage">
+          <b-form-input v-model="form.birthday" type="date" class="mb-2" @input="validateDateOfBirth"></b-form-input>
         </b-form-group>
 
         <!-- Trường chọn ngày mất -->
-        <b-form-group
-          v-if="form.selectedStatus === 'false'"
-          label="Ngày mất:"
-          class="col-md-6"
-          :state="isDeathdayValid"
-          :invalid-feedback="deathdayErrorMessage"
-        >
-          <b-form-input
-            v-model="form.deathday"
-            type="date"
-            class="mb-2"
-            @input="validateDateOfDeath"
-          ></b-form-input>
+        <b-form-group v-if="form.selectedStatus === 'false'" label="Ngày mất:" class="col-md-6" :state="isDeathdayValid"
+          :invalid-feedback="deathdayErrorMessage">
+          <b-form-input v-model="form.deathday" type="date" class="mb-2" @input="validateDateOfDeath"></b-form-input>
         </b-form-group>
       </div>
 
       <!-- Sử lý các sự kiện -->
       <div class="d-flex justify-content-end">
         <b-button type="reset" class="mr-3" variant="danger">Reset</b-button>
-        <b-button type="submit" variant="primary" :disabled="!validForm"
-          >Thêm người</b-button
-        >
+        <b-button type="submit" variant="primary" :disabled="!validForm">Thêm người</b-button>
       </div>
     </b-form>
   </div>

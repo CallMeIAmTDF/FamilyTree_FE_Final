@@ -1,10 +1,6 @@
 <template>
   <div class="list">
-    <div
-      v-for="notification in listNotifi"
-      :key="notification.id"
-      class="wrapper row"
-    >
+    <div v-for="notification in listNotifi" :key="notification.id" class="wrapper row">
       <div class="content col-md-12">
         <b class="name">
           {{ JSON.parse(notification.content).userName }}
@@ -46,13 +42,17 @@ export default {
 
   methods: {
     async getNotifications() {
-      const notifi = await this.$axios.get(
-        'http://localhost:8080/notification/list'
-      )
+      if (localStorage.getItem('accessToken') !== null && localStorage.getItem('accessToken') !== undefined && localStorage.getItem('accessToken') !== '') {
+        const notifi = await this.$axios.get(
+          'http://localhost:8080/notification/list'
+        )
 
-      this.listNotifi = notifi.data.data.reverse()
-      // eslint-disable-next-line no-console
-      console.log('notidicatión: ', notifi)
+        if (notifi.data.data) {
+          this.listNotifi = notifi.data.data.reverse()
+        }
+        // eslint-disable-next-line no-console
+        console.log('notidicatión: ', notifi)
+      }
     },
 
     formatDate(dateString) {
@@ -85,6 +85,7 @@ export default {
   border-radius: 8px;
   cursor: pointer;
 }
+
 .wrapper:hover {
   background: #ddd;
 }

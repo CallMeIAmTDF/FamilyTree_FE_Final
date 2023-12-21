@@ -2,49 +2,30 @@
   <div class="list">
     <b-form class="col-md-12">
       <b-form-group id="searchName" label="Họ và tên" label-for="name">
-        <b-form-input
-          id="name"
-          v-model="searchName"
-          placeholder="Nhập tên"
-        ></b-form-input>
+        <b-form-input id="name" v-model="searchName" placeholder="Nhập tên"></b-form-input>
       </b-form-group>
     </b-form>
 
     <div class="list-person col-md-12">
       <ul>
-        <li
-          v-for="person in listPerson"
-          :key="person.personId"
-          style="list-style: none"
-          @click="openModalInfoPerson(person.personId)"
-        >
-          <div
-            class="wrapper row"
-            style="
+        <li v-for="person in listPerson" :key="person.personId" style="list-style: none"
+          @click="openModalInfoPerson(person.personId)">
+          <div class="wrapper row" style="
               margin-bottom: 8px;
               box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
                 rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
               border-radius: 8px;
               cursor: pointer;
-            "
-          >
-            <div
-              class="avt col-md-4"
-              style="
+            ">
+            <div class="avt col-md-4" style="
                 display: flex;
                 justify-content: center;
                 align-items: center;
-              "
-            >
-              <img
-                style="width: 50%; border-radius: 8px"
-                :src="
-                  person.personImage
-                    ? person.personImage
-                    : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
-                "
-                alt=""
-              />
+              ">
+              <img style="width: 50%; border-radius: 8px" :src="person.personImage
+                  ? person.personImage
+                  : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
+                " alt="" />
             </div>
             <div class="content col-md-8">
               <h5 class="name">{{ person.personName }}</h5>
@@ -79,6 +60,7 @@ export default {
 
       modalVisibleInfoPerson: false,
       selectedPersonId: null,
+      idCay: 0,
     }
   },
 
@@ -95,11 +77,25 @@ export default {
 
   methods: {
     async getListPerson() {
+      if (
+        this.$route.query.code !== undefined &&
+        this.$route.query.code !== 'undefined' &&
+        this.$route.query.code !== null
+      ) {
+        const join = await this.$axios.get(
+          'http://localhost:8080/getFamilyIdByCode?code=' +
+          this.$route.query.code
+        )
+        this.idCay = join.data.fid
+      }
+      else {
+        this.idCay = this.$route.query.id
+      }
       const list = await this.$axios.get(
         'http://localhost:8080/personSearch?familyTreeId=' +
-          this.$route.query.id +
-          '&keyword=' +
-          this.searchName
+        this.idCay +
+        '&keyword=' +
+        this.searchName
       )
 
       this.listPerson = list.data
@@ -137,12 +133,13 @@ export default {
   justify-content: center;
   flex-direction: column;
 }
+
 .list-person {
   overflow: auto;
   scroll-behavior: smooth;
 }
 
-.list-person > ul {
+.list-person>ul {
   height: 400px;
   scroll-behavior: smooth;
 }

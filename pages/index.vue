@@ -139,11 +139,11 @@ export default {
         currentPath.startsWith('/account/xac_nhan_otp') ||
         currentPath.startsWith('/account/trang_chao_mung')
       ) {
-        this.$router.push('/')
+        window.location.href="/"
       }
     } else {
       // Chuyển hướng về trang /account/dang_nhap nếu không có accessToken
-      this.$router.push('/account/dang_nhap')
+      window.location.href= "/account/dang_nhap"
     }
   },
 

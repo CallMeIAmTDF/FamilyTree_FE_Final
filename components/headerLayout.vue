@@ -10,109 +10,54 @@
           <!-- Nav trang chủ -->
           <b-navbar-nav v-if="showHeader">
             <b-nav-item href="/" active>Trang chủ</b-nav-item>
-            <b-nav-item href="/danh_sach_so_do" active
-              >Danh sách phả đồ</b-nav-item
-            >
+            <b-nav-item href="/danh_sach_so_do" active>Danh sách phả đồ</b-nav-item>
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
             <!-- Jointrang sơ đồ -->
-            <b-button
-              v-if="joinTree && actionJoin !== 1"
-              class="mr-3"
-              pill
-              variant="light"
-              style="border: none"
-              :disabled="actionJoin === 0"
-              @click="requestJoin"
-            >
+            <b-button v-if="joinTree && actionJoin !== 1" class="mr-3" pill variant="light" style="border: none"
+              :disabled="actionJoin === 0" @click="requestJoin">
               <strong v-if="actionJoin === -1">Tham gia</strong>
               <strong v-else-if="actionJoin === 0">Đã yêu cầu</strong>
             </b-button>
 
             <!-- Search của trang sơ đồ -->
-            <b-button
-              v-if="showSearch"
-              v-b-modal.search-info
-              class="mr-3"
-              pill
-              variant="outline-light"
-              style="border: none"
-            >
+            <b-button v-if="showSearch" v-b-modal.search-info class="mr-3" pill variant="outline-light"
+              style="border: none">
               <strong>Tìm kiếm</strong>
             </b-button>
 
             <!-- lịch sử -->
-            <b-button
-              v-if="showSearch"
-              class="mr-3"
-              pill
-              variant="outline-light"
-              style="border: none"
-            >
-              <a
-                class="ls"
-                :href="'/lich_su_chinh_sua?treeId=' + treeId"
-                style=""
-              >
+            <b-button v-if="showSearch" class="mr-3" pill variant="outline-light" style="border: none">
+              <a class="ls" :href="'/lich_su_chinh_sua?treeId=' + treeId" style="">
                 <strong>Lịch sử</strong>
               </a>
             </b-button>
 
             <!-- Chia sẻ sơ đồ trang sơ đồ -->
-            <b-button
-              v-if="showSearch && actionJoin === 1"
-              v-b-modal.share-box
-              pill
-              variant="outline-info"
-              class="mr-3"
-              style="border: none; color: #fff"
-            >
+            <b-button v-if="showSearch && actionJoin === 1" v-b-modal.share-box pill variant="outline-info" class="mr-3"
+              style="border: none; color: #fff">
               <strong>Chia sẻ</strong>
             </b-button>
 
             <!-- Danh sách ngươi dùng -->
-            <b-button
-              v-if="showSearch"
-              v-b-modal.control-user
-              pill
-              variant="outline-primary"
-              style="border: none; color: #fff"
-            >
+            <b-button v-if="showSearch && actionJoin === 1" v-b-modal.control-user pill variant="outline-primary"
+              style="border: none; color: #fff">
               <strong>QL người dùng</strong>
             </b-button>
 
             <!-- Đăng nhập đăng kí của trang account -->
-            <router-link
-              v-if="showSignIn"
-              to="/account/dang_nhap"
-              class="btn btn-primary"
-              >Đăng nhập</router-link
-            >
-            <router-link
-              v-if="showRegister"
-              to="/account/dang_ki"
-              class="btn btn-primary"
-              >Đăng kí</router-link
-            >
+            <router-link v-if="showSignIn" to="/account/dang_nhap" class="btn btn-primary">Đăng nhập</router-link>
+            <router-link v-if="showRegister" to="/account/dang_ki" class="btn btn-primary">Đăng kí</router-link>
 
             <!-- Thông báo trên các trang đã đăng nhập -->
-            <b-dropdown
-              v-if="showNotifi"
-              right
-              no-caret
-              class="btn mx-4"
-              style="padding: 0 !important; border: none"
-            >
+            <b-dropdown v-if="showNotifi" right no-caret class="btn mx-4" style="padding: 0 !important; border: none">
               <template #button-content>
                 <bell-header />
               </template>
 
-              <notification-card
-                class="px-4"
-                style="max-width: 360px; min-width: 360px"
-              />
+              <notification-card class="px-4" style="max-width: 360px; min-width: 360px" />
             </b-dropdown>
 
             <!-- Đăng xuất -->
@@ -126,23 +71,13 @@
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
-      <b-modal
-        id="search-info"
-        centered
-        hide-footer
-        size="lg"
-        title="Tìm kiếm người thân"
-      >
+      <b-modal id="search-info" centered hide-footer size="lg" title="Tìm kiếm người thân">
         <search-person />
       </b-modal>
       <b-modal id="share-box" hide-footer title="Chia sẻ thông tin">
         <share-box />
       </b-modal>
-      <b-modal
-        id="control-user"
-        hide-footer
-        title="Quản lý thông tin người dùng"
-      >
+      <b-modal id="control-user" hide-footer title="Quản lý thông tin người dùng">
         <list-tree-user />
       </b-modal>
     </header>
@@ -318,7 +253,7 @@ export default {
         ) {
           join = await this.$axios.get(
             'http://localhost:8080/getFamilyIdByCode?code=' +
-              this.$route.query.code
+            this.$route.query.code
           )
         }
         // eslint-disable-next-line no-console

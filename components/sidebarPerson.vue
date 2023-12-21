@@ -1,16 +1,10 @@
 <template>
   <div class="px-3 py-2">
     <div class="d-flex justify-content-center">
-      <b-img
-        :src="
-          personInfo.personImage
-            ? personInfo.personImage
-            : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
-        "
-        style="margin: auto; width: 200px; height: 200px"
-        fluid
-        thumbnail
-      ></b-img>
+      <b-img :src="personInfo.personImage
+          ? personInfo.personImage
+          : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
+        " style="margin: auto; width: 200px; height: 200px" fluid thumbnail></b-img>
     </div>
     <br />
 
@@ -34,78 +28,32 @@
       <hr />
 
       <div class="d-flex justify-content-around">
-        <b-button
-          v-if="actionJoin === 1"
-          class="btn btn-warning"
-          @click="editPerson"
-          >Sửa thông tin</b-button
-        >
-        <b-button
-          v-if="personid != centerid"
-          class="btn btn-primary"
-          @click="changeTree"
-          >Chuyển cây</b-button
-        >
-        <b-button
-          v-if="actionJoin === 1 && personid != centerid && personid != firstId"
-          class="btn btn-danger"
-          @click="confirmDelete"
-          >Xóa thành viên</b-button
-        >
+        <b-button v-if="actionJoin === 1" class="btn btn-warning" @click="editPerson">Sửa thông tin</b-button>
+        <b-button v-if="personid != centerid && actionJoin === 1" class="btn btn-primary" @click="changeTree">Chuyển
+          cây</b-button>
+        <b-button v-if="actionJoin === 1 && personid != centerid && personid != firstId" class="btn btn-danger"
+          @click="confirmDelete">Xóa thành viên</b-button>
       </div>
-      <b-modal
-        id="modalEditPerson"
-        centered
-        hide-footer
-        :title="'Sửa thông tin của ' + personInfo.personName"
-      >
-        <b-form
-          v-if="show"
-          class="b-form"
-          enctype="multipart/form-data"
-          @submit.prevent="onSubmit"
-          @reset="onReset"
-        >
+      <b-modal id="modalEditPerson" centered hide-footer :title="'Sửa thông tin của ' + personInfo.personName">
+        <b-form v-if="show" class="b-form" enctype="multipart/form-data" @submit.prevent="onSubmit" @reset="onReset">
           <div class="row">
             <!-- Trường họ và tên -->
-            <b-form-group
-              label="Họ và tên:"
-              class="col-md-6"
-              :state="isNameValid"
-              :invalid-feedback="nameErrorMessage"
-            >
-              <b-form-input
-                v-model="form.name"
-                type="text"
-                placeholder="Nhập tên..."
-                required
-                @blur="validateName"
-              ></b-form-input>
+            <b-form-group label="Họ và tên:" class="col-md-6" :state="isNameValid" :invalid-feedback="nameErrorMessage">
+              <b-form-input v-model="form.name" type="text" placeholder="Nhập tên..." required
+                @blur="validateName"></b-form-input>
             </b-form-group>
 
             <!-- Trường chọn hình ảnh từ file -->
             <b-form-group label="Chọn ảnh đại diện:" class="col-md-6">
-              <b-form-file
-                placeholder="Chọn ảnh..."
-                accept="image/*"
-                @change="onFileChosen"
-              ></b-form-file>
+              <b-form-file placeholder="Chọn ảnh..." accept="image/*" @change="onFileChosen"></b-form-file>
             </b-form-group>
           </div>
 
           <div class="row">
             <div class="col-md-6">
               <!-- Trường giới tính -->
-              <b-form-group
-                label="Giới tính: "
-                class="mt-3"
-                :state="form.selectedSex !== ''"
-              >
-                <b-form-radio-group
-                  v-model="form.selectedSex"
-                  name="radio-sex"
-                  required
-                >
+              <b-form-group label="Giới tính: " class="mt-3" :state="form.selectedSex !== ''">
+                <b-form-radio-group v-model="form.selectedSex" name="radio-sex" required>
                   <b-form-radio value="Nam" :disabled="form.selectedSex !== ''">
                     Nam
                   </b-form-radio>
@@ -116,19 +64,9 @@
               </b-form-group>
 
               <!-- Trường tình trạng -->
-              <b-form-group
-                label="Tình trạng: "
-                class="mt-2"
-                :state="form.selectedStatus !== ''"
-              >
-                <b-form-radio-group
-                  v-model="form.selectedStatus"
-                  name="radio-status"
-                  required
-                >
-                  <b-form-radio value="true" @change="deleteValueDeath"
-                    >Còn sống</b-form-radio
-                  >
+              <b-form-group label="Tình trạng: " class="mt-2" :state="form.selectedStatus !== ''">
+                <b-form-radio-group v-model="form.selectedStatus" name="radio-status" required>
+                  <b-form-radio value="true" @change="deleteValueDeath">Còn sống</b-form-radio>
                   <b-form-radio value="false">Từ trần</b-form-radio>
                 </b-form-radio-group>
               </b-form-group>
@@ -136,110 +74,60 @@
 
             <!-- Hiển thị hình ảnh -->
             <div class="col-md-6 d-flex justify-content-center">
-              <img
-                class="mt-2"
-                width="200px"
-                height="100%"
-                :src="
-                  form.img
-                    ? form.img
-                    : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
-                "
-                alt="person_image"
-                style="object-fit: cover"
-              />
+              <img class="mt-2" width="200px" height="100%" :src="form.img
+                  ? form.img
+                  : 'https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png'
+                " alt="person_image" style="object-fit: cover" />
             </div>
           </div>
 
           <div class="row">
             <!-- trường nghề nghiệp -->
             <b-form-group label="Nghề nghiệp:" class="col-md-6">
-              <b-form-input
-                v-model="form.job"
-                type="text"
-                placeholder="Nhập nghề nghiệp..."
-              ></b-form-input>
+              <b-form-input v-model="form.job" type="text" placeholder="Nhập nghề nghiệp..."></b-form-input>
             </b-form-group>
 
             <!-- Trường chọn địa chỉ -->
             <b-form-group label="Địa chỉ:" class="col-md-6">
-              <b-form-input
-                v-model="form.address"
-                type="text"
-                placeholder="Nhập địa chỉ..."
-              ></b-form-input>
+              <b-form-input v-model="form.address" type="text" placeholder="Nhập địa chỉ..."></b-form-input>
             </b-form-group>
           </div>
 
           <div class="row">
             <!-- trường dân tộc -->
             <b-form-group label="Dân tộc:" class="col-md-6">
-              <b-form-input
-                v-model="form.ethnic"
-                type="text"
-                placeholder="Thuộc dân tộc..."
-              ></b-form-input>
+              <b-form-input v-model="form.ethnic" type="text" placeholder="Thuộc dân tộc..."></b-form-input>
             </b-form-group>
 
             <!-- Trường tôn giáo -->
             <b-form-group label="Tôn giáo:" class="col-md-6">
-              <b-form-input
-                v-model="form.religion"
-                type="text"
-                placeholder="Thuộc tôn giáo..."
-              ></b-form-input>
+              <b-form-input v-model="form.religion" type="text" placeholder="Thuộc tôn giáo..."></b-form-input>
             </b-form-group>
           </div>
 
           <div class="row">
             <!-- Trường chọn ngày sinh -->
-            <b-form-group
-              label="Ngày sinh:"
-              class="col-md-6"
-              :state="isBirthdayValid"
-              :invalid-feedback="birthdayErrorMessage"
-            >
-              <b-form-input
-                v-model="form.birthday"
-                type="date"
-                class="mb-2"
-                @input="validateDateOfBirth"
-              ></b-form-input>
+            <b-form-group label="Ngày sinh:" class="col-md-6" :state="isBirthdayValid"
+              :invalid-feedback="birthdayErrorMessage">
+              <b-form-input v-model="form.birthday" type="date" class="mb-2" @input="validateDateOfBirth"></b-form-input>
             </b-form-group>
 
             <!-- Trường chọn ngày mất -->
-            <b-form-group
-              v-if="form.selectedStatus === 'false'"
-              label="Ngày mất:"
-              class="col-md-6"
-              :state="isDeathdayValid"
-              :invalid-feedback="deathdayErrorMessage"
-            >
-              <b-form-input
-                v-model="form.deathday"
-                type="date"
-                class="mb-2"
-                @input="validateDateOfDeath"
-              ></b-form-input>
+            <b-form-group v-if="form.selectedStatus === 'false'" label="Ngày mất:" class="col-md-6"
+              :state="isDeathdayValid" :invalid-feedback="deathdayErrorMessage">
+              <b-form-input v-model="form.deathday" type="date" class="mb-2" @input="validateDateOfDeath"></b-form-input>
             </b-form-group>
           </div>
 
           <div class="row">
             <b-form-group label="Mô tả:" class="col-md-12">
-              <b-form-textarea
-                v-model="form.description"
-                placeholder=" ..."
-                rows="3"
-                max-rows="6"
-              ></b-form-textarea>
+              <b-form-textarea v-model="form.description" placeholder=" ..." rows="3" max-rows="6"></b-form-textarea>
             </b-form-group>
           </div>
 
           <!-- Sử lý các sự kiện -->
           <div class="d-flex justify-content-end">
-            <b-button type="reset" class="mr-3" variant="danger"
-              >Reset</b-button
-            >
+            <b-button type="reset" class="mr-3" variant="danger">Reset</b-button>
             <b-button type="submit" variant="primary">Sửa thông tin</b-button>
           </div>
         </b-form>

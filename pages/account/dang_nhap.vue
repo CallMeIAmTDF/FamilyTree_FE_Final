@@ -3,13 +3,13 @@
       <sign-in-form/>
     </div>
    </template>
-   
-   
+
+
    <script>
    import signInForm from '../../components/form_user/signInForm.vue'
    export default {
     components: { signInForm },
-   
+
     mounted() {
     // Kiểm tra nếu có accessToken trong localStorage
     if (localStorage.getItem('accessToken')) {
@@ -25,17 +25,14 @@
       ) {
         window.location.href="/"
       }
-    } else {
-      // Chuyển hướng về trang /account/dang_nhap nếu không có accessToken
-      window.location.href="/account/dang_nhap"
     }
   },
-   
+
    }
    </script>
-   
-   
+
+
    <style>
-   
-   
+
+
    </style>
