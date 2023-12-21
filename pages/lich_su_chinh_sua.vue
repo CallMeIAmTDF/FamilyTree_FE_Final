@@ -460,12 +460,12 @@ export default {
 
     this.getHistory()
   },
-
+  
   methods: {
     getHighlightClass(prevData, currentData, side) {
       if (prevData && !currentData && side === 'left') {
         return 'highlight-red'
-      } else if (prevData !== currentData && side === 'right') {
+      } else if (currentData && prevData !== currentData && side === 'right') {
         return 'highlight-green'
       } else {
         return 'khongcogi'
