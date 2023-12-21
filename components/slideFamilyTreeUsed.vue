@@ -72,9 +72,13 @@ export default {
     },
     // Tính toán danh sách sơ đồ đã lọc dựa trên từ khóa tìm kiếm
     filteredTrees() {
-      return this.ownedTrees.filter((tree) =>
-        tree.familyTreeName.toLowerCase().includes(this.filter.toLowerCase())
-      )
+      // Đảo ngược mảng joinedTrees và sau đó áp dụng filter
+      return this.ownedTrees
+        .slice()
+        .reverse()
+        .filter((tree) =>
+          tree.familyTreeName.toLowerCase().includes(this.filter.toLowerCase())
+        )
     },
   },
   mounted() {

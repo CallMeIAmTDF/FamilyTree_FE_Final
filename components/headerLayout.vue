@@ -306,7 +306,7 @@ export default {
         console.log('join: ', join)
 
         this.actionJoin = join.data.UserStatus ? join.data.UserStatus : 0
-      } 
+      }
     },
 
     async requestJoin() {

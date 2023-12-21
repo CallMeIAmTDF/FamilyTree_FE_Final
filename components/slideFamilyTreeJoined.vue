@@ -72,9 +72,13 @@ export default {
     },
     // Tính toán danh sách sơ đồ đã lọc dựa trên từ khóa tìm kiếm
     filteredTrees() {
-      return this.joinedTrees.filter((tree) =>
-        tree.familyTreeName.toLowerCase().includes(this.filter.toLowerCase())
-      )
+      // Đảo ngược mảng joinedTrees và sau đó áp dụng filter
+      return this.joinedTrees
+        .slice()
+        .reverse()
+        .filter((tree) =>
+          tree.familyTreeName.toLowerCase().includes(this.filter.toLowerCase())
+        )
     },
   },
   mounted() {
@@ -88,7 +92,9 @@ export default {
           'http://localhost:8080/familyTree/list'
         )
 
-        this.joinedTrees = response.data.joined.sort((a, b) => b.familyTreeId - a.familyTreeId)
+        this.joinedTrees = response.data.joined.sort(
+          (a, b) => b.familyTreeId - a.familyTreeId
+        )
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error)

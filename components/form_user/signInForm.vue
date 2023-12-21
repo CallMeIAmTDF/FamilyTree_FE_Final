@@ -18,10 +18,13 @@
             <div class="col-md-12">
               <!-- Trường email -->
               <b-form-group
-                label="Email:"
                 :state="isEmailValid"
                 :invalid-feedback="emailErrorMessage"
               >
+                <label
+                  >Email
+                  <span style="color: red; margin-left: 2px">*</span>
+                </label>
                 <b-form-input
                   v-model="form.email"
                   type="email"
@@ -33,10 +36,13 @@
 
               <!-- Trường password -->
               <b-form-group
-                label="Mật khẩu:"
                 :state="isPasswordlValid"
                 :invalid-feedback="passwordErrorMessage"
               >
+                <label
+                  >Mật khẩu
+                  <span style="color: red; margin-left: 2px">*</span>
+                </label>
                 <b-form-input
                   v-model="form.password"
                   :type="passwordFieldType"
@@ -142,7 +148,8 @@ export default {
         this.form.email.length > 0 &&
         this.form.email.length <= 50 &&
         this.form.password.length > 0 &&
-        this.form.password.length <= 50
+        this.form.password.length <= 50 &&
+        this.form.password.length >= 8
       ) {
         this.validForm = true
       } else {
@@ -170,7 +177,10 @@ export default {
         this.passwordErrorMessage = 'Vui lòng nhập password.'
       } else if (this.form.password.length > 50) {
         this.isPasswordValid = false
-        this.passwordErrorMessage = 'Password không được vượt quá 50 ký tự.'
+        this.passwordErrorMessage = 'Mật khẩu không được vượt quá 50 ký tự.'
+      } else if (this.form.password.length < 8) {
+        this.isPasswordValid = false
+        this.passwordErrorMessage = 'Mật khẩu phải có ít nhất 8 kí tự.'
       } else {
         this.ispasswordValid = true
         this.passwordErrorMessage = ''
@@ -224,10 +234,10 @@ export default {
           console.error('Đăng nhập thất bại!')
 
           this.$bvToast.toast(response.message, {
-          title: 'Đã xảy ra lỗi',
-          variant: 'danger',
-          autoHideDelay: 5000, // Hiển thị trong 5 giây
-        })
+            title: 'Đã xảy ra lỗi',
+            variant: 'danger',
+            autoHideDelay: 5000, // Hiển thị trong 5 giây
+          })
         }
       } catch (error) {
         // Xử lý lỗi nếu có

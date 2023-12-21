@@ -50,11 +50,14 @@
                   <div class="row">
                     <!-- Trường họ và tên -->
                     <b-form-group
-                      label="Họ và tên:"
                       class="col-md-6"
                       :state="isNameValid"
                       :invalid-feedback="nameErrorMessage"
                     >
+                      <label
+                        >Họ và tên
+                        <span style="color: red; margin-left: 2px">*</span>
+                      </label>
                       <b-form-input
                         v-model="form.name"
                         type="text"
@@ -78,10 +81,13 @@
                     <div class="col-md-6">
                       <!-- Trường giới tính -->
                       <b-form-group
-                        label="Giới tính: "
                         class="mt-3"
                         :state="form.selectedSex !== ''"
                       >
+                        <label
+                          >Giới tính
+                          <span style="color: red; margin-left: 2px">*</span>
+                        </label>
                         <b-form-radio-group
                           v-model="form.selectedSex"
                           name="radio-sex"
@@ -94,10 +100,13 @@
 
                       <!-- Trường tình trạng -->
                       <b-form-group
-                        label="Tình trạng: "
                         class="mt-2"
                         :state="form.selectedStatus !== ''"
                       >
+                        <label
+                          >Tình trạng
+                          <span style="color: red; margin-left: 2px">*</span>
+                        </label>
                         <b-form-radio-group
                           v-model="form.selectedStatus"
                           name="radio-status"
@@ -228,7 +237,7 @@ export default {
 
       form: {
         name: '',
-        img: '',
+        img: null,
         selectedSex: '',
         selectedStatus: '',
         birthday: '',
@@ -272,6 +281,8 @@ export default {
   },
 
   async mounted() {
+    document.querySelector('body').style.overflow = 'hidden';
+    
     let scale = 0.24
     let panning = false
     let pointX = -11242.8
@@ -358,7 +369,7 @@ export default {
       event.preventDefault()
       // Reset our form values
       this.form.name = ''
-      this.form.img = ''
+      this.form.img = null
       this.form.imageSrc = ''
       this.form.selectedSex = ''
       this.form.selectedStatus = ''
@@ -706,7 +717,7 @@ export default {
             personStory: null,
             fatherId: null,
             motherId: null,
-            personImage: this.form.imageSrc,
+            personImage: this.form.img,
             siblingNum: null,
             groupChildId: null,
           }
@@ -752,10 +763,31 @@ export default {
         ) {
           return this.centerId
         }
-        if (this.infoPersonFamily[this.centerId].data.info.fatherId != null) {
+        if (
+          this.infoPersonFamily[this.centerId].data.info.fatherId != null &&
+          this.infoPersonFamily[
+            this.infoPersonFamily[this.centerId].data.info.fatherId
+          ] != null &&
+          this.infoPersonFamily[
+            this.infoPersonFamily[this.centerId].data.info.fatherId
+          ] !== undefined
+        ) {
+          // eslint-disable-next-line no-console
+          console.log(
+            'log: ',
+            this.infoPersonFamily[
+              this.infoPersonFamily[this.centerId].data.info.fatherId
+            ]
+          )
           root = '0'
         } else if (
-          this.infoPersonFamily[this.centerId].data.info.motherId != null
+          this.infoPersonFamily[this.centerId].data.info.motherId != null &&
+          this.infoPersonFamily[
+            this.infoPersonFamily[this.centerId].data.info.motherId
+          ] != null &&
+          this.infoPersonFamily[
+            this.infoPersonFamily[this.centerId].data.info.motherId
+          ] !== undefined
         ) {
           root = '1'
         } else {

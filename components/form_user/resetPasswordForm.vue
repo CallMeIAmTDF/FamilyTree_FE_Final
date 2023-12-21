@@ -18,10 +18,13 @@
             <div class="col-md">
               <!-- Trường email -->
               <b-form-group
-                label="Email:"
                 :state="isEmailValid"
                 :invalid-feedback="emailErrorMessage"
               >
+                <label
+                  >Email
+                  <span style="color: red; margin-left: 2px">*</span>
+                </label>
                 <b-form-input
                   v-model="form.email"
                   type="email"
@@ -33,10 +36,13 @@
 
               <!-- Trường password -->
               <b-form-group
-                label="Mật khẩu mới:"
                 :state="isPasswordlValid"
                 :invalid-feedback="passwordErrorMessage"
               >
+                <label
+                  >Mật khẩu mới
+                  <span style="color: red; margin-left: 2px">*</span>
+                </label>
                 <b-form-input
                   v-model="form.password"
                   :type="passwordFieldType"
@@ -66,9 +72,25 @@
             <b-button type="reset" class="mr-3" variant="danger"
               >Reset</b-button
             >
-            <b-button type="submit" variant="primary" :disabled="!validForm"
-              >Xác nhận</b-button
+
+            <b-overlay
+              :show="busy"
+              rounded
+              opacity="0.6"
+              spinner-small
+              spinner-variant="primary"
+              class="d-inline-block"
+              @hidden="onHidden"
             >
+              <b-button
+                ref="button"
+                type="submit"
+                variant="primary"
+                :disabled="!validForm"
+              >
+                Xác nhận
+              </b-button>
+            </b-overlay>
           </div>
 
           <!-- Quay về trang đăng nhập -->
@@ -98,6 +120,9 @@ export default {
       emailErrorMessage: '',
       passwordErrorMessage: '',
       passwordFieldType: 'password',
+
+      busy: false,
+      timeout: null,
     }
   },
 
@@ -108,6 +133,10 @@ export default {
         this.validateForm()
       },
     },
+  },
+
+  beforeDestroy() {
+    this.clearTimeout()
   },
 
   methods: {
@@ -127,7 +156,8 @@ export default {
         this.form.email.length > 0 &&
         this.form.email.length <= 50 &&
         this.form.password.length > 0 &&
-        this.form.password.length <= 50
+        this.form.password.length <= 50 &&
+        this.form.password.length >= 8
       ) {
         this.validForm = true
       } else {
@@ -155,7 +185,10 @@ export default {
         this.passwordErrorMessage = 'Vui lòng nhập password.'
       } else if (this.form.password.length > 50) {
         this.isPasswordValid = false
-        this.passwordErrorMessage = 'Password không được vượt quá 50 ký tự.'
+        this.passwordErrorMessage = 'Mật khẩu không được vượt quá 50 ký tự.'
+      } else if (this.form.password.length < 8) {
+        this.isPasswordValid = false
+        this.passwordErrorMessage = 'Mật khẩu phải có ít nhất 8 kí tự.'
       } else {
         this.ispasswordValid = true
         this.passwordErrorMessage = ''
@@ -173,6 +206,12 @@ export default {
 
       try {
         // Gọi API để đặt lại mật khẩu
+
+        this.busy = true
+        // Simulate an async request
+        this.setTimeout(() => {
+          this.busy = false
+        })
 
         const response = await this.$axios.$post(
           `http://localhost:8080/users/forgetPassword?email=${this.form.email}`
@@ -192,13 +231,13 @@ export default {
           })
         } else {
           // Xử lý khi đăng nhập không thành công
+          this.busy = false
 
           this.$bvToast.toast(response.message, {
             title: 'Đã xảy ra lỗi',
             variant: 'danger',
             autoHideDelay: 5000, // Hiển thị trong 5 giây
           })
-
         }
       } catch (error) {
         // Xử lý lỗi nếu gọi API không thành công
@@ -210,8 +249,25 @@ export default {
           variant: 'danger',
           autoHideDelay: 5000,
         })
-
       }
+    },
+
+    clearTimeout() {
+      if (this.timeout) {
+        clearTimeout(this.timeout)
+        this.timeout = null
+      }
+    },
+    setTimeout(callback) {
+      this.clearTimeout()
+      this.timeout = setTimeout(() => {
+        this.clearTimeout()
+        callback()
+      }, 5000)
+    },
+    onHidden() {
+      // Return focus to the button once hidden
+      this.$refs.button.focus()
     },
   },
 }

@@ -10,11 +10,14 @@
       <div class="row">
         <!-- Trường họ và tên -->
         <b-form-group
-          label="Họ và tên:"
           class="col-md-6"
           :state="isNameValid"
           :invalid-feedback="nameErrorMessage"
         >
+          <label
+            >Họ và tên
+            <span style="color: red; margin-left: 2px">*</span>
+          </label>
           <b-form-input
             v-model="form.name"
             type="text"
@@ -37,11 +40,11 @@
       <div class="row">
         <div class="col-md-6">
           <!-- Trường giới tính -->
-          <b-form-group
-            label="Giới tính: "
-            class="mt-3"
-            :state="form.selectedSex !== ''"
-          >
+          <b-form-group class="mt-3" :state="form.selectedSex !== ''">
+            <label
+              >Giới tính
+              <span style="color: red; margin-left: 2px">*</span>
+            </label>
             <b-form-radio-group
               v-model="form.selectedSex"
               name="radio-sex"
@@ -53,11 +56,11 @@
           </b-form-group>
 
           <!-- Trường tình trạng -->
-          <b-form-group
-            label="Tình trạng: "
-            class="mt-2"
-            :state="form.selectedStatus !== ''"
-          >
+          <b-form-group class="mt-2" :state="form.selectedStatus !== ''">
+            <label
+              >Tình trạng
+              <span style="color: red; margin-left: 2px">*</span>
+            </label>
             <b-form-radio-group
               v-model="form.selectedStatus"
               name="radio-status"
@@ -128,27 +131,35 @@
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
+      </div>
 
-        <!-- Chọn chức vụ là anh chị em  -->
-        <b-form-group class="col-md-6" label="Chọn chức vụ">
-          <b-form-select v-model="form.selectedLevel">
-            <b-form-select-option :value="''" disabled
-              >Chọn</b-form-select-option
-            >
-            <b-form-select-option value="0.5">
-              Chọn anh hoặc chị gần nhất
-            </b-form-select-option>
-            <b-form-select-option value="-0.5">
-              Chọn em gần nhất
-            </b-form-select-option>
-          </b-form-select>
-        </b-form-group>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="d-flex align-items-baseline ">
+            <div class=""><span>Người này có</span></div>
+            <!-- Chọn chức vụ là anh chị em  -->
+            <b-form-group class="col-md-8">
+              <b-form-select v-model="form.selectedLevel">
+                <b-form-select-option :value="''" disabled
+                  >Chọn chức vụ</b-form-select-option
+                >
+                <b-form-select-option value="0.5">
+                  anh hoặc chị gần nhất
+                </b-form-select-option>
+                <b-form-select-option value="-0.5">
+                  em gần nhất
+                </b-form-select-option>
+              </b-form-select>
+            </b-form-group>
 
+            <div><span>là: </span></div>
+          </div>
+        </div>
         <!-- Chọn anh chị em gần nhất -->
-        <b-form-group class="col-md-6" label="Chọn anh chị em gần nhất">
+        <b-form-group class="col-md-6">
           <b-form-select v-model="form.selectedChildren">
             <b-form-select-option value="null" disabled
-              >Chọn</b-form-select-option
+              >Chọn người</b-form-select-option
             >
             <b-form-select-option
               v-for="child in children"
@@ -242,7 +253,7 @@ export default {
     return {
       form: {
         name: '',
-        img: '',
+        img: null,
         selectedSex: '',
         selectedStatus: '',
         birthday: '',
@@ -294,7 +305,7 @@ export default {
       event.preventDefault()
       // Reset our form values
       this.form.name = ''
-      this.form.img = ''
+      this.form.img = null
       this.form.selectedSex = ''
       this.form.selectedStatus = ''
       this.form.selectedParent = null
@@ -331,7 +342,7 @@ export default {
           })
 
           const data = await response.json()
-          this.form.img = data.data.link // Lưu đường dẫn hình ảnh vào biến img
+          this.form.img = data.data.link
           // eslint-disable-next-line no-console
           console.log(this.form.img)
           // eslint-disable-next-line no-console
@@ -575,7 +586,7 @@ export default {
               personStory: null,
               fatherId,
               motherId,
-              personImage: this.form.imageSrc,
+              personImage: this.form.img,
               siblingNum: siblingNumNext,
               groupChildId: null,
             }

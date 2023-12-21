@@ -164,7 +164,7 @@ export default {
     return {
       form: {
         name: '',
-        img: '',
+        img: null,
         selectedSex: false,
         selectedStatus: '',
         selectedParent: '',
@@ -196,7 +196,7 @@ export default {
       event.preventDefault()
       // Reset our form values
       this.form.name = ''
-      this.form.img = ''
+      this.form.img = null
       this.form.selectedSex = ''
       this.form.selectedStatus = ''
       this.form.selectedParent = ''
@@ -332,7 +332,7 @@ export default {
             personStory: null,
             fatherId: null,
             motherId: null,
-            personImage: this.form.imageSrc,
+            personImage: this.form.img,
             siblingNum: null,
             groupChildId: null,
           }

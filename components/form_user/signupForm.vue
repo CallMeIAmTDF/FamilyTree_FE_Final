@@ -17,11 +17,14 @@
         <div class="row">
           <!-- Trường họ và tên -->
           <b-form-group
-            label="Họ và tên:"
             class="col-md"
             :state="isNameValid"
             :invalid-feedback="nameErrorMessage"
           >
+            <label
+              >Họ và tên
+              <span style="color: red; margin-left: 2px">*</span>
+            </label>
             <b-form-input
               v-model="form.user_fullname"
               type="text"
@@ -36,10 +39,13 @@
           <div class="col-md">
             <!-- Trường email -->
             <b-form-group
-              label="Email:"
               :state="isEmailValid"
               :invalid-feedback="emailErrorMessage"
             >
+              <label
+                >Email
+                <span style="color: red; margin-left: 2px">*</span></label
+              >
               <b-form-input
                 v-model="form.user_email"
                 type="email"
@@ -51,33 +57,20 @@
 
             <!-- Trường password -->
             <b-form-group
-              label="Password:"
               :state="isPasswordlValid"
               :invalid-feedback="passwordErrorMessage"
             >
+              <label
+                >Mật khẩu
+                <span style="color: red; margin-left: 2px">*</span></label
+              >
               <b-form-input
                 v-model="form.user_password"
                 type="password"
-                placeholder="Nhập password..."
+                placeholder="Nhập mật khẩu..."
                 required
                 @blur="validatePassword"
               ></b-form-input>
-            </b-form-group>
-
-            <!-- Trường giới tính -->
-            <b-form-group
-              label="Giới tính: "
-              class="mt-3"
-              :state="form.user_gender !== ''"
-            >
-              <b-form-radio-group
-                v-model="form.user_gender"
-                name="radio-sex"
-                required
-              >
-                <b-form-radio value="true">Nam</b-form-radio>
-                <b-form-radio value="false">Nữ</b-form-radio>
-              </b-form-radio-group>
             </b-form-group>
           </div>
         </div>
@@ -193,7 +186,7 @@ export default {
         this.form.user_email.length <= 50 &&
         this.form.user_password.length > 0 &&
         this.form.user_password.length <= 50 &&
-        this.form.user_gender !== ''
+        this.form.user_password.length >= 8
       ) {
         this.validForm = true
       } else {
@@ -237,6 +230,9 @@ export default {
       } else if (this.form.user_password.length > 50) {
         this.isPasswordValid = false
         this.passwordErrorMessage = 'Password không được vượt quá 50 ký tự.'
+      } else if (this.form.user_password.length < 8) {
+        this.isPasswordValid = false
+        this.passwordErrorMessage = 'Mật khẩu phải có ít nhất 8 kí tự.'
       } else {
         this.ispasswordValid = true
         this.passwordErrorMessage = ''
@@ -274,12 +270,15 @@ export default {
           }
         )
 
+        // eslint-disable-next-line no-console
+        console.log('response', response)
+
         if (response.data && response.status === 'OK') {
           // eslint-disable-next-line no-console
           console.log('success')
 
           this.$bvToast.toast(response.message, {
-            title: 'Đã xảy ra lỗi',
+            title: 'Thành Công',
             variant: 'success',
             autoHideDelay: 5000, // Hiển thị trong 5 giây
           })
@@ -292,12 +291,12 @@ export default {
                 password: this.form.password,
               },
             })
-          }, 3000)
+          }, 500)
         } else {
           this.$bvToast.toast(response.message, {
             title: 'Đã xảy ra lỗi',
             variant: 'danger',
-            autoHideDelay: 5000, // Hiển thị trong 5 giây
+            autoHideDelay: 500, // Hiển thị trong 5 giây
           })
         }
       } catch (error) {

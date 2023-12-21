@@ -10,11 +10,14 @@
       <div class="row">
         <!-- Trường họ và tên -->
         <b-form-group
-          label="Họ và tên:"
           class="col-md-6"
           :state="isNameValid"
           :invalid-feedback="nameErrorMessage"
         >
+          <label
+            >Họ và tên
+            <span style="color: red; margin-left: 2px">*</span>
+          </label>
           <b-form-input
             v-model="form.name"
             type="text"
@@ -37,11 +40,11 @@
       <div class="row">
         <div class="col-md-6">
           <!-- Trường giới tính -->
-          <b-form-group
-            label="Giới tính: "
-            class="mt-3"
-            :state="form.selectedSex !== ''"
-          >
+          <b-form-group class="mt-3" :state="form.selectedSex !== ''">
+            <label
+              >Giới tính
+              <span style="color: red; margin-left: 2px">*</span>
+            </label>
             <b-form-radio-group
               v-model="form.selectedSex"
               name="radio-sex"
@@ -53,11 +56,11 @@
           </b-form-group>
 
           <!-- Trường tình trạng -->
-          <b-form-group
-            label="Tình trạng: "
-            class="mt-2"
-            :state="form.selectedStatus !== ''"
-          >
+          <b-form-group class="mt-2" :state="form.selectedStatus !== ''">
+            <label
+              >Tình trạng
+              <span style="color: red; margin-left: 2px">*</span>
+            </label>
             <b-form-radio-group
               v-model="form.selectedStatus"
               name="radio-status"
@@ -170,7 +173,7 @@ export default {
     return {
       form: {
         name: '',
-        img: '',
+        img: null,
         selectedSex: false,
         selectedStatus: '',
         birthday: '',
@@ -203,7 +206,7 @@ export default {
       event.preventDefault()
       // Reset our form values
       this.form.name = ''
-      this.form.img = ''
+      this.form.img = null
       this.form.selectedSex = ''
       this.form.selectedStatus = ''
       this.form.birthday = ''
@@ -346,7 +349,7 @@ export default {
             personStory: null,
             fatherId: null,
             motherId: null,
-            personImage: this.form.imageSrc,
+            personImage: this.form.img,
             siblingNum: null,
             groupChildId: null,
           }

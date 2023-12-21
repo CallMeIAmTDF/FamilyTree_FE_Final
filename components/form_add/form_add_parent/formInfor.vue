@@ -9,12 +9,15 @@
     >
       <div class="row">
         <!-- Trường họ và tên -->
-        <b-form-group
-          label="Họ và tên:"
+        <b-form-radio-group
           class="col-md-6"
           :state="isNameValid"
           :invalid-feedback="nameErrorMessage"
         >
+          <label
+            >Họ và tên
+            <span style="color: red; margin-left: 2px">*</span>
+          </label>
           <b-form-input
             v-model="form.name"
             type="text"
@@ -22,7 +25,7 @@
             required
             @blur="validateName"
           ></b-form-input>
-        </b-form-group>
+        </b-form-radio-group>
 
         <!-- Trường chọn hình ảnh từ file -->
         <b-form-group label="Chọn ảnh đại diện:" class="col-md-6">
@@ -37,11 +40,11 @@
       <div class="row">
         <div class="col-md-6">
           <!-- Trường giới tính -->
-          <b-form-group
-            label="Giới tính: "
-            class="mt-3"
-            :state="form.selectedSex !== ''"
-          >
+          <b-form-radio-group class="mt-3" :state="form.selectedSex !== ''">
+            <label
+              >Giới tính
+              <span style="color: red; margin-left: 2px">*</span>
+            </label>
             <b-form-radio-group
               v-model="form.selectedSex"
               name="radio-sex"
@@ -50,14 +53,14 @@
               <b-form-radio value="true">Nam</b-form-radio>
               <b-form-radio value="false">Nữ</b-form-radio>
             </b-form-radio-group>
-          </b-form-group>
+          </b-form-radio-group>
 
           <!-- Trường tình trạng -->
-          <b-form-group
-            label="Tình trạng: "
-            class="mt-2"
-            :state="form.selectedStatus !== ''"
-          >
+          <b-form-group class="mt-2" :state="form.selectedStatus !== ''">
+            <label
+              >Tình trạng
+              <span style="color: red; margin-left: 2px">*</span>
+            </label>
             <b-form-radio-group
               v-model="form.selectedStatus"
               name="radio-status"
@@ -169,7 +172,7 @@ export default {
     return {
       form: {
         name: '',
-        img: '',
+        img: null,
         selectedSex: '',
         selectedStatus: '',
         birthday: '',
@@ -208,7 +211,7 @@ export default {
       event.preventDefault()
       // Reset our form values
       this.form.name = ''
-      this.form.img = ''
+      this.form.img = null
       this.form.selectedSex = ''
       this.form.selectedStatus = ''
       this.form.birthday = ''
@@ -351,7 +354,7 @@ export default {
             personStory: null,
             fatherId: null,
             motherId: null,
-            personImage: this.form.imageSrc,
+            personImage: this.form.img,
             siblingNum: null,
             groupChildId: null,
           }

@@ -36,13 +36,19 @@
       <hr />
 
       <div class="d-flex justify-content-around">
-        <b-button v-if="actionJoin === 1" class="btn btn-warning" @click="editPerson"
+        <b-button
+          v-if="actionJoin === 1"
+          class="btn btn-warning"
+          @click="editPerson"
           >Sửa thông tin</b-button
         >
         <b-button class="btn btn-primary" @click="changeTree"
           >Chuyển cây</b-button
         >
-        <b-button v-if="actionJoin === 1" class="btn btn-danger" @click="confirmDelete"
+        <b-button
+          v-if="actionJoin === 1 && personid != centerid"
+          class="btn btn-danger"
+          @click="confirmDelete"
           >Xóa thành viên</b-button
         >
       </div>
@@ -73,6 +79,7 @@
                 placeholder="Nhập tên..."
                 required
                 @blur="validateName"
+                @change="validateForm"
               ></b-form-input>
             </b-form-group>
 
@@ -98,6 +105,7 @@
                   v-model="form.selectedSex"
                   name="radio-sex"
                   required
+                  @change="validateForm"
                 >
                   <b-form-radio
                     value="true"
@@ -124,6 +132,7 @@
                   v-model="form.selectedStatus"
                   name="radio-status"
                   required
+                  @change="validateForm"
                 >
                   <b-form-radio value="true" @change="deleteValueDeath"
                     >Còn sống</b-form-radio
@@ -259,15 +268,15 @@ export default {
 
     actionJoin: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
 
   data() {
     return {
       form: {
         name: '',
-        img: '',
+        img: null,
         selectedSex: '',
         selectedStatus: '',
         birthday: '',
@@ -279,6 +288,7 @@ export default {
         description: '',
       },
       personInfo: {},
+      centerid: '',
       show: true,
       familyTreeId: null,
       validForm: false,
@@ -307,12 +317,19 @@ export default {
     this.getPersonInfo()
   },
 
+  mounted() {
+    this.centerid = localStorage.getItem('centerId')
+
+    // eslint-disable-next-line no-console
+    console.log('center-id: ', this.centerid)
+  },
+
   methods: {
     onReset(event) {
       event.preventDefault()
       // Reset our form values
       this.form.name = ''
-      this.form.img = ''
+      this.form.img = null
       this.form.selectedSex = ''
       this.form.selectedStatus = ''
       this.form.birthday = ''
@@ -497,7 +514,7 @@ export default {
             personStory: null,
             fatherId: null,
             motherId: null,
-            personImage: this.form.imageSrc,
+            personImage: this.form.img,
             siblingNum: 0,
             siblingId: null,
           }
@@ -527,6 +544,9 @@ export default {
         // Nếu người dùng xác nhận xóa, thực hiện xóa thành viên ở đây
         this.deletePerson()
       }
+
+      // eslint-disable-next-line no-console
+      console.log('id:  ', this.personid)
     },
 
     async deletePerson() {
@@ -549,7 +569,7 @@ export default {
       localStorage.setItem('side', undefined)
 
       window.location.reload()
-    }
+    },
   },
 }
 </script>

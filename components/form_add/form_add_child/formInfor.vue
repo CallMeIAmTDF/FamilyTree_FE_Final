@@ -10,11 +10,14 @@
       <div class="row">
         <!-- Trường họ và tên -->
         <b-form-group
-          label="Họ và tên:"
           class="col-md-6"
           :state="isNameValid"
           :invalid-feedback="nameErrorMessage"
         >
+          <label
+            >Họ và tên
+            <span style="color: red; margin-left: 2px">*</span>
+          </label>
           <b-form-input
             v-model="form.name"
             type="text"
@@ -37,11 +40,11 @@
       <div class="row">
         <div class="col-md-6">
           <!-- Trường giới tính -->
-          <b-form-group
-            label="Giới tính: "
-            class="mt-3"
-            :state="form.selectedSex !== ''"
-          >
+          <b-form-group class="mt-3" :state="form.selectedSex !== ''">
+            <label
+              >Giới tính
+              <span style="color: red; margin-left: 2px">*</span>
+            </label>
             <b-form-radio-group
               v-model="form.selectedSex"
               name="radio-sex"
@@ -53,11 +56,11 @@
           </b-form-group>
 
           <!-- Trường tình trạng -->
-          <b-form-group
-            label="Tình trạng: "
-            class="mt-2"
-            :state="form.selectedStatus !== ''"
-          >
+          <b-form-group class="mt-2" :state="form.selectedStatus !== ''">
+            <label
+              >Tình trạng
+              <span style="color: red; margin-left: 2px">*</span>
+            </label>
             <b-form-radio-group
               v-model="form.selectedStatus"
               name="radio-status"
@@ -92,7 +95,7 @@
         <!-- Chọn bố -->
         <b-form-group
           v-if="item.gender === 'Female'"
-          class="col-md-4"
+          class="col-md-12"
           label="Chọn bố cho con"
         >
           <b-form-select v-model="form.selectedFather" @change="fetchChildren">
@@ -112,7 +115,7 @@
         <!-- Chọn mẹ  -->
         <b-form-group
           v-if="item.gender === 'Male'"
-          class="col-md-4"
+          class="col-md-12"
           label="Chọn mẹ cho con"
         >
           <b-form-select v-model="form.selectedMother" @change="fetchChildren">
@@ -128,25 +131,32 @@
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
+      </div>
 
-        <!-- Chọn anh chị em  -->
-        <b-form-group class="col-md-4" label="Chọn chức vụ">
-          <b-form-select v-model="form.selectedLevel">
-            <b-form-select-option :value="''" disabled
-              >Chọn</b-form-select-option
-            >
+      <div class="row">
+        <div class="col-md-6">
+          <div class="d-flex align-items-baseline">
+            <div><span>Người này có</span></div>
+            <!-- Chọn anh chị em  -->
+            <b-form-group class="col-md-8">
+              <b-form-select v-model="form.selectedLevel">
+                <b-form-select-option :value="''" disabled
+                  >Chọn</b-form-select-option
+                >
+                <b-form-select-option value="0.5">
+                  anh hoặc chị gần nhất
+                </b-form-select-option>
+                <b-form-select-option value="-0.5">
+                  em gần nhất
+                </b-form-select-option>
+              </b-form-select>
+            </b-form-group>
 
-            <b-form-select-option value="0.5">
-              Chọn anh hoặc chị gần nhất
-            </b-form-select-option>
-            <b-form-select-option value="-0.5">
-              Chọn em gần nhất
-            </b-form-select-option>
-          </b-form-select>
-        </b-form-group>
-
+            <span>là: </span>
+          </div>
+        </div>
         <!-- Chọn anh chị em gần nhất -->
-        <b-form-group class="col-md-4" label="Chọn con gần nhất">
+        <b-form-group class="col-md-6">
           <b-form-select v-model="form.selectedChildren">
             <b-form-select-option value="null" disabled
               >Chọn</b-form-select-option
@@ -243,7 +253,7 @@ export default {
     return {
       form: {
         name: '',
-        img: '',
+        img: null,
         selectedSex: '',
         selectedStatus: '',
         birthday: '',
@@ -295,7 +305,7 @@ export default {
       event.preventDefault()
       // Reset our form values
       this.form.name = ''
-      this.form.img = ''
+      this.form.img = null
       this.form.selectedSex = ''
       this.form.selectedStatus = ''
       this.form.selectedFather = ''
@@ -535,7 +545,7 @@ export default {
               personStory: null,
               fatherId,
               motherId,
-              personImage: this.form.imageSrc,
+              personImage: this.form.img,
               siblingNum: siblingNumNext,
               groupChildId: null,
             }

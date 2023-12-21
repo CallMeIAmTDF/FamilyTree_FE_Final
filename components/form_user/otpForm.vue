@@ -81,7 +81,7 @@ export default {
         );
 
         // Nếu mã OTP chính xác
-        if (response && response.success) {
+        if (response && response.status === 'OK') {
           this.showSuccessToast(response.message);
           this.$router.push('/account/dang_nhap');
         } else {
