@@ -42,7 +42,7 @@
             </b-button>
 
             <!-- Danh sách ngươi dùng -->
-            <b-button v-if="showSearch && actionJoin === 1" v-b-modal.control-user pill variant="outline-primary"
+            <b-button v-if="showSearch" v-b-modal.control-user pill variant="outline-primary"
               style="border: none; color: #fff">
               <strong>QL người dùng</strong>
             </b-button>

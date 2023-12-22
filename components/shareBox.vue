@@ -3,20 +3,10 @@
     <nav>
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a
-            class="nav-link"
-            :class="{ active: activeTab === 'shareLink' }"
-            @click="activeTab = 'shareLink'"
-            >Chia sẻ</a
-          >
+          <a class="nav-link" :class="{ active: activeTab === 'shareLink' }" @click="activeTab = 'shareLink'">Chia sẻ</a>
         </li>
         <li class="nav-item">
-          <a
-            class="nav-link"
-            :class="{ active: activeTab === 'copy' }"
-            @click="activeTab = 'copy'"
-            >Sao chép</a
-          >
+          <a class="nav-link" :class="{ active: activeTab === 'copy' }" @click="activeTab = 'copy'">Sao chép</a>
         </li>
       </ul>
     </nav>
@@ -25,46 +15,27 @@
         <h5 style="font-weight: bold">Chia sẻ phả đồ</h5>
         <div class="container">
           <b-input-group class="mb-3">
-            <b-form-input
-              ref="copyInput"
-              v-model="inputValue"
-              class="copyLink"
-              style="color: #0b57d0"
-              readonly
-            ></b-form-input>
+            <b-form-input ref="copyInput" v-model="inputValue" class="copyLink" style="color: #0b57d0"
+              readonly></b-form-input>
             <b-input-group-append>
-              <b-button variant="outline-primary" @click="copyText"
-                >Sao chép link</b-button
-              >
+              <b-button variant="outline-primary" @click="copyText">Sao chép link</b-button>
             </b-input-group-append>
           </b-input-group>
         </div>
       </div>
       <div v-else-if="activeTab === 'copy'">
         <b-form-group class="col-md-12">
-          <b-form-input
-            v-model="nameTree"
-            placeholder="Tên phả đồ"
-            class="mb-3"
-          ></b-form-input>
+          <b-form-input v-model="nameTree" placeholder="Tên phả đồ" class="mb-3"></b-form-input>
           <b-form-select v-model="selectPerson">
-            <b-form-select-option value="null" disabled
-              >Chọn người trung tâm</b-form-select-option
-            >
-            <b-form-select-option
-              v-for="per in person"
-              :key="per.data.id"
-              :value="per.data.id"
-            >
+            <b-form-select-option value="null" disabled>Chọn người trung tâm</b-form-select-option>
+            <b-form-select-option v-for="per in person" :key="per.data.id" :value="per.data.id">
               {{ per.data.info.name }}
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
         <div class="container">
           <b-form-select v-model="selectedSide" class="mb-3">
-            <b-form-select-option value="null" disabled
-              >Chọn hướng phả đồ</b-form-select-option
-            >
+            <b-form-select-option value="null" disabled>Chọn hướng phả đồ</b-form-select-option>
             <b-form-select-option value="2">
               Xem phả đồ họ nội
             </b-form-select-option>
@@ -77,9 +48,7 @@
           </b-form-select>
 
           <b-input-group class="mb-3">
-            <b-button variant="primary" style="width: 100%" @click="getCopyTree"
-              >Copy phả đồ</b-button
-            >
+            <b-button variant="primary" style="width: 100%" @click="getCopyTree">Copy phả đồ</b-button>
           </b-input-group>
         </div>
       </div>
@@ -147,7 +116,7 @@ export default {
       try {
         const res = await this.$axios.get(
           'http://localhost:8080/familyTree/getDataV2?fid=' +
-            this.$route.query.id
+          this.$route.query.id
         )
 
         // eslint-disable-next-line no-console
@@ -166,16 +135,16 @@ export default {
 
         const res = await this.$axios.$post(
           'http://localhost:8080/linkSharing/create?familyTreeId=' +
-            this.$route.query.id +
-            '&personId=' +
-            personId
+          this.$route.query.id +
+          '&personId=' +
+          personId
         )
 
         const link = res.data
 
         const link2 = link.split('linkSharing?code=')[1]
 
-        this.inputValue = 'http://127.0.0.1:3000/so_do_cay?code=' + link2
+        this.inputValue = window.location.host + '/so_do_cay?code=' + link2
 
         // eslint-disable-next-line no-console
         console.log(this.inputValue)
